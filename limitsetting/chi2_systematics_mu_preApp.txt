@@ -1,2 +1,0 @@
-Chi2/NDOF of systematics:
-Systematic  & #chi^{2} Down   & #chi^{2} Up  

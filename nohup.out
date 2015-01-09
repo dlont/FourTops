@@ -1,1211 +1,0 @@
-
-[1mRooFit v3.55 -- Developed by Wouter Verkerke and David Kirkby[0m 
-                Copyright (C) 2000-2012 NIKHEF, University of California & Stanford University
-                All rights reserved, please read http://roofit.sourceforge.net/license.txt
-
-float ptmin[] = {20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600};
-non-empty 
-float ptmin[] = {20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600};
-parsing startinglines
-20, 30, 40, 50, 60, 70, 80, 100, 120, 160, 210, 260, 320, 400, 500, 600
-30, 40, 50, 60, 70, 80,100, 120, 160, 210, 260, 320, 400, 500, 600, 800
-__20__
-__ 30__
-__ 40__
-__ 50__
-__ 60__
-__ 70__
-__ 80__
-__ 100__
-__ 120__
-__ 160__
-__ 210__
-__ 260__
-__ 320__
-__ 400__
-__ 500__
-__ 600__
-__30__
-__ 40__
-__ 50__
-__ 60__
-__ 70__
-__ 80__
-__100__
-__ 120__
-__ 160__
-__ 210__
-__ 260__
-__ 320__
-__ 400__
-__ 500__
-__ 600__
-__ 800__
-
-
- Tagger: TCHPT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: TCHPT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: TCHPT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: JPL within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: JPL within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: JPL within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: JPM within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: JPM within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: JPM within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: JPT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: JPT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: JPT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: CSVL within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: CSVL within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: CSVL within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: CSVM within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: CSVM within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: CSVM within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: CSVT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: CSVT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: CSVT within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: CSVV1L within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: CSVV1L within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: CSVV1L within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: CSVV1M within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: CSVV1M within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: CSVV1M within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
- Tagger: CSVV1T within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-non-empty 
- Tagger: CSVV1T within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
- Tagger: CSVV1T within 20 < pt < 800 GeV, abs(eta) < 2.4, x = pt
-
-BTagWeightTools:INFO: successfully parsed file SFb-pt_NOttbar_payload_EPS13.txt, b-tag parameterizations now loaded!
-doJESShift: 0
-doJERShift: 0
-dobTagEffShift: 0
-domisTagEffShift: 0
-doPUShift: 0
-doScaleShift: 0
-doMatchingShift: 0
-dottbbShift: 2
-doLeptonSFShift: 0
-*************************************************************
- Beginning of the program for the FourTop search ! 
-*************************************************************
- --> Using the Muon channel...
-used config file: config/test_mconly.xml
- - Loading environment ...
- - Loading datasets ...
-Instantiating jet combiner...
-The MVA stuff will be computed!
-plots prepared...
-vector filled...
-Instantiating computer...
-
-==> Start TMVA Computer
-postfix_
-name of weights dir weights/
---- Reader                   : Booking "BDT method" of type "BDT" from weights/JetCombTrainer_BDT.weights.xml.
---- MethodBase               : Reading weight file: weights/JetCombTrainer_BDT.weights.xml
---- BDT                      : Read method "BDT" of type "BDT"
---- BDT                      : MVA method was trained with TMVA Version: 4.1.4
---- BDT                      : MVA method was trained with ROOT Version: 5.34/05
---- DataSetInfo              : Added class "Signal"	 with internal class number 0
---- DataSetInfo              : Added class "Background"	 with internal class number 1
---- Reader                   : Booked classifier "BDT" of type: "BDT"
-Instantiated jet combiner...
-Instantiated jet combiner...
- Initialized Eventcomputer_
-
-==> Start TMVA Computer
-postfix__25thFeb
-name of weights dir weights_25thFeb/
---- Reader                   : Booking "BDT method" of type "BDT" from weights_25thFeb/MasterMVA_Mu_25thFeb_BDT.weights.xml.
---- MethodBase               : Reading weight file: weights_25thFeb/MasterMVA_Mu_25thFeb_BDT.weights.xml
---- BDT                      : Read method "BDT" of type "BDT"
---- BDT                      : MVA method was trained with TMVA Version: 4.1.4
---- BDT                      : MVA method was trained with ROOT Version: 5.34/05
---- DataSetInfo              : Added class "Signal"	 with internal class number 0
---- DataSetInfo              : Added class "Background"	 with internal class number 1
---- Reader                   : Booked classifier "BDT" of type: "BDT"
-found sample with equivalent lumi 230726
-Rescaling to an integrated luminosity of 18848.4 pb^-1
-Old lumi =   230726
- - Variable declaration ...
-Warning in <TFile::Append>: Replacing existing TH1: MuonRelIsolation_PreTrig_TTJets (Potential memory leak).
-Warning in <TFile::Append>: Replacing existing TH1: hRandomPseudoData_MuonRelIsolation_PreTrig (Potential memory leak).
-Making directory :FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/
- Lumi/Pileup Reweighting: Computed Weights per In-Time Nint 
-   0 0.133807
-   1 0.234582
-   2 0.27856
-   3 0.25094
-   4 0.265325
-   5 0.546109
-   6 0.442551
-   7 0.434754
-   8 0.600625
-   9 0.920484
-   10 1.33461
-   11 1.7079
-   12 1.77021
-   13 1.58194
-   14 1.34496
-   15 1.1708
-   16 1.08277
-   17 1.05569
-   18 1.07158
-   19 1.11308
-   20 1.1511
-   21 1.17181
-   22 1.17866
-   23 1.17296
-   24 1.14866
-   25 1.10084
-   26 1.02987
-   27 0.939371
-   28 0.832666
-   29 0.714757
-   30 0.593142
-   31 0.475928
-   32 0.369064
-   33 0.27635
-   34 0.199312
-   35 0.137963
-   36 0.0916736
-   37 0.0586222
-   38 0.0362176
-   39 0.0217828
-   40 0.0128783
-   41 0.00757868
-   42 0.00450829
-   43 0.00275872
-   44 0.00176936
-   45 0.00120321
-   46 0.000870439
-   47 0.000666559
-   48 0.000534603
-   49 0.000443986
-   50 0.000378401
-   51 0.00032847
-   52 0.000289043
-   53 0.000256781
-   54 0.000229284
-   55 0.000205233
-   56 0.000183653
-   57 0.000163955
-   58 0.000145693
-   59 0.000270638
- Initialized LumiReWeighting stuff
- - Loop over datasets ... 1 datasets !
-   Dataset 0 name : TTJets / title : t\bar{t}+jets
- - Cross section = 108.152
- - IntLumi = 115363  NormFactor = 8.66831e-06
- - Nb of events : 1023198
-Load Dataset
-DATE STRING   26_2_2014
-Number of events = 1023198
- - Loop over events 
-N ttjets to run over =   380800
-Will run over 761599 events...
-Starting event = = = = 250000
-Processing the 250000th event, time = 0.86 (24%)File changed!!! => iFile = 0
-Processing the 251000th event, time = 3.74 (24%)Processing the 252000th event, time = 6.05 (24%)Processing the 253000th event, time = 8.35 (24%)Processing the 254000th event, time = 11.06 (24%)Processing the 255000th event, time = 13.39 (24%)Processing the 256000th event, time = 16.03 (25%)BTagWeightTools::WARNING retrieving for pT value (861.669) outside range of 20,800 which is fine but tread with caution...
-Processing the 257000th event, time = 18.35 (25%)BTagWeightTools::WARNING retrieving for pT value (857.07) outside range of 20,800 which is fine but tread with caution...
-Processing the 258000th event, time = 20.74 (25%)Processing the 259000th event, time = 23.53 (25%)Processing the 260000th event, time = 25.99 (25%)Processing the 261000th event, time = 28.57 (25%)File changed!!! => iFile = 1
-Processing the 262000th event, time = 31.12 (25%)Processing the 263000th event, time = 33.6 (25%)BTagWeightTools::WARNING retrieving for pT value (831.094) outside range of 20,800 which is fine but tread with caution...
-Processing the 264000th event, time = 36.05 (25%)BTagWeightTools::WARNING retrieving for pT value (809.477) outside range of 20,800 which is fine but tread with caution...
-Processing the 265000th event, time = 39.05 (25%)BTagWeightTools::WARNING retrieving for pT value (800.842) outside range of 20,800 which is fine but tread with caution...
-Processing the 266000th event, time = 41.6 (25%)Processing the 267000th event, time = 43.95 (26%)Processing the 268000th event, time = 46.66 (26%)Processing the 269000th event, time = 49.39 (26%)Processing the 270000th event, time = 52.09 (26%)Processing the 271000th event, time = 54.64 (26%)Processing the 272000th event, time = 57.15 (26%)Processing the 273000th event, time = 59.94 (26%)Processing the 274000th event, time = 62.66 (26%)Processing the 275000th event, time = 65.19 (26%)BTagWeightTools::WARNING retrieving for pT value (847.265) outside range of 20,800 which is fine but tread with caution...
-Processing the 276000th event, time = 67.96 (26%)Processing the 277000th event, time = 70.61 (27%)Processing the 278000th event, time = 73.36 (27%)File changed!!! => iFile = 2
-Processing the 279000th event, time = 76.16 (27%)Processing the 280000th event, time = 78.77 (27%)Processing the 281000th event, time = 81.87 (27%)Processing the 282000th event, time = 84.62 (27%)Processing the 283000th event, time = 87.28 (27%)Processing the 284000th event, time = 90.22 (27%)Processing the 285000th event, time = 92.9 (27%)Processing the 286000th event, time = 95.53 (27%)Processing the 287000th event, time = 98.34 (28%)Processing the 288000th event, time = 100.86 (28%)Processing the 289000th event, time = 103.93 (28%)Processing the 290000th event, time = 106.6 (28%)Processing the 291000th event, time = 109.18 (28%)BTagWeightTools::WARNING retrieving for pT value (840.36) outside range of 20,800 which is fine but tread with caution...
-Processing the 292000th event, time = 112.03 (28%)Processing the 293000th event, time = 114.72 (28%)Processing the 294000th event, time = 117.49 (28%)File changed!!! => iFile = 3
-Processing the 295000th event, time = 120.32 (28%)Processing the 296000th event, time = 122.98 (28%)Processing the 297000th event, time = 125.83 (29%)Processing the 298000th event, time = 128.88 (29%)Processing the 299000th event, time = 131.51 (29%)Processing the 300000th event, time = 134.01 (29%)BTagWeightTools::WARNING retrieving for pT value (893.489) outside range of 20,800 which is fine but tread with caution...
-Processing the 301000th event, time = 136.86 (29%)Processing the 302000th event, time = 139.36 (29%)Processing the 303000th event, time = 142.34 (29%)Processing the 304000th event, time = 144.98 (29%)BTagWeightTools::WARNING retrieving for pT value (880.181) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (859.465) outside range of 20,800 which is fine but tread with caution...
-Processing the 305000th event, time = 147.84 (29%)Processing the 306000th event, time = 150.77 (29%)BTagWeightTools::WARNING retrieving for pT value (846.485) outside range of 20,800 which is fine but tread with caution...
-Processing the 307000th event, time = 153.44 (30%)Processing the 308000th event, time = 156.38 (30%)Processing the 309000th event, time = 159.48 (30%)Processing the 310000th event, time = 162.22 (30%)Processing the 311000th event, time = 164.87 (30%)File changed!!! => iFile = 4
-Processing the 312000th event, time = 167.78 (30%)BTagWeightTools::WARNING retrieving for pT value (825.53) outside range of 20,800 which is fine but tread with caution...
-Processing the 313000th event, time = 170.67 (30%)Processing the 314000th event, time = 173.73 (30%)Processing the 315000th event, time = 176.45 (30%)Processing the 316000th event, time = 179.48 (30%)Processing the 317000th event, time = 182.29 (30%)Processing the 318000th event, time = 184.9 (31%)Processing the 319000th event, time = 187.54 (31%)Processing the 320000th event, time = 190.54 (31%)Processing the 321000th event, time = 193.25 (31%)Processing the 322000th event, time = 196.08 (31%)Processing the 323000th event, time = 198.88 (31%)BTagWeightTools::WARNING retrieving for pT value (815.918) outside range of 20,800 which is fine but tread with caution...
-Processing the 324000th event, time = 201.5 (31%)Processing the 325000th event, time = 204.46 (31%)Processing the 326000th event, time = 207.16 (31%)BTagWeightTools::WARNING retrieving for pT value (1130.55) outside range of 20,800 which is fine but tread with caution...
-File changed!!! => iFile = 5
-BTagWeightTools::WARNING retrieving for pT value (849.469) outside range of 20,800 which is fine but tread with caution...
-Processing the 327000th event, time = 209.94 (31%)Processing the 328000th event, time = 212.71 (32%)Processing the 329000th event, time = 215.46 (32%)Processing the 330000th event, time = 218.46 (32%)Processing the 331000th event, time = 221.21 (32%)Processing the 332000th event, time = 223.9 (32%)Processing the 333000th event, time = 226.82 (32%)Processing the 334000th event, time = 229.59 (32%)Processing the 335000th event, time = 232.58 (32%)Processing the 336000th event, time = 235.33 (32%)BTagWeightTools::WARNING retrieving for pT value (967.524) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (992.287) outside range of 20,800 which is fine but tread with caution...
-Processing the 337000th event, time = 237.83 (32%)BTagWeightTools::WARNING retrieving for pT value (896.352) outside range of 20,800 which is fine but tread with caution...
-Processing the 338000th event, time = 240.83 (33%)BTagWeightTools::WARNING retrieving for pT value (824.193) outside range of 20,800 which is fine but tread with caution...
-Processing the 339000th event, time = 243.52 (33%)Processing the 340000th event, time = 246.08 (33%)Processing the 341000th event, time = 249.04 (33%)Processing the 342000th event, time = 251.8 (33%)File changed!!! => iFile = 6
-Processing the 343000th event, time = 254.51 (33%)Processing the 344000th event, time = 257.43 (33%)Processing the 345000th event, time = 260.34 (33%)Processing the 346000th event, time = 263.3 (33%)Processing the 347000th event, time = 266 (33%)Processing the 348000th event, time = 268.69 (34%)Processing the 349000th event, time = 271.6 (34%)Processing the 350000th event, time = 274.2 (34%)Processing the 351000th event, time = 276.94 (34%)BTagWeightTools::WARNING retrieving for pT value (1073.02) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (851.905) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (1051.41) outside range of 20,800 which is fine but tread with caution...
-Processing the 352000th event, time = 279.72 (34%)BTagWeightTools::WARNING retrieving for pT value (997.618) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (956.888) outside range of 20,800 which is fine but tread with caution...
-Processing the 353000th event, time = 282.39 (34%)BTagWeightTools::WARNING retrieving for pT value (800.884) outside range of 20,800 which is fine but tread with caution...
-Processing the 354000th event, time = 285.33 (34%)Processing the 355000th event, time = 288.22 (34%)BTagWeightTools::WARNING retrieving for pT value (847.04) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (819.136) outside range of 20,800 which is fine but tread with caution...
-Processing the 356000th event, time = 290.96 (34%)Processing the 357000th event, time = 294.05 (34%)Processing the 358000th event, time = 296.79 (34%)File changed!!! => iFile = 7
-Processing the 359000th event, time = 299.63 (35%)Processing the 360000th event, time = 302.44 (35%)Processing the 361000th event, time = 305.36 (35%)Processing the 362000th event, time = 308.4 (35%)Processing the 363000th event, time = 311.33 (35%)Processing the 364000th event, time = 313.83 (35%)Processing the 365000th event, time = 316.72 (35%)Processing the 366000th event, time = 319.44 (35%)Processing the 367000th event, time = 322.49 (35%)Processing the 368000th event, time = 325.39 (35%)BTagWeightTools::WARNING retrieving for pT value (827.201) outside range of 20,800 which is fine but tread with caution...
-Processing the 369000th event, time = 328.1 (36%)Processing the 370000th event, time = 331.12 (36%)Processing the 371000th event, time = 333.76 (36%)Processing the 372000th event, time = 336.6 (36%)Processing the 373000th event, time = 339.44 (36%)Processing the 374000th event, time = 342.11 (36%)Processing the 375000th event, time = 344.89 (36%)File changed!!! => iFile = 8
-Processing the 376000th event, time = 347.76 (36%)Processing the 377000th event, time = 350.66 (36%)BTagWeightTools::WARNING retrieving for pT value (833.661) outside range of 20,800 which is fine but tread with caution...
-Processing the 378000th event, time = 353.72 (36%)Processing the 379000th event, time = 356.59 (37%)Processing the 380000th event, time = 359.34 (37%)Processing the 381000th event, time = 362.26 (37%)Processing the 382000th event, time = 365.04 (37%)Processing the 383000th event, time = 367.81 (37%)BTagWeightTools::WARNING retrieving for pT value (1172.12) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (857.28) outside range of 20,800 which is fine but tread with caution...
-Processing the 384000th event, time = 370.75 (37%)Processing the 385000th event, time = 373.48 (37%)Processing the 386000th event, time = 376.18 (37%)BTagWeightTools::WARNING retrieving for pT value (844.316) outside range of 20,800 which is fine but tread with caution...
-Processing the 387000th event, time = 379.18 (37%)Processing the 388000th event, time = 381.89 (37%)Processing the 389000th event, time = 384.9 (38%)Processing the 390000th event, time = 387.54 (38%)Processing the 391000th event, time = 390.38 (38%)File changed!!! => iFile = 9
-Processing the 392000th event, time = 393.25 (38%)Processing the 393000th event, time = 396.02 (38%)Processing the 394000th event, time = 399 (38%)Processing the 395000th event, time = 402.15 (38%)Processing the 396000th event, time = 405.06 (38%)BTagWeightTools::WARNING retrieving for pT value (994.44) outside range of 20,800 which is fine but tread with caution...
-Processing the 397000th event, time = 407.86 (38%)Processing the 398000th event, time = 410.79 (38%)Processing the 399000th event, time = 413.36 (38%)Processing the 400000th event, time = 416.16 (39%)Processing the 401000th event, time = 418.95 (39%)Processing the 402000th event, time = 421.78 (39%)Processing the 403000th event, time = 424.72 (39%)Processing the 404000th event, time = 427.66 (39%)BTagWeightTools::WARNING retrieving for pT value (807.072) outside range of 20,800 which is fine but tread with caution...
-Processing the 405000th event, time = 430.34 (39%)Processing the 406000th event, time = 433.25 (39%)Processing the 407000th event, time = 436.14 (39%)BTagWeightTools::WARNING retrieving for pT value (943.702) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (895.022) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (841.706) outside range of 20,800 which is fine but tread with caution...
-Processing the 408000th event, time = 439.01 (39%)File changed!!! => iFile = 10
-Processing the 409000th event, time = 441.79 (39%)BTagWeightTools::WARNING retrieving for pT value (855.269) outside range of 20,800 which is fine but tread with caution...
-Processing the 410000th event, time = 444.73 (40%)BTagWeightTools::WARNING retrieving for pT value (822.978) outside range of 20,800 which is fine but tread with caution...
-Processing the 411000th event, time = 447.74 (40%)BTagWeightTools::WARNING retrieving for pT value (809.192) outside range of 20,800 which is fine but tread with caution...
-Processing the 412000th event, time = 450.64 (40%)BTagWeightTools::WARNING retrieving for pT value (865.111) outside range of 20,800 which is fine but tread with caution...
-Processing the 413000th event, time = 453.4 (40%)Processing the 414000th event, time = 456.35 (40%)Processing the 415000th event, time = 459.12 (40%)Processing the 416000th event, time = 461.77 (40%)Processing the 417000th event, time = 464.63 (40%)Processing the 418000th event, time = 467.35 (40%)Processing the 419000th event, time = 470.19 (40%)BTagWeightTools::WARNING retrieving for pT value (866.312) outside range of 20,800 which is fine but tread with caution...
-Processing the 420000th event, time = 473.07 (41%)Processing the 421000th event, time = 475.88 (41%)BTagWeightTools::WARNING retrieving for pT value (838.244) outside range of 20,800 which is fine but tread with caution...
-Processing the 422000th event, time = 478.78 (41%)Processing the 423000th event, time = 481.5 (41%)Processing the 424000th event, time = 484.27 (41%)File changed!!! => iFile = 11
-Processing the 425000th event, time = 487.2 (41%)BTagWeightTools::WARNING retrieving for pT value (852.891) outside range of 20,800 which is fine but tread with caution...
-Processing the 426000th event, time = 489.93 (41%)Processing the 427000th event, time = 492.88 (41%)Processing the 428000th event, time = 495.89 (41%)Processing the 429000th event, time = 498.56 (41%)BTagWeightTools::WARNING retrieving for pT value (874.018) outside range of 20,800 which is fine but tread with caution...
-Processing the 430000th event, time = 501.26 (42%)BTagWeightTools::WARNING retrieving for pT value (813.435) outside range of 20,800 which is fine but tread with caution...
-Processing the 431000th event, time = 504.26 (42%)Processing the 432000th event, time = 506.95 (42%)Processing the 433000th event, time = 509.8 (42%)Processing the 434000th event, time = 512.79 (42%)Processing the 435000th event, time = 515.58 (42%)Processing the 436000th event, time = 518.6 (42%)Processing the 437000th event, time = 521.52 (42%)Processing the 438000th event, time = 524.33 (42%)Processing the 439000th event, time = 527.14 (42%)Processing the 440000th event, time = 529.98 (43%)Processing the 441000th event, time = 532.76 (43%)File changed!!! => iFile = 12
-BTagWeightTools::WARNING retrieving for pT value (931.205) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (878.936) outside range of 20,800 which is fine but tread with caution...
-Processing the 442000th event, time = 535.71 (43%)BTagWeightTools::WARNING retrieving for pT value (1009.85) outside range of 20,800 which is fine but tread with caution...
-Processing the 443000th event, time = 538.6 (43%)Processing the 444000th event, time = 541.51 (43%)BTagWeightTools::WARNING retrieving for pT value (825.886) outside range of 20,800 which is fine but tread with caution...
-Processing the 445000th event, time = 544.35 (43%)BTagWeightTools::WARNING retrieving for pT value (1109.12) outside range of 20,800 which is fine but tread with caution...
-Processing the 446000th event, time = 546.98 (43%)Processing the 447000th event, time = 550.06 (43%)Processing the 448000th event, time = 552.88 (43%)Processing the 449000th event, time = 555.71 (43%)Processing the 450000th event, time = 558.62 (43%)BTagWeightTools::WARNING retrieving for pT value (802.939) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (1053.47) outside range of 20,800 which is fine but tread with caution...
-Processing the 451000th event, time = 561.43 (44%)Processing the 452000th event, time = 564.19 (44%)Processing the 453000th event, time = 567.32 (44%)Processing the 454000th event, time = 570.14 (44%)Processing the 455000th event, time = 573.19 (44%)BTagWeightTools::WARNING retrieving for pT value (884.896) outside range of 20,800 which is fine but tread with caution...
-Processing the 456000th event, time = 575.88 (44%)Processing the 457000th event, time = 578.75 (44%)Processing the 458000th event, time = 581.57 (44%)File changed!!! => iFile = 13
-Processing the 459000th event, time = 584.4 (44%)Processing the 460000th event, time = 587.26 (44%)Processing the 461000th event, time = 590.26 (45%)BTagWeightTools::WARNING retrieving for pT value (1010.73) outside range of 20,800 which is fine but tread with caution...
-Processing the 462000th event, time = 593.02 (45%)Processing the 463000th event, time = 595.86 (45%)Processing the 464000th event, time = 598.78 (45%)Processing the 465000th event, time = 601.66 (45%)Processing the 466000th event, time = 604.4 (45%)Processing the 467000th event, time = 607.47 (45%)Processing the 468000th event, time = 610.17 (45%)BTagWeightTools::WARNING retrieving for pT value (803.739) outside range of 20,800 which is fine but tread with caution...
-Processing the 469000th event, time = 613.14 (45%)Processing the 470000th event, time = 615.99 (45%)Processing the 471000th event, time = 618.76 (46%)Processing the 472000th event, time = 621.78 (46%)Processing the 473000th event, time = 624.73 (46%)Processing the 474000th event, time = 627.53 (46%)File changed!!! => iFile = 14
-Processing the 475000th event, time = 630.26 (46%)Processing the 476000th event, time = 633.11 (46%)Processing the 477000th event, time = 636.22 (46%)Processing the 478000th event, time = 639.24 (46%)Processing the 479000th event, time = 642.1 (46%)Processing the 480000th event, time = 644.82 (46%)Processing the 481000th event, time = 647.8 (47%)Processing the 482000th event, time = 650.62 (47%)BTagWeightTools::WARNING retrieving for pT value (837.291) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (801.971) outside range of 20,800 which is fine but tread with caution...
-Processing the 483000th event, time = 653.59 (47%)BTagWeightTools::WARNING retrieving for pT value (811.761) outside range of 20,800 which is fine but tread with caution...
-Processing the 484000th event, time = 656.49 (47%)Processing the 485000th event, time = 659.32 (47%)BTagWeightTools::WARNING retrieving for pT value (928.999) outside range of 20,800 which is fine but tread with caution...
-Processing the 486000th event, time = 662.28 (47%)Processing the 487000th event, time = 665.17 (47%)BTagWeightTools::WARNING retrieving for pT value (870.625) outside range of 20,800 which is fine but tread with caution...
-Processing the 488000th event, time = 667.94 (47%)BTagWeightTools::WARNING retrieving for pT value (848.386) outside range of 20,800 which is fine but tread with caution...
-Processing the 489000th event, time = 670.81 (47%)Processing the 490000th event, time = 673.62 (47%)File changed!!! => iFile = 15
-Processing the 491000th event, time = 676.54 (47%)BTagWeightTools::WARNING retrieving for pT value (1142.5) outside range of 20,800 which is fine but tread with caution...
-Processing the 492000th event, time = 679.33 (48%)Processing the 493000th event, time = 682.29 (48%)Processing the 494000th event, time = 685.19 (48%)Processing the 495000th event, time = 687.88 (48%)Processing the 496000th event, time = 691.06 (48%)BTagWeightTools::WARNING retrieving for pT value (878.538) outside range of 20,800 which is fine but tread with caution...
-Processing the 497000th event, time = 693.75 (48%)Processing the 498000th event, time = 696.36 (48%)Processing the 499000th event, time = 699.44 (48%)Processing the 500000th event, time = 702.2 (48%)Processing the 501000th event, time = 705.03 (48%)Processing the 502000th event, time = 708 (49%)BTagWeightTools::WARNING retrieving for pT value (908.76) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (964.12) outside range of 20,800 which is fine but tread with caution...
-Processing the 503000th event, time = 710.97 (49%)Processing the 504000th event, time = 713.66 (49%)Processing the 505000th event, time = 716.69 (49%)BTagWeightTools::WARNING retrieving for pT value (811.73) outside range of 20,800 which is fine but tread with caution...
-Processing the 506000th event, time = 719.51 (49%)File changed!!! => iFile = 16
-Processing the 507000th event, time = 722.4 (49%)Processing the 508000th event, time = 725.37 (49%)BTagWeightTools::WARNING retrieving for pT value (820.49) outside range of 20,800 which is fine but tread with caution...
-Processing the 509000th event, time = 728.26 (49%)Processing the 510000th event, time = 731.49 (49%)Processing the 511000th event, time = 734.34 (49%)Processing the 512000th event, time = 737.19 (50%)Processing the 513000th event, time = 740.17 (50%)Processing the 514000th event, time = 742.87 (50%)Processing the 515000th event, time = 745.85 (50%)Processing the 516000th event, time = 748.63 (50%)Processing the 517000th event, time = 751.38 (50%)Processing the 518000th event, time = 754.48 (50%)BTagWeightTools::WARNING retrieving for pT value (1229.86) outside range of 20,800 which is fine but tread with caution...
-Processing the 519000th event, time = 757.29 (50%)BTagWeightTools::WARNING retrieving for pT value (823.627) outside range of 20,800 which is fine but tread with caution...
-Processing the 520000th event, time = 760.08 (50%)Processing the 521000th event, time = 762.82 (50%)Processing the 522000th event, time = 765.52 (51%)Processing the 523000th event, time = 768.33 (51%)File changed!!! => iFile = 17
-BTagWeightTools::WARNING retrieving for pT value (1072.51) outside range of 20,800 which is fine but tread with caution...
-Processing the 524000th event, time = 771.16 (51%)Processing the 525000th event, time = 774.09 (51%)Processing the 526000th event, time = 777.29 (51%)Processing the 527000th event, time = 780.08 (51%)Processing the 528000th event, time = 782.93 (51%)Processing the 529000th event, time = 785.99 (51%)Processing the 530000th event, time = 788.62 (51%)Processing the 531000th event, time = 791.34 (51%)Processing the 532000th event, time = 794.47 (51%)Processing the 533000th event, time = 797.26 (52%)Processing the 534000th event, time = 800.05 (52%)BTagWeightTools::WARNING retrieving for pT value (946.088) outside range of 20,800 which is fine but tread with caution...
-Processing the 535000th event, time = 803.2 (52%)Processing the 536000th event, time = 805.98 (52%)Processing the 537000th event, time = 808.97 (52%)Processing the 538000th event, time = 811.93 (52%)Processing the 539000th event, time = 814.73 (52%)File changed!!! => iFile = 18
-Processing the 540000th event, time = 817.48 (52%)Processing the 541000th event, time = 820.37 (52%)BTagWeightTools::WARNING retrieving for pT value (818.44) outside range of 20,800 which is fine but tread with caution...
-Processing the 542000th event, time = 823.17 (52%)Processing the 543000th event, time = 826.25 (53%)Processing the 544000th event, time = 829.11 (53%)Processing the 545000th event, time = 832.09 (53%)Processing the 546000th event, time = 834.85 (53%)Processing the 547000th event, time = 837.64 (53%)BTagWeightTools::WARNING retrieving for pT value (946.081) outside range of 20,800 which is fine but tread with caution...
-Processing the 548000th event, time = 840.73 (53%)Processing the 549000th event, time = 843.59 (53%)BTagWeightTools::WARNING retrieving for pT value (864.155) outside range of 20,800 which is fine but tread with caution...
-Processing the 550000th event, time = 846.48 (53%)Processing the 551000th event, time = 849.43 (53%)Processing the 552000th event, time = 852.11 (53%)Processing the 553000th event, time = 854.92 (54%)Processing the 554000th event, time = 857.59 (54%)Processing the 555000th event, time = 860.45 (54%)BTagWeightTools::WARNING retrieving for pT value (868.62) outside range of 20,800 which is fine but tread with caution...
-Processing the 556000th event, time = 863.39 (54%)File changed!!! => iFile = 19
-Processing the 557000th event, time = 866.35 (54%)Processing the 558000th event, time = 869.1 (54%)Processing the 559000th event, time = 872.11 (54%)BTagWeightTools::WARNING retrieving for pT value (886.465) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (1300.79) outside range of 20,800 which is fine but tread with caution...
-Processing the 560000th event, time = 874.8 (54%)Processing the 561000th event, time = 877.58 (54%)Processing the 562000th event, time = 880.62 (54%)Processing the 563000th event, time = 883.42 (55%)Processing the 564000th event, time = 886.2 (55%)BTagWeightTools::WARNING retrieving for pT value (1200.49) outside range of 20,800 which is fine but tread with caution...
-Processing the 565000th event, time = 889.06 (55%)Processing the 566000th event, time = 891.97 (55%)BTagWeightTools::WARNING retrieving for pT value (887.533) outside range of 20,800 which is fine but tread with caution...
-Processing the 567000th event, time = 894.78 (55%)Processing the 568000th event, time = 897.53 (55%)Processing the 569000th event, time = 900.38 (55%)BTagWeightTools::WARNING retrieving for pT value (921.54) outside range of 20,800 which is fine but tread with caution...
-Processing the 570000th event, time = 903.4 (55%)BTagWeightTools::WARNING retrieving for pT value (829.425) outside range of 20,800 which is fine but tread with caution...
-Processing the 571000th event, time = 906.14 (55%)Processing the 572000th event, time = 908.89 (55%)File changed!!! => iFile = 20
-Processing the 573000th event, time = 911.78 (56%)Processing the 574000th event, time = 914.56 (56%)Processing the 575000th event, time = 917.41 (56%)Processing the 576000th event, time = 920.64 (56%)Processing the 577000th event, time = 923.39 (56%)Processing the 578000th event, time = 926.2 (56%)Processing the 579000th event, time = 929.2 (56%)Processing the 580000th event, time = 932.14 (56%)Processing the 581000th event, time = 934.95 (56%)Processing the 582000th event, time = 937.78 (56%)Processing the 583000th event, time = 940.54 (56%)Processing the 584000th event, time = 943.53 (57%)BTagWeightTools::WARNING retrieving for pT value (881.313) outside range of 20,800 which is fine but tread with caution...
-Processing the 585000th event, time = 946.26 (57%)Processing the 586000th event, time = 949 (57%)Processing the 587000th event, time = 952.07 (57%)Processing the 588000th event, time = 954.88 (57%)File changed!!! => iFile = 21
-BTagWeightTools::WARNING retrieving for pT value (933.274) outside range of 20,800 which is fine but tread with caution...
-Processing the 589000th event, time = 957.73 (57%)Processing the 590000th event, time = 960.45 (57%)Processing the 591000th event, time = 963.25 (57%)Processing the 592000th event, time = 966.13 (57%)Processing the 593000th event, time = 968.88 (57%)Processing the 594000th event, time = 971.71 (58%)BTagWeightTools::WARNING retrieving for pT value (886.144) outside range of 20,800 which is fine but tread with caution...
-Processing the 595000th event, time = 974.77 (58%)Processing the 596000th event, time = 977.63 (58%)Processing the 597000th event, time = 980.73 (58%)Processing the 598000th event, time = 983.5 (58%)Processing the 599000th event, time = 986.44 (58%)Processing the 600000th event, time = 989.28 (58%)Processing the 601000th event, time = 992.13 (58%)Processing the 602000th event, time = 995.05 (58%)BTagWeightTools::WARNING retrieving for pT value (928.293) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (825.375) outside range of 20,800 which is fine but tread with caution...
-Processing the 603000th event, time = 998.01 (58%)Processing the 604000th event, time = 1000.89 (59%)File changed!!! => iFile = 22
-Processing the 605000th event, time = 1003.74 (59%)BTagWeightTools::WARNING retrieving for pT value (1099.34) outside range of 20,800 which is fine but tread with caution...
-Processing the 606000th event, time = 1006.59 (59%)Processing the 607000th event, time = 1009.48 (59%)BTagWeightTools::WARNING retrieving for pT value (1164.77) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (1048.04) outside range of 20,800 which is fine but tread with caution...
-Processing the 608000th event, time = 1012.51 (59%)Processing the 609000th event, time = 1015.2 (59%)Processing the 610000th event, time = 1018.25 (59%)Processing the 611000th event, time = 1021.02 (59%)BTagWeightTools::WARNING retrieving for pT value (831.744) outside range of 20,800 which is fine but tread with caution...
-Processing the 612000th event, time = 1023.83 (59%)Processing the 613000th event, time = 1026.79 (59%)Processing the 614000th event, time = 1029.75 (60%)Processing the 615000th event, time = 1032.51 (60%)Processing the 616000th event, time = 1035.54 (60%)Processing the 617000th event, time = 1038.32 (60%)BTagWeightTools::WARNING retrieving for pT value (964.137) outside range of 20,800 which is fine but tread with caution...
-Processing the 618000th event, time = 1041.05 (60%)BTagWeightTools::WARNING retrieving for pT value (975.533) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (805.638) outside range of 20,800 which is fine but tread with caution...
-Processing the 619000th event, time = 1044.27 (60%)BTagWeightTools::WARNING retrieving for pT value (1025.12) outside range of 20,800 which is fine but tread with caution...
-Processing the 620000th event, time = 1046.91 (60%)File changed!!! => iFile = 23
-BTagWeightTools::WARNING retrieving for pT value (824.86) outside range of 20,800 which is fine but tread with caution...
-Processing the 621000th event, time = 1049.81 (60%)BTagWeightTools::WARNING retrieving for pT value (825.048) outside range of 20,800 which is fine but tread with caution...
-Processing the 622000th event, time = 1052.89 (60%)Processing the 623000th event, time = 1056.05 (60%)Processing the 624000th event, time = 1058.75 (60%)Processing the 625000th event, time = 1061.65 (61%)BTagWeightTools::WARNING retrieving for pT value (872.489) outside range of 20,800 which is fine but tread with caution...
-Processing the 626000th event, time = 1064.81 (61%)Processing the 627000th event, time = 1067.42 (61%)Processing the 628000th event, time = 1070.18 (61%)Processing the 629000th event, time = 1073.16 (61%)Processing the 630000th event, time = 1076.17 (61%)Processing the 631000th event, time = 1079.05 (61%)Processing the 632000th event, time = 1081.92 (61%)BTagWeightTools::WARNING retrieving for pT value (1213.97) outside range of 20,800 which is fine but tread with caution...
-Processing the 633000th event, time = 1084.7 (61%)Processing the 634000th event, time = 1087.64 (61%)BTagWeightTools::WARNING retrieving for pT value (878.686) outside range of 20,800 which is fine but tread with caution...
-Processing the 635000th event, time = 1090.3 (62%)Processing the 636000th event, time = 1093.01 (62%)File changed!!! => iFile = 24
-BTagWeightTools::WARNING retrieving for pT value (985.344) outside range of 20,800 which is fine but tread with caution...
-Processing the 637000th event, time = 1095.83 (62%)Processing the 638000th event, time = 1098.78 (62%)Processing the 639000th event, time = 1101.57 (62%)Processing the 640000th event, time = 1104.65 (62%)Processing the 641000th event, time = 1107.49 (62%)Processing the 642000th event, time = 1110.31 (62%)BTagWeightTools::WARNING retrieving for pT value (803.049) outside range of 20,800 which is fine but tread with caution...
-Processing the 643000th event, time = 1113.32 (62%)Processing the 644000th event, time = 1116.23 (62%)Processing the 645000th event, time = 1119.2 (63%)Processing the 646000th event, time = 1122.01 (63%)Processing the 647000th event, time = 1124.81 (63%)Processing the 648000th event, time = 1127.78 (63%)Processing the 649000th event, time = 1130.6 (63%)Processing the 650000th event, time = 1133.37 (63%)Processing the 651000th event, time = 1136.32 (63%)BTagWeightTools::WARNING retrieving for pT value (1051.63) outside range of 20,800 which is fine but tread with caution...
-Processing the 652000th event, time = 1139.06 (63%)Processing the 653000th event, time = 1141.8 (63%)File changed!!! => iFile = 25
-Processing the 654000th event, time = 1144.77 (63%)Processing the 655000th event, time = 1147.66 (64%)Processing the 656000th event, time = 1150.78 (64%)Processing the 657000th event, time = 1153.68 (64%)Processing the 658000th event, time = 1156.49 (64%)Processing the 659000th event, time = 1159.49 (64%)Processing the 660000th event, time = 1162.37 (64%)BTagWeightTools::WARNING retrieving for pT value (903.886) outside range of 20,800 which is fine but tread with caution...
-Processing the 661000th event, time = 1165.09 (64%)Processing the 662000th event, time = 1168.13 (64%)Processing the 663000th event, time = 1171.11 (64%)Processing the 664000th event, time = 1173.96 (64%)Processing the 665000th event, time = 1176.85 (64%)Processing the 666000th event, time = 1179.7 (65%)Processing the 667000th event, time = 1182.61 (65%)Processing the 668000th event, time = 1185.42 (65%)Processing the 669000th event, time = 1188.4 (65%)File changed!!! => iFile = 26
-Processing the 670000th event, time = 1191.36 (65%)BTagWeightTools::WARNING retrieving for pT value (969.484) outside range of 20,800 which is fine but tread with caution...
-Processing the 671000th event, time = 1194.32 (65%)Processing the 672000th event, time = 1197.28 (65%)Processing the 673000th event, time = 1200.33 (65%)Processing the 674000th event, time = 1203 (65%)Processing the 675000th event, time = 1206.03 (65%)Processing the 676000th event, time = 1209 (66%)Processing the 677000th event, time = 1211.78 (66%)BTagWeightTools::WARNING retrieving for pT value (861.497) outside range of 20,800 which is fine but tread with caution...
-Processing the 678000th event, time = 1214.7 (66%)BTagWeightTools::WARNING retrieving for pT value (941.257) outside range of 20,800 which is fine but tread with caution...
-Processing the 679000th event, time = 1217.56 (66%)Processing the 680000th event, time = 1220.37 (66%)Processing the 681000th event, time = 1223.31 (66%)Processing the 682000th event, time = 1226.21 (66%)BTagWeightTools::WARNING retrieving for pT value (800.807) outside range of 20,800 which is fine but tread with caution...
-Processing the 683000th event, time = 1229.14 (66%)Processing the 684000th event, time = 1231.84 (66%)Processing the 685000th event, time = 1234.52 (66%)Processing the 686000th event, time = 1237.57 (67%)File changed!!! => iFile = 27
-Processing the 687000th event, time = 1240.34 (67%)Processing the 688000th event, time = 1243.27 (67%)Processing the 689000th event, time = 1246.25 (67%)Processing the 690000th event, time = 1249.07 (67%)Processing the 691000th event, time = 1252 (67%)Processing the 692000th event, time = 1254.87 (67%)Processing the 693000th event, time = 1257.55 (67%)BTagWeightTools::WARNING retrieving for pT value (825.62) outside range of 20,800 which is fine but tread with caution...
-Processing the 694000th event, time = 1260.41 (67%)BTagWeightTools::WARNING retrieving for pT value (858.654) outside range of 20,800 which is fine but tread with caution...
-Processing the 695000th event, time = 1263.58 (67%)Processing the 696000th event, time = 1266.39 (68%)Processing the 697000th event, time = 1269.34 (68%)Processing the 698000th event, time = 1272.27 (68%)BTagWeightTools::WARNING retrieving for pT value (1113.86) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (871.689) outside range of 20,800 which is fine but tread with caution...
-Processing the 699000th event, time = 1275.16 (68%)Processing the 700000th event, time = 1278.19 (68%)Processing the 701000th event, time = 1281.11 (68%)Processing the 702000th event, time = 1284.1 (68%)File changed!!! => iFile = 28
-Processing the 703000th event, time = 1287.07 (68%)Processing the 704000th event, time = 1289.96 (68%)BTagWeightTools::WARNING retrieving for pT value (932.606) outside range of 20,800 which is fine but tread with caution...
-Processing the 705000th event, time = 1293.01 (68%)Processing the 706000th event, time = 1295.85 (68%)Processing the 707000th event, time = 1298.67 (69%)Processing the 708000th event, time = 1301.72 (69%)Processing the 709000th event, time = 1304.47 (69%)Processing the 710000th event, time = 1307.31 (69%)BTagWeightTools::WARNING retrieving for pT value (851.281) outside range of 20,800 which is fine but tread with caution...
-Processing the 711000th event, time = 1310.29 (69%)Processing the 712000th event, time = 1313.18 (69%)Processing the 713000th event, time = 1316.2 (69%)Processing the 714000th event, time = 1319.09 (69%)Processing the 715000th event, time = 1321.89 (69%)Processing the 716000th event, time = 1324.95 (69%)Processing the 717000th event, time = 1327.84 (70%)Processing the 718000th event, time = 1330.64 (70%)File changed!!! => iFile = 29
-Processing the 719000th event, time = 1333.47 (70%)Processing the 720000th event, time = 1336.28 (70%)Processing the 721000th event, time = 1339.11 (70%)BTagWeightTools::WARNING retrieving for pT value (872.591) outside range of 20,800 which is fine but tread with caution...
-Processing the 722000th event, time = 1342.2 (70%)Processing the 723000th event, time = 1345.18 (70%)Processing the 724000th event, time = 1348.04 (70%)Processing the 725000th event, time = 1351.18 (70%)Processing the 726000th event, time = 1354.03 (70%)Processing the 727000th event, time = 1356.99 (71%)Processing the 728000th event, time = 1359.85 (71%)Processing the 729000th event, time = 1362.49 (71%)Processing the 730000th event, time = 1365.41 (71%)Processing the 731000th event, time = 1368.15 (71%)Processing the 732000th event, time = 1371 (71%)BTagWeightTools::WARNING retrieving for pT value (896.094) outside range of 20,800 which is fine but tread with caution...
-Processing the 733000th event, time = 1374.11 (71%)Processing the 734000th event, time = 1376.89 (71%)Processing the 735000th event, time = 1379.7 (71%)File changed!!! => iFile = 30
-Processing the 736000th event, time = 1382.41 (71%)Processing the 737000th event, time = 1385.24 (72%)Processing the 738000th event, time = 1388.25 (72%)Processing the 739000th event, time = 1391.13 (72%)Processing the 740000th event, time = 1393.98 (72%)Processing the 741000th event, time = 1397 (72%)Processing the 742000th event, time = 1399.82 (72%)Processing the 743000th event, time = 1402.57 (72%)Processing the 744000th event, time = 1405.7 (72%)Processing the 745000th event, time = 1408.33 (72%)Processing the 746000th event, time = 1411.04 (72%)BTagWeightTools::WARNING retrieving for pT value (822.709) outside range of 20,800 which is fine but tread with caution...
-Processing the 747000th event, time = 1413.94 (73%)Processing the 748000th event, time = 1416.85 (73%)Processing the 749000th event, time = 1419.73 (73%)Processing the 750000th event, time = 1422.6 (73%)Processing the 751000th event, time = 1425.44 (73%)File changed!!! => iFile = 31
-Processing the 752000th event, time = 1428.49 (73%)Processing the 753000th event, time = 1431.36 (73%)BTagWeightTools::WARNING retrieving for pT value (844.721) outside range of 20,800 which is fine but tread with caution...
-BTagWeightTools::WARNING retrieving for pT value (874.735) outside range of 20,800 which is fine but tread with caution...
-Processing the 754000th event, time = 1434.55 (73%)BTagWeightTools::WARNING retrieving for pT value (837.371) outside range of 20,800 which is fine but tread with caution...
-Processing the 755000th event, time = 1437.32 (73%)Processing the 756000th event, time = 1440.21 (73%)Processing the 757000th event, time = 1443.15 (73%)Processing the 758000th event, time = 1446.07 (74%)Processing the 759000th event, time = 1448.87 (74%)Processing the 760000th event, time = 1451.87 (74%)Processing the 761000th event, time = 1454.7 (74%)n events passed  =  31353
-Efficiency of MVA jet selection = = nan
- We ran over all the data ;-)
- - Writing outputs to the files ...
- after cd ..
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/4thJetPt_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/4thJetPt_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/4thJetPt_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/4thJetPt_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/4thJetPt_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/5thJetPt_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/5thJetPt_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/5thJetPt_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/5thJetPt_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/5thJetPt_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/6thJetPt_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/6thJetPt_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/6thJetPt_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/6thJetPt_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/6thJetPt_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/7thJetPt_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/7thJetPt_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/7thJetPt_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/7thJetPt_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/7thJetPt_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/BdiscBJetCand_CSV_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/BdiscBJetCand_CSV_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/BdiscBJetCand_CSV_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/BdiscBJetCand_CSV_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/BdiscBJetCand_CSV_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_Matched_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_Matched_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_Matched_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-12.500001, y1=0.000000, x2=112.500001, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=100.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_Matched_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_Matched_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_UnMatched_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_UnMatched_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_UnMatched_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-12.500001, y1=0.000000, x2=112.500001, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=100.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_UnMatched_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Chi2_UnMatched_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/DiMuon_InvMass_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/DiMuon_InvMass_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/DiMuon_InvMass_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-15.000001, y1=0.000000, x2=135.000001, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=120.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/DiMuon_InvMass_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/DiMuon_InvMass_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/H_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/H_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/H_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/H_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/H_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTH_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTH_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTH_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTH_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTH_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTRat_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTRat_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTRat_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTRat_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTRat_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTX_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTX_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTX_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTX_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTX_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HT_SelectedJets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HT_SelectedJets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HT_SelectedJets_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HT_SelectedJets_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HT_SelectedJets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTb_SelectedJets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTb_SelectedJets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTb_SelectedJets_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTb_SelectedJets_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HTb_SelectedJets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HX_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HX_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HX_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-187.500014, y1=0.000000, x2=1687.500014, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=1500.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HX_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/HX_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetEta_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetEta_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetEta_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetEta_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetEta_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetPhi_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetPhi_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetPhi_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetPhi_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/JetPhi_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MET_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MET_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MET_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MET_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MET_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThBh_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThBh_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThBh_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThBh_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThBh_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThWh_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThWh_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThWh_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThWh_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1AnThWh_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1BTag_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1BTag_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1BTag_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1BTag_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1BTag_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1DiJetMass_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1DiJetMass_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1DiJetMass_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1DiJetMass_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1DiJetMass_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1PtRat_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1PtRat_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1PtRat_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1PtRat_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1PtRat_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJet_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJet_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJet_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJet_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJet_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMass_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMass_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMass_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMass_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMass_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMassMatched_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMassMatched_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMassMatched_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-62.500005, y1=0.000000, x2=562.500005, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=500.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMassMatched_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA1TriJetMassMatched_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2Tags_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2Tags_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2Tags_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2Tags_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2Tags_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2TriJetMass_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2TriJetMass_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2TriJetMass_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-62.500005, y1=0.000000, x2=562.500005, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=500.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2TriJetMass_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2TriJetMass_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2ndPassTriJetMass_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2ndPassTriJetMass_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2ndPassTriJetMass_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-125.000009, y1=0.000000, x2=1125.000009, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=1000.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2ndPassTriJetMass_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA2ndPassTriJetMass_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA3Tags_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA3Tags_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA3Tags_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA3Tags_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA3Tags_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA6Jets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA6Jets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA6Jets_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA6Jets_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA6Jets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA7Jets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA7Jets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA7Jets_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA7Jets_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA7Jets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA8Jets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA8Jets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA8Jets_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA8Jets_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MVA8Jets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MultiTopness_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MultiTopness_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MultiTopness_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MultiTopness_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MultiTopness_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDistVzPVz_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDistVzPVz_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDistVzPVz_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDistVzPVz_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDistVzPVz_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDz_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDz_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDz_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDz_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonDz_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonEta_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonEta_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonEta_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonEta_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonEta_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNMatchedStations_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNMatchedStations_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNMatchedStations_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNMatchedStations_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNMatchedStations_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNValidHits_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNValidHits_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNValidHits_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNValidHits_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonNValidHits_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPhi_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPhi_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPhi_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPhi_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPhi_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPt_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPt_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPt_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPt_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonPt_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PostTrig_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PostTrig_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PostTrig_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-0.031250, y1=0.000000, x2=0.281250, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=0.250000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PostTrig_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PostTrig_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PreTrig_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PreTrig_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PreTrig_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-0.031250, y1=0.000000, x2=0.281250, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=0.250000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PreTrig_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonRelIsolation_PreTrig_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonTrackerLayersWithMeasurement_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonTrackerLayersWithMeasurement_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonTrackerLayersWithMeasurement_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonTrackerLayersWithMeasurement_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuonTrackerLayersWithMeasurement_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Muond0_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Muond0_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Muond0_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Muond0_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/Muond0_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondRJets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondRJets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondRJets_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-1.250000, y1=0.000000, x2=11.250000, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=10.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondRJets_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondRJets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondZPVz_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondZPVz_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondZPVz_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-0.062500, y1=0.000000, x2=0.562500, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=0.500000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondZPVz_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/MuondZPVz_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfBadTrijets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfBadTrijets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfBadTrijets_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-18.750001, y1=0.000000, x2=168.750001, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=150.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfBadTrijets_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfBadTrijets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedElectrons_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedElectrons_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedElectrons_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-0.625000, y1=0.000000, x2=5.625000, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=5.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedElectrons_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedElectrons_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedMuons_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedMuons_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedMuons_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-0.625000, y1=0.000000, x2=5.625000, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=5.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedMuons_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfExtraIsolatedMuons_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedElectrons_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedElectrons_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedElectrons_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-0.625000, y1=0.000000, x2=5.625000, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=5.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedElectrons_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedElectrons_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedMuons_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedMuons_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedMuons_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedMuons_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfIsolatedMuons_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfLooseMuon_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfLooseMuon_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfLooseMuon_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-1.250000, y1=0.000000, x2=11.250000, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=10.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfLooseMuon_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfLooseMuon_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedBJets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedBJets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedBJets_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedBJets_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedBJets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedJets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedJets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedJets_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedJets_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedJets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedLightJets_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedLightJets_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedLightJets_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedLightJets_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfSelectedLightJets_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfVertices_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfVertices_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfVertices_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfVertices_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/NbOfVertices_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/RhoCorrection_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/RhoCorrection_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/RhoCorrection_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-12.500001, y1=0.000000, x2=112.500001, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=100.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/RhoCorrection_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/RhoCorrection_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_b_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_b_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_b_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-125.000009, y1=0.000000, x2=1125.000009, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=1000.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_b_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_b_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_light_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_light_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_light_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-125.000009, y1=0.000000, x2=1125.000009, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=1000.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_light_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SelectedJetPt_light_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMass_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMass_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMass_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMass_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMass_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMassX_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMassX_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMassX_StackLogY.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMassX_StackAreaNorm.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/SumJetMassX_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_Matched_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_Matched_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_Matched_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-125.000009, y1=0.000000, x2=1125.000009, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=1000.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_Matched_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_Matched_StackAreaNormLogY.pdf has been created
-PU sys nominal
-leptonSF sys nominal
-JER sys nominal
-misTag sys nominal
-bTag sys nominal
-So far, so good : 14
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_UnMatched_Normalized.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_UnMatched_Stack.pdf has been created
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_UnMatched_StackLogY.pdf has been created
-Error in <TCanvas::Range>: illegal world coordinates range: x1=-125.000009, y1=0.000000, x2=1125.000009, y2=0.000000
-Error in <TCanvas::RangeAxis>: illegal axis coordinates range: xmin=0.000000, ymin=0.000000, xmax=1000.000000, ymax=0.000000
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_UnMatched_StackAreaNorm.pdf has been created
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
-Info in <TCanvas::Print>: pdf file FourTop_EventSelection_synclana_noNJets_ttbbPlus_Mu_MSPlots/TriJetMass_UnMatched_StackAreaNormLogY.pdf has been created
- integral ttjets njets = =  4715.19
- integral ttjets ntags = =  4715.19
-
-==> Destructing computer, writing root-files
-It took us 1459.15 to run the program
-********************************************
-           End of the program !!            
-********************************************

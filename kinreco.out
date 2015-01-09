@@ -1,755 +1,0 @@
-
-[1mRooFit v3.55 -- Developed by Wouter Verkerke and David Kirkby[0m 
-                Copyright (C) 2000-2012 NIKHEF, University of California & Stanford University
-                All rights reserved, please read http://roofit.sourceforge.net/license.txt
-
-*************************************************************
- Beginning of the program for the FourTop search ! 
-*************************************************************
- --> Using the Muon channel...
-used config file: config/test_mconly.xml
- - Loading environment ...
- - Loading datasets ...
-Instantiating jet combiner...
-The MVA stuff will be trained!
-
-==> Start TMVA Trainer
---- Factory                  : You are running ROOT Version: 5.34/05, Feb 14, 2013
---- Factory                  : 
---- Factory                  : _/_/_/_/_/ _|      _|  _|      _|    _|_|   
---- Factory                  :    _/      _|_|  _|_|  _|      _|  _|    _| 
---- Factory                  :   _/       _|  _|  _|  _|      _|  _|_|_|_| 
---- Factory                  :  _/        _|      _|    _|  _|    _|    _| 
---- Factory                  : _/         _|      _|      _|      _|    _| 
---- Factory                  : 
---- Factory                  : ___________TMVA Version 4.1.4, Dec 04, 2012
---- Factory                  : 
-Instantiated jet combiner...
-found sample with equivalent lumi 230726
-Rescaling to an integrated luminosity of 5343.64 pb^-1
- - Variable declaration ...
-Warning in <TFile::Append>: Replacing existing TH1: MuonRelIsolation_PreTrig_TTJets (Potential memory leak).
-Warning in <TFile::Append>: Replacing existing TH1: hRandomPseudoData_MuonRelIsolation_PreTrig (Potential memory leak).
-Warning in <TFile::Append>: Replacing existing TH1: MuonPt_TTJets (Potential memory leak).
-Warning in <TFile::Append>: Replacing existing TH1: hRandomPseudoData_MuonPt (Potential memory leak).
- - Loop over datasets ... 1 datasets !
-   Dataset 0 name : TTJets / title : t\bar{t}+jets
- - Cross section = 108.152
- - IntLumi = 230726  NormFactor = 4.33415e-06
- - Nb of events : 1023198
-Load Dataset
-Error in <TChain::SetBranchAddress>: unknown branch -> GenJets_ak5GenJets
-Number of events = 1023198
- - Loop over events 
-N ttjets to run over =   200000
-Old lumi =   230726
-Starting event = = 0Ending event = =200000
-Processing the 0th event, time = 0.81 (0%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 0
-What run? 1
-Processing the 1000th event, time = 2.5 (0.5%)Processing the 2000th event, time = 4.11 (1%)Processing the 3000th event, time = 5.93 (1.5%)Processing the 4000th event, time = 7.45 (2%)Processing the 5000th event, time = 8.98 (2.5%)Processing the 6000th event, time = 10.69 (3%)Processing the 7000th event, time = 12.2 (3.5%)Processing the 8000th event, time = 13.69 (4%)Processing the 9000th event, time = 15.42 (4.5%)Processing the 10000th event, time = 16.94 (5%)Processing the 11000th event, time = 18.63 (5.5%)Processing the 12000th event, time = 20.12 (6%)Processing the 13000th event, time = 21.62 (6.5%)Processing the 14000th event, time = 23.28 (7%)Processing the 15000th event, time = 24.82 (7.5%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 1
-Processing the 16000th event, time = 26.43 (8%)Processing the 17000th event, time = 28.04 (8.5%)Processing the 18000th event, time = 29.66 (9%)Processing the 19000th event, time = 31.45 (9.5%)Processing the 20000th event, time = 32.93 (10%)Processing the 21000th event, time = 34.65 (10.5%)Processing the 22000th event, time = 36.17 (11%)Processing the 23000th event, time = 37.7 (11.5%)Processing the 24000th event, time = 39.44 (12%)Processing the 25000th event, time = 40.94 (12.5%)Processing the 26000th event, time = 42.45 (13%)Processing the 27000th event, time = 44.15 (13.5%)Processing the 28000th event, time = 45.65 (14%)Processing the 29000th event, time = 47.39 (14.5%)Processing the 30000th event, time = 48.91 (15%)Processing the 31000th event, time = 50.42 (15.5%)Processing the 32000th event, time = 51.94 (16%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 2
-Processing the 33000th event, time = 53.59 (16.5%)Processing the 34000th event, time = 55.18 (17%)Processing the 35000th event, time = 56.99 (17.5%)Processing the 36000th event, time = 58.47 (18%)Processing the 37000th event, time = 59.95 (18.5%)Processing the 38000th event, time = 61.7 (19%)Processing the 39000th event, time = 63.18 (19.5%)Processing the 40000th event, time = 64.67 (20%)Processing the 41000th event, time = 66.37 (20.5%)Processing the 42000th event, time = 67.87 (21%)Processing the 43000th event, time = 69.6 (21.5%)Processing the 44000th event, time = 71.09 (22%)Processing the 45000th event, time = 72.57 (22.5%)Processing the 46000th event, time = 74.26 (23%)Processing the 47000th event, time = 75.75 (23.5%)Processing the 48000th event, time = 77.25 (24%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 3
-Processing the 49000th event, time = 78.89 (24.5%)Processing the 50000th event, time = 80.48 (25%)Processing the 51000th event, time = 82.3 (25.5%)Processing the 52000th event, time = 83.8 (26%)Processing the 53000th event, time = 85.25 (26.5%)Processing the 54000th event, time = 86.97 (27%)Processing the 55000th event, time = 88.45 (27.5%)Processing the 56000th event, time = 89.94 (28%)Processing the 57000th event, time = 91.65 (28.5%)Processing the 58000th event, time = 93.13 (29%)Processing the 59000th event, time = 94.84 (29.5%)Processing the 60000th event, time = 96.36 (30%)Processing the 61000th event, time = 97.85 (30.5%)Processing the 62000th event, time = 99.54 (31%)Processing the 63000th event, time = 101 (31.5%)Processing the 64000th event, time = 102.49 (32%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 4
-Processing the 65000th event, time = 104.16 (32.5%)Processing the 66000th event, time = 105.76 (33%)Processing the 67000th event, time = 107.6 (33.5%)Processing the 68000th event, time = 109.08 (34%)Processing the 69000th event, time = 110.59 (34.5%)Processing the 70000th event, time = 112.32 (35%)Processing the 71000th event, time = 113.81 (35.5%)Processing the 72000th event, time = 115.29 (36%)Processing the 73000th event, time = 117.01 (36.5%)Processing the 74000th event, time = 118.5 (37%)Processing the 75000th event, time = 120.21 (37.5%)Processing the 76000th event, time = 121.68 (38%)Processing the 77000th event, time = 123.16 (38.5%)Processing the 78000th event, time = 124.88 (39%)Processing the 79000th event, time = 126.36 (39.5%)Processing the 80000th event, time = 127.8 (40%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 5
-Processing the 81000th event, time = 129.44 (40.5%)Processing the 82000th event, time = 131.05 (41%)Processing the 83000th event, time = 132.66 (41.5%)Processing the 84000th event, time = 134.44 (42%)Processing the 85000th event, time = 135.92 (42.5%)Processing the 86000th event, time = 137.43 (43%)Processing the 87000th event, time = 139.12 (43.5%)Processing the 88000th event, time = 140.63 (44%)Processing the 89000th event, time = 142.35 (44.5%)Processing the 90000th event, time = 143.85 (45%)Processing the 91000th event, time = 145.31 (45.5%)Processing the 92000th event, time = 147.01 (46%)Processing the 93000th event, time = 148.51 (46.5%)Processing the 94000th event, time = 150 (47%)Processing the 95000th event, time = 151.66 (47.5%)Processing the 96000th event, time = 153.14 (48%)Processing the 97000th event, time = 154.63 (48.5%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 6
-Processing the 98000th event, time = 156.26 (49%)Processing the 99000th event, time = 157.85 (49.5%)Processing the 100000th event, time = 159.47 (50%)Processing the 101000th event, time = 161.28 (50.5%)Processing the 102000th event, time = 162.75 (51%)Processing the 103000th event, time = 164.23 (51.5%)Processing the 104000th event, time = 165.94 (52%)Processing the 105000th event, time = 167.43 (52.5%)Processing the 106000th event, time = 169.11 (53%)Processing the 107000th event, time = 170.62 (53.5%)Processing the 108000th event, time = 172.1 (54%)Processing the 109000th event, time = 173.8 (54.5%)Processing the 110000th event, time = 175.3 (55%)Processing the 111000th event, time = 176.77 (55.5%)Processing the 112000th event, time = 178.46 (56%)Processing the 113000th event, time = 179.97 (56.5%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 7
-Processing the 114000th event, time = 181.54 (57%)Processing the 115000th event, time = 183.1 (57.5%)Processing the 116000th event, time = 184.69 (58%)Processing the 117000th event, time = 186.44 (58.5%)Processing the 118000th event, time = 187.92 (59%)Processing the 119000th event, time = 189.41 (59.5%)Processing the 120000th event, time = 191.12 (60%)Processing the 121000th event, time = 192.62 (60.5%)Processing the 122000th event, time = 194.35 (61%)Processing the 123000th event, time = 195.85 (61.5%)Processing the 124000th event, time = 197.35 (62%)Processing the 125000th event, time = 199.08 (62.5%)Processing the 126000th event, time = 200.59 (63%)Processing the 127000th event, time = 202.07 (63.5%)Processing the 128000th event, time = 203.76 (64%)Processing the 129000th event, time = 205.29 (64.5%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 8
-Processing the 130000th event, time = 206.88 (65%)Processing the 131000th event, time = 208.5 (65.5%)Processing the 132000th event, time = 210.1 (66%)Processing the 133000th event, time = 211.91 (66.5%)Processing the 134000th event, time = 213.42 (67%)Processing the 135000th event, time = 214.89 (67.5%)Processing the 136000th event, time = 216.56 (68%)Processing the 137000th event, time = 218.04 (68.5%)Processing the 138000th event, time = 219.74 (69%)Processing the 139000th event, time = 221.23 (69.5%)Processing the 140000th event, time = 222.73 (70%)Processing the 141000th event, time = 224.42 (70.5%)Processing the 142000th event, time = 225.93 (71%)Processing the 143000th event, time = 227.4 (71.5%)Processing the 144000th event, time = 229.12 (72%)Processing the 145000th event, time = 230.62 (72.5%)Processing the 146000th event, time = 232.17 (73%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 9
-Processing the 147000th event, time = 233.8 (73.5%)Processing the 148000th event, time = 235.4 (74%)Processing the 149000th event, time = 237.26 (74.5%)Processing the 150000th event, time = 238.73 (75%)Processing the 151000th event, time = 240.25 (75.5%)Processing the 152000th event, time = 241.96 (76%)Processing the 153000th event, time = 243.44 (76.5%)Processing the 154000th event, time = 244.92 (77%)Processing the 155000th event, time = 246.61 (77.5%)Processing the 156000th event, time = 248.11 (78%)Processing the 157000th event, time = 249.56 (78.5%)Processing the 158000th event, time = 251.29 (79%)Processing the 159000th event, time = 252.78 (79.5%)Processing the 160000th event, time = 254.47 (80%)Processing the 161000th event, time = 255.96 (80.5%)Processing the 162000th event, time = 257.45 (81%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 10
-Processing the 163000th event, time = 259.07 (81.5%)Processing the 164000th event, time = 260.68 (82%)Processing the 165000th event, time = 262.3 (82.5%)Processing the 166000th event, time = 264.06 (83%)Processing the 167000th event, time = 265.57 (83.5%)Processing the 168000th event, time = 267.05 (84%)Processing the 169000th event, time = 268.77 (84.5%)Processing the 170000th event, time = 270.27 (85%)Processing the 171000th event, time = 271.98 (85.5%)Processing the 172000th event, time = 273.49 (86%)Processing the 173000th event, time = 275.02 (86.5%)Processing the 174000th event, time = 276.73 (87%)Processing the 175000th event, time = 278.21 (87.5%)Processing the 176000th event, time = 279.72 (88%)Processing the 177000th event, time = 281.39 (88.5%)Processing the 178000th event, time = 282.89 (89%)Processing the 179000th event, time = 284.42 (89.5%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 11
-Processing the 180000th event, time = 286.01 (90%)Processing the 181000th event, time = 287.6 (90.5%)Processing the 182000th event, time = 289.19 (91%)Processing the 183000th event, time = 290.97 (91.5%)Processing the 184000th event, time = 292.47 (92%)Processing the 185000th event, time = 294.21 (92.5%)Processing the 186000th event, time = 295.7 (93%)Processing the 187000th event, time = 297.17 (93.5%)Processing the 188000th event, time = 298.89 (94%)Processing the 189000th event, time = 300.38 (94.5%)Processing the 190000th event, time = 301.88 (95%)Processing the 191000th event, time = 303.59 (95.5%)Processing the 192000th event, time = 305.07 (96%)Processing the 193000th event, time = 306.73 (96.5%)Processing the 194000th event, time = 308.22 (97%)Error in <TTree::SetBranchStatus>: unknown branch -> GenJets_ak5GenJets
-File changed!!! => iFile = 12
-Processing the 195000th event, time = 309.77 (97.5%)Processing the 196000th event, time = 311.38 (98%)Processing the 197000th event, time = 312.98 (98.5%)Processing the 198000th event, time = 314.78 (99%)Processing the 199000th event, time = 316.29 (99.5%)Efficiency of MVA jet selection = = nan
- We ran over all the data ;-)
- - Writing outputs to the files ...
-Info in <TROOT::TEfficiency::CheckBinning>: Histograms are not consistent: they have different bin edges
-Error in <TROOT::TEfficiency::CheckConsistency>: passed TEfficiency objects have different binning
-Error in <TGraphAsymmErrors::Divide>: passed histograms are not consistent
- after cd ..
- - Writing out the JetCombiner stuff ...
- in end job ...
-
-==> Training the MVA method
---- DataSetInfo              : Added class "Signal"	 with internal class number 0
---- Factory                  : Add Tree TreeS of type Signal with 65786 events
---- DataSetInfo              : Added class "Background"	 with internal class number 1
---- Factory                  : Add Tree TreeB of type Background with 5443900 events
---- Factory                  : Preparing trees for training and testing...
---- Factory                  : Booking method: Likelihood
---- Factory                  : Booking method: LikelihoodD
---- LikelihoodD              : Create Transformation "Decorrelate" with events from all classes.
---- Deco                     : Transformation, Variable selection : 
---- Deco                     : Input : variable 'btag' (index=0).   <---> Output : variable 'btag' (index=0).
---- Deco                     : Input : variable 'ThPtOverSumPt' (index=1).   <---> Output : variable 'ThPtOverSumPt' (index=1).
---- Deco                     : Input : variable 'AngleThWh' (index=2).   <---> Output : variable 'AngleThWh' (index=2).
---- Deco                     : Input : variable 'AngleThBh' (index=3).   <---> Output : variable 'AngleThBh' (index=3).
---- Deco                     : Input : variable 'HadrWmass' (index=4).   <---> Output : variable 'HadrWmass' (index=4).
---- Deco                     : Input : variable 'TopMass' (index=5).   <---> Output : variable 'TopMass' (index=5).
---- Factory                  : Booking method: MLP
---- MLP                      : Create Transformation "N" with events from all classes.
---- Norm                     : Transformation, Variable selection : 
---- Norm                     : Input : variable 'btag' (index=0).   <---> Output : variable 'btag' (index=0).
---- Norm                     : Input : variable 'ThPtOverSumPt' (index=1).   <---> Output : variable 'ThPtOverSumPt' (index=1).
---- Norm                     : Input : variable 'AngleThWh' (index=2).   <---> Output : variable 'AngleThWh' (index=2).
---- Norm                     : Input : variable 'AngleThBh' (index=3).   <---> Output : variable 'AngleThBh' (index=3).
---- Norm                     : Input : variable 'HadrWmass' (index=4).   <---> Output : variable 'HadrWmass' (index=4).
---- Norm                     : Input : variable 'TopMass' (index=5).   <---> Output : variable 'TopMass' (index=5).
---- MLP                      : Building Network
---- MLP                      : Initializing weights
---- Factory                  : Booking method: BDT
---- DataSetFactory           : Splitmode is: "BLOCK" the mixmode is: "SAMEASSPLITMODE"
---- DataSetFactory           : Create training and testing trees -- looping over class "Signal" ...
---- DataSetFactory           : Weight expression for class 'Signal': ""
---- DataSetFactory           : Create training and testing trees -- looping over class "Background" ...
---- DataSetFactory           : Weight expression for class 'Background': ""
---- DataSetFactory           : Number of events in input trees (after possible flattening of arrays):
---- DataSetFactory           :     Signal          -- number of events       : 65786  / sum of weights: 65786
---- DataSetFactory           :     Background      -- number of events       : 5443900  / sum of weights: 5.4439e+06
---- DataSetFactory           :     Signal     tree -- total number of entries: 65786
---- DataSetFactory           :     Background tree -- total number of entries: 5443900
---- DataSetFactory           : Preselection: (will effect number of requested training and testing events)
---- DataSetFactory           :     No preselection cuts applied on event classes
---- DataSetFactory           : Weight renormalisation mode: "EqualNumEvents": renormalise class weights ...
---- DataSetFactory           : ... so that Sum[i=1..N_j]{w_i} = N_classA, j=classA, classB, ...
---- DataSetFactory           : ... (note that N_j is the sum of training and test events)
---- DataSetFactory           : --> Rescale Signal     event weights by factor: 1
---- DataSetFactory           : --> Rescale Background event weights by factor: 0.0120844
---- DataSetFactory           : Number of training and testing events after rescaling:
---- DataSetFactory           : ------------------------------------------------------
---- DataSetFactory           : Signal     -- training events            : 32893 (sum of weights: 32893) - requested were 0 events
---- DataSetFactory           : Signal     -- testing events             : 32893 (sum of weights: 32893) - requested were 0 events
---- DataSetFactory           : Signal     -- training and testing events: 65786 (sum of weights: 65786)
---- DataSetFactory           : Background -- training events            : 2721950 (sum of weights: 32893) - requested were 0 events
---- DataSetFactory           : Background -- testing events             : 2721950 (sum of weights: 32893) - requested were 0 events
---- DataSetFactory           : Background -- training and testing events: 5443900 (sum of weights: 65786)
---- DataSetFactory           : Create internal training tree
---- DataSetFactory           : Create internal testing tree
---- DataSetInfo              : Correlation matrix (Signal):
---- DataSetInfo              : --------------------------------------------------------------------------
---- DataSetInfo              :                   btag ThPtOverSumPt AngleThWh AngleThBh HadrWmass TopMass
---- DataSetInfo              :          btag:  +1.000        +0.022    +0.033    -0.013    -0.059  -0.005
---- DataSetInfo              : ThPtOverSumPt:  +0.022        +1.000    -0.361    -0.527    +0.101  +0.078
---- DataSetInfo              :     AngleThWh:  +0.033        -0.361    +1.000    -0.015    -0.285  +0.022
---- DataSetInfo              :     AngleThBh:  -0.013        -0.527    -0.015    +1.000    +0.090  +0.054
---- DataSetInfo              :     HadrWmass:  -0.059        +0.101    -0.285    +0.090    +1.000  +0.413
---- DataSetInfo              :       TopMass:  -0.005        +0.078    +0.022    +0.054    +0.413  +1.000
---- DataSetInfo              : --------------------------------------------------------------------------
---- DataSetInfo              : Correlation matrix (Background):
---- DataSetInfo              : --------------------------------------------------------------------------
---- DataSetInfo              :                   btag ThPtOverSumPt AngleThWh AngleThBh HadrWmass TopMass
---- DataSetInfo              :          btag:  +1.000        -0.041    +0.043    +0.015    -0.008  -0.029
---- DataSetInfo              : ThPtOverSumPt:  -0.041        +1.000    -0.319    -0.195    +0.026  +0.021
---- DataSetInfo              :     AngleThWh:  +0.043        -0.319    +1.000    -0.466    -0.079  +0.177
---- DataSetInfo              :     AngleThBh:  +0.015        -0.195    -0.466    +1.000    +0.223  -0.059
---- DataSetInfo              :     HadrWmass:  -0.008        +0.026    -0.079    +0.223    +1.000  +0.514
---- DataSetInfo              :       TopMass:  -0.029        +0.021    +0.177    -0.059    +0.514  +1.000
---- DataSetInfo              : --------------------------------------------------------------------------
---- DataSetFactory           :  
---- Factory                  : Booking method: RuleFit
-train it
---- Factory                  : 
---- Factory                  : current transformation string: 'I'
---- Factory                  : Create Transformation "I" with events from all classes.
---- Id                       : Transformation, Variable selection : 
---- Id                       : Input : variable 'btag' (index=0).   <---> Output : variable 'btag' (index=0).
---- Id                       : Input : variable 'ThPtOverSumPt' (index=1).   <---> Output : variable 'ThPtOverSumPt' (index=1).
---- Id                       : Input : variable 'AngleThWh' (index=2).   <---> Output : variable 'AngleThWh' (index=2).
---- Id                       : Input : variable 'AngleThBh' (index=3).   <---> Output : variable 'AngleThBh' (index=3).
---- Id                       : Input : variable 'HadrWmass' (index=4).   <---> Output : variable 'HadrWmass' (index=4).
---- Id                       : Input : variable 'TopMass' (index=5).   <---> Output : variable 'TopMass' (index=5).
---- Factory                  : 
---- Factory                  : current transformation string: 'D'
---- Factory                  : Create Transformation "D" with events from all classes.
---- Deco                     : Transformation, Variable selection : 
---- Deco                     : Input : variable 'btag' (index=0).   <---> Output : variable 'btag' (index=0).
---- Deco                     : Input : variable 'ThPtOverSumPt' (index=1).   <---> Output : variable 'ThPtOverSumPt' (index=1).
---- Deco                     : Input : variable 'AngleThWh' (index=2).   <---> Output : variable 'AngleThWh' (index=2).
---- Deco                     : Input : variable 'AngleThBh' (index=3).   <---> Output : variable 'AngleThBh' (index=3).
---- Deco                     : Input : variable 'HadrWmass' (index=4).   <---> Output : variable 'HadrWmass' (index=4).
---- Deco                     : Input : variable 'TopMass' (index=5).   <---> Output : variable 'TopMass' (index=5).
---- Factory                  : 
---- Factory                  : current transformation string: 'P'
---- Factory                  : Create Transformation "P" with events from all classes.
---- PCA                      : Transformation, Variable selection : 
---- PCA                      : Input : variable 'btag' (index=0).   <---> Output : variable 'btag' (index=0).
---- PCA                      : Input : variable 'ThPtOverSumPt' (index=1).   <---> Output : variable 'ThPtOverSumPt' (index=1).
---- PCA                      : Input : variable 'AngleThWh' (index=2).   <---> Output : variable 'AngleThWh' (index=2).
---- PCA                      : Input : variable 'AngleThBh' (index=3).   <---> Output : variable 'AngleThBh' (index=3).
---- PCA                      : Input : variable 'HadrWmass' (index=4).   <---> Output : variable 'HadrWmass' (index=4).
---- PCA                      : Input : variable 'TopMass' (index=5).   <---> Output : variable 'TopMass' (index=5).
---- Factory                  : 
---- Factory                  : current transformation string: 'G,D'
---- Factory                  : Create Transformation "G" with events from all classes.
---- Gauss                    : Transformation, Variable selection : 
---- Gauss                    : Input : variable 'btag' (index=0).   <---> Output : variable 'btag' (index=0).
---- Gauss                    : Input : variable 'ThPtOverSumPt' (index=1).   <---> Output : variable 'ThPtOverSumPt' (index=1).
---- Gauss                    : Input : variable 'AngleThWh' (index=2).   <---> Output : variable 'AngleThWh' (index=2).
---- Gauss                    : Input : variable 'AngleThBh' (index=3).   <---> Output : variable 'AngleThBh' (index=3).
---- Gauss                    : Input : variable 'HadrWmass' (index=4).   <---> Output : variable 'HadrWmass' (index=4).
---- Gauss                    : Input : variable 'TopMass' (index=5).   <---> Output : variable 'TopMass' (index=5).
---- Factory                  : Create Transformation "D" with events from all classes.
---- Deco                     : Transformation, Variable selection : 
---- Deco                     : Input : variable 'btag' (index=0).   <---> Output : variable 'btag' (index=0).
---- Deco                     : Input : variable 'ThPtOverSumPt' (index=1).   <---> Output : variable 'ThPtOverSumPt' (index=1).
---- Deco                     : Input : variable 'AngleThWh' (index=2).   <---> Output : variable 'AngleThWh' (index=2).
---- Deco                     : Input : variable 'AngleThBh' (index=3).   <---> Output : variable 'AngleThBh' (index=3).
---- Deco                     : Input : variable 'HadrWmass' (index=4).   <---> Output : variable 'HadrWmass' (index=4).
---- Deco                     : Input : variable 'TopMass' (index=5).   <---> Output : variable 'TopMass' (index=5).
---- Id                       : Preparing the Identity transformation...
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        :          btag:        0.43448        0.43972   [        -1.0000         1.0000 ]
---- TFHandler_Factory        : ThPtOverSumPt:        0.42807        0.20442   [         0.0000        0.98630 ]
---- TFHandler_Factory        :     AngleThWh:        0.47954        0.56386   [         0.0000         3.1415 ]
---- TFHandler_Factory        :     AngleThBh:         1.3385        0.82031   [         0.0000         3.1416 ]
---- TFHandler_Factory        :     HadrWmass:         100.19         50.871   [         0.0000         1005.7 ]
---- TFHandler_Factory        :       TopMass:         254.84         147.40   [         0.0000         2553.9 ]
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        : Plot event variables for Id
---- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
---- TFHandler_Factory        : MVAOutput_TTbarJES.root:/InputVariables_Id/CorrelationPlots
---- Deco                     : Preparing the Decorrelation transformation...
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        :          btag:         1.1311         1.0000   [        -2.2817         3.7422 ]
---- TFHandler_Factory        : ThPtOverSumPt:         3.9431         1.0000   [      -0.065324         8.8006 ]
---- TFHandler_Factory        :     AngleThWh:         1.3839         1.0000   [        -5.5044         8.1978 ]
---- TFHandler_Factory        :     AngleThBh:         1.8226         1.0000   [        -3.8407         5.3607 ]
---- TFHandler_Factory        :     HadrWmass:         1.4485         1.0000   [        -5.0386         22.324 ]
---- TFHandler_Factory        :       TopMass:         1.5305         1.0000   [        -2.0322         17.944 ]
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        : Plot event variables for Deco
---- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
---- TFHandler_Factory        : MVAOutput_TTbarJES.root:/InputVariables_Deco/CorrelationPlots
---- PCA                      : Preparing the Principle Component (PCA) transformation...
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        :          btag:        -76.106         150.34   [        -346.22         2278.5 ]
---- TFHandler_Factory        : ThPtOverSumPt:        -1.8600         41.382   [        -866.10         385.29 ]
---- TFHandler_Factory        :     AngleThWh:       0.078263        0.79521   [        -4.1549         5.6502 ]
---- TFHandler_Factory        :     AngleThBh:        0.19921        0.55267   [        -3.0533         2.1196 ]
---- TFHandler_Factory        :     HadrWmass:      -0.080059        0.44124   [       -0.95056         1.7048 ]
---- TFHandler_Factory        :       TopMass:      -0.042530        0.16002   [       -0.80031        0.70576 ]
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        : Plot event variables for PCA
---- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
---- TFHandler_Factory        : MVAOutput_TTbarJES.root:/InputVariables_PCA/CorrelationPlots
---- Gauss                    : Preparing the Gaussian transformation...
---- Deco                     : Preparing the Decorrelation transformation...
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        :          btag:      -0.047029         1.0000   [        -4.3055         1.8932 ]
---- TFHandler_Factory        : ThPtOverSumPt:      0.0035312         1.0000   [        -7.4067         7.0636 ]
---- TFHandler_Factory        :     AngleThWh:      0.0032910         1.0000   [        -5.5657         6.7799 ]
---- TFHandler_Factory        :     AngleThBh:      0.0025799         1.0000   [        -5.5956         6.4490 ]
---- TFHandler_Factory        :     HadrWmass:      0.0024054         1.0000   [        -4.9714         7.1620 ]
---- TFHandler_Factory        :       TopMass:     -0.0025346         1.0000   [        -7.7663         5.8426 ]
---- TFHandler_Factory        : ------------------------------------------------------------------------------------
---- TFHandler_Factory        : Plot event variables for Gauss_Deco
---- TFHandler_Factory        : Create scatter and profile plots in target-file directory: 
---- TFHandler_Factory        : MVAOutput_TTbarJES.root:/InputVariables_Gauss_Deco/CorrelationPlots
---- TFHandler_Factory        :  
---- TFHandler_Factory        : Ranking input variables (method unspecific)...
---- IdTransformation         : Ranking result (top variable is best ranked)
---- IdTransformation         : --------------------------------------
---- IdTransformation         : Rank : Variable      : Separation
---- IdTransformation         : --------------------------------------
---- IdTransformation         :    1 : TopMass       : 5.445e-01
---- IdTransformation         :    2 : HadrWmass     : 1.665e-01
---- IdTransformation         :    3 : ThPtOverSumPt : 1.572e-01
---- IdTransformation         :    4 : AngleThWh     : 1.355e-01
---- IdTransformation         :    5 : AngleThBh     : 5.509e-02
---- IdTransformation         :    6 : btag          : 3.150e-02
---- IdTransformation         : --------------------------------------
---- Factory                  :  
---- Factory                  : Train all methods for Classification ...
---- Factory                  : Train method: Likelihood for Classification
---- Likelihood               : 
---- Likelihood               : ================================================================
---- Likelihood               : H e l p   f o r   M V A   m e t h o d   [ Likelihood ] :
---- Likelihood               : 
---- Likelihood               : --- Short description:
---- Likelihood               : 
---- Likelihood               : The maximum-likelihood classifier models the data with probability 
---- Likelihood               : density functions (PDF) reproducing the signal and background
---- Likelihood               : distributions of the input variables. Correlations among the 
---- Likelihood               : variables are ignored.
---- Likelihood               : 
---- Likelihood               : --- Performance optimisation:
---- Likelihood               : 
---- Likelihood               : Required for good performance are decorrelated input variables
---- Likelihood               : (PCA transformation via the option "VarTransform=Decorrelate"
---- Likelihood               : may be tried). Irreducible non-linear correlations may be reduced
---- Likelihood               : by precombining strongly correlated input variables, or by simply
---- Likelihood               : removing one of the variables.
---- Likelihood               : 
---- Likelihood               : --- Performance tuning via configuration options:
---- Likelihood               : 
---- Likelihood               : High fidelity PDF estimates are mandatory, i.e., sufficient training 
---- Likelihood               : statistics is required to populate the tails of the distributions
---- Likelihood               : It would be a surprise if the default Spline or KDE kernel parameters
---- Likelihood               : provide a satisfying fit to the data. The user is advised to properly
---- Likelihood               : tune the events per bin and smooth options in the spline cases
---- Likelihood               : individually per variable. If the KDE kernel is used, the adaptive
---- Likelihood               : Gaussian kernel may lead to artefacts, so please always also try
---- Likelihood               : the non-adaptive one.
---- Likelihood               : 
---- Likelihood               : All tuning parameters must be adjusted individually for each input
---- Likelihood               : variable!
---- Likelihood               : 
---- Likelihood               : <Suppress this message by specifying "!H" in the booking option>
---- Likelihood               : ================================================================
---- Likelihood               : 
---- TFHandler_Likelihood     : ------------------------------------------------------------------------------------
---- TFHandler_Likelihood     :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_Likelihood     : ------------------------------------------------------------------------------------
---- TFHandler_Likelihood     :          btag:        0.43448        0.43972   [        -1.0000         1.0000 ]
---- TFHandler_Likelihood     : ThPtOverSumPt:        0.42807        0.20442   [         0.0000        0.98630 ]
---- TFHandler_Likelihood     :     AngleThWh:        0.47954        0.56386   [         0.0000         3.1415 ]
---- TFHandler_Likelihood     :     AngleThBh:         1.3385        0.82031   [         0.0000         3.1416 ]
---- TFHandler_Likelihood     :     HadrWmass:         100.19         50.871   [         0.0000         1005.7 ]
---- TFHandler_Likelihood     :       TopMass:         254.84         147.40   [         0.0000         2553.9 ]
---- TFHandler_Likelihood     : ------------------------------------------------------------------------------------
---- Likelihood               : Begin training
---- Likelihood               : Filling reference histograms
---- Likelihood               : Building PDF out of reference histograms
---- Likelihood PDF Sig[0]    : Validation result for PDF "btag signal training": 
---- Likelihood PDF Sig[0]    :     chi2/ndof(!=0) = 5062.8/299 = 16.93 (Prob = 0.00)
---- <WARNING> Likelihood PDF Sig[0]    : Comparison of the original histogram "btag signal training"
---- <WARNING> Likelihood PDF Sig[0]    : with the corresponding PDF gave a chi2/ndof of 16.9325,
---- <WARNING> Likelihood PDF Sig[0]    : which corresponds to a deviation of more than 5 sigma! Please check!
---- Likelihood PDF Sig[0]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [221(94),157(13),93(0),14(0)]
---- Likelihood PDF Bkg[0]    : Validation result for PDF "btag background training": 
---- Likelihood PDF Bkg[0]    :     chi2/ndof(!=0) = 3506.3/329 = 10.66 (Prob = 0.00)
---- <WARNING> Likelihood PDF Bkg[0]    : Comparison of the original histogram "btag background training"
---- <WARNING> Likelihood PDF Bkg[0]    : with the corresponding PDF gave a chi2/ndof of 10.6576,
---- <WARNING> Likelihood PDF Bkg[0]    : which corresponds to a deviation of more than 5 sigma! Please check!
---- Likelihood PDF Bkg[0]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [180(104),68(14),27(0),8(0)]
---- Likelihood PDF Sig[1]    : Validation result for PDF "ThPtOverSumPt signal training": 
---- Likelihood PDF Sig[1]    :     chi2/ndof(!=0) = 7254.8/562 = 12.91 (Prob = 0.00)
---- <WARNING> Likelihood PDF Sig[1]    : Comparison of the original histogram "ThPtOverSumPt signal training"
---- <WARNING> Likelihood PDF Sig[1]    : with the corresponding PDF gave a chi2/ndof of 12.909,
---- <WARNING> Likelihood PDF Sig[1]    : which corresponds to a deviation of more than 5 sigma! Please check!
---- Likelihood PDF Sig[1]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [410(178),275(25),156(1),44(0)]
---- Likelihood PDF Bkg[1]    : Validation result for PDF "ThPtOverSumPt background training": 
---- Likelihood PDF Bkg[1]    :     chi2/ndof(!=0) = 273.5/645 = 0.42 (Prob = 1.00)
---- Likelihood PDF Bkg[1]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [72(204),5(29),0(1),0(0)]
---- Likelihood PDF Sig[2]    : Validation result for PDF "AngleThWh signal training": 
---- Likelihood PDF Sig[2]    :     chi2/ndof(!=0) = 1571.4/233 = 6.74 (Prob = 0.00)
---- <WARNING> Likelihood PDF Sig[2]    : Comparison of the original histogram "AngleThWh signal training"
---- <WARNING> Likelihood PDF Sig[2]    : with the corresponding PDF gave a chi2/ndof of 6.744,
---- <WARNING> Likelihood PDF Sig[2]    : which corresponds to a deviation of more than 5 sigma! Please check!
---- Likelihood PDF Sig[2]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [151(73),86(10),38(0),5(0)]
---- Likelihood PDF Bkg[2]    : Validation result for PDF "AngleThWh background training": 
---- Likelihood PDF Bkg[2]    :     chi2/ndof(!=0) = 784.0/657 = 1.19 (Prob = 0.00)
---- Likelihood PDF Bkg[2]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [99(208),29(29),11(1),4(0)]
---- Likelihood PDF Sig[3]    : Validation result for PDF "AngleThBh signal training": 
---- Likelihood PDF Sig[3]    :     chi2/ndof(!=0) = 6693.1/593 = 11.29 (Prob = 0.00)
---- <WARNING> Likelihood PDF Sig[3]    : Comparison of the original histogram "AngleThBh signal training"
---- <WARNING> Likelihood PDF Sig[3]    : with the corresponding PDF gave a chi2/ndof of 11.2868,
---- <WARNING> Likelihood PDF Sig[3]    : which corresponds to a deviation of more than 5 sigma! Please check!
---- Likelihood PDF Sig[3]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [414(188),271(26),159(1),38(0)]
---- Likelihood PDF Bkg[3]    : Validation result for PDF "AngleThBh background training": 
---- Likelihood PDF Bkg[3]    :     chi2/ndof(!=0) = 463.3/657 = 0.71 (Prob = 1.00)
---- Likelihood PDF Bkg[3]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [85(208),29(29),6(1),1(0)]
---- Likelihood PDF Sig[4]    : Validation result for PDF "HadrWmass signal training": 
---- Likelihood PDF Sig[4]    :     chi2/ndof(!=0) = 647.0/83 = 7.80 (Prob = 0.00)
---- <WARNING> Likelihood PDF Sig[4]    : Comparison of the original histogram "HadrWmass signal training"
---- <WARNING> Likelihood PDF Sig[4]    : with the corresponding PDF gave a chi2/ndof of 7.7957,
---- <WARNING> Likelihood PDF Sig[4]    : which corresponds to a deviation of more than 5 sigma! Please check!
---- Likelihood PDF Sig[4]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [54(26),39(3),24(0),2(0)]
---- Likelihood PDF Bkg[4]    : Validation result for PDF "HadrWmass background training": 
---- Likelihood PDF Bkg[4]    :     chi2/ndof(!=0) = 229.2/367 = 0.62 (Prob = 1.00)
---- Likelihood PDF Bkg[4]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [65(116),8(16),1(0),0(0)]
---- Likelihood PDF Sig[5]    : Validation result for PDF "TopMass signal training": 
---- Likelihood PDF Sig[5]    :     chi2/ndof(!=0) = 211.4/44 = 4.81 (Prob = 0.00)
---- <WARNING> Likelihood PDF Sig[5]    : Comparison of the original histogram "TopMass signal training"
---- <WARNING> Likelihood PDF Sig[5]    : with the corresponding PDF gave a chi2/ndof of 4.80508,
---- <WARNING> Likelihood PDF Sig[5]    : which corresponds to a deviation of more than 5 sigma! Please check!
---- Likelihood PDF Sig[5]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [24(13),11(2),7(0),1(0)]
---- Likelihood PDF Bkg[5]    : Validation result for PDF "TopMass background training": 
---- Likelihood PDF Bkg[5]    :     chi2/ndof(!=0) = 89.8/410 = 0.22 (Prob = 1.00)
---- Likelihood PDF Bkg[5]    :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [14(130),1(18),0(1),0(0)]
---- Likelihood               : End of training                                              
---- Likelihood               : Elapsed time for training with 2754843 events: 2.41 sec         
---- Likelihood               : Create MVA output for classification on training sample
---- Likelihood               : Evaluation of Likelihood on training sample (2754843 events)
---- Likelihood               : Elapsed time for evaluation of 2754843 events: 4.91 sec       
---- Likelihood               : Creating weight file in xml format: weights/JetCombTrainer_Likelihood.weights.xml
---- Likelihood               : Creating standalone response class: weights/JetCombTrainer_Likelihood.class.C
---- Likelihood               : Write monitoring histograms to file: MVAOutput_TTbarJES.root:/Method_Likelihood/Likelihood
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
---- Factory                  : Training finished
---- Factory                  : Train method: LikelihoodD for Classification
---- Deco                     : Preparing the Decorrelation transformation...
---- TFHandler_LikelihoodD    : ------------------------------------------------------------------------------------
---- TFHandler_LikelihoodD    :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_LikelihoodD    : ------------------------------------------------------------------------------------
---- TFHandler_LikelihoodD    :          btag:         1.1311         1.0000   [        -2.2817         3.7422 ]
---- TFHandler_LikelihoodD    : ThPtOverSumPt:         3.9431         1.0000   [      -0.065324         8.8006 ]
---- TFHandler_LikelihoodD    :     AngleThWh:         1.3839         1.0000   [        -5.5044         8.1978 ]
---- TFHandler_LikelihoodD    :     AngleThBh:         1.8226         1.0000   [        -3.8407         5.3607 ]
---- TFHandler_LikelihoodD    :     HadrWmass:         1.4485         1.0000   [        -5.0386         22.324 ]
---- TFHandler_LikelihoodD    :       TopMass:         1.5305         1.0000   [        -2.0322         17.944 ]
---- TFHandler_LikelihoodD    : ------------------------------------------------------------------------------------
---- LikelihoodD              : Begin training
---- LikelihoodD              : Filling reference histograms
---- LikelihoodD              : Building PDF out of reference histograms
---- LikelihoodD PDF Sig[0]   : Validation result for PDF "btag signal training": 
---- LikelihoodD PDF Sig[0]   :     chi2/ndof(!=0) = 1375.5/236 = 5.83 (Prob = 0.00)
---- <WARNING> LikelihoodD PDF Sig[0]   : Comparison of the original histogram "btag signal training"
---- <WARNING> LikelihoodD PDF Sig[0]   : with the corresponding PDF gave a chi2/ndof of 5.82818,
---- <WARNING> LikelihoodD PDF Sig[0]   : which corresponds to a deviation of more than 5 sigma! Please check!
---- LikelihoodD PDF Sig[0]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [145(74),79(10),42(0),5(0)]
---- LikelihoodD PDF Bkg[0]   : Validation result for PDF "btag background training": 
---- LikelihoodD PDF Bkg[0]   :     chi2/ndof(!=0) = 55.9/254 = 0.22 (Prob = 1.00)
---- LikelihoodD PDF Bkg[0]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [10(80),2(11),0(0),0(0)]
---- LikelihoodD PDF Sig[1]   : Validation result for PDF "ThPtOverSumPt signal training": 
---- LikelihoodD PDF Sig[1]   :     chi2/ndof(!=0) = 451.4/229 = 1.97 (Prob = 0.00)
---- <WARNING> LikelihoodD PDF Sig[1]   : Comparison of the original histogram "ThPtOverSumPt signal training"
---- <WARNING> LikelihoodD PDF Sig[1]   : with the corresponding PDF gave a chi2/ndof of 1.97139,
---- <WARNING> LikelihoodD PDF Sig[1]   : which corresponds to a deviation of more than 5 sigma! Please check!
---- LikelihoodD PDF Sig[1]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [98(72),38(10),6(0),0(0)]
---- LikelihoodD PDF Bkg[1]   : Validation result for PDF "ThPtOverSumPt background training": 
---- LikelihoodD PDF Bkg[1]   :     chi2/ndof(!=0) = 8.7/256 = 0.03 (Prob = 1.00)
---- LikelihoodD PDF Bkg[1]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [0(81),0(11),0(0),0(0)]
---- LikelihoodD PDF Sig[2]   : Validation result for PDF "AngleThWh signal training": 
---- LikelihoodD PDF Sig[2]   :     chi2/ndof(!=0) = 711.5/176 = 4.04 (Prob = 0.00)
---- <WARNING> LikelihoodD PDF Sig[2]   : Comparison of the original histogram "AngleThWh signal training"
---- <WARNING> LikelihoodD PDF Sig[2]   : with the corresponding PDF gave a chi2/ndof of 4.04248,
---- <WARNING> LikelihoodD PDF Sig[2]   : which corresponds to a deviation of more than 5 sigma! Please check!
---- LikelihoodD PDF Sig[2]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [99(55),43(8),20(0),1(0)]
---- LikelihoodD PDF Bkg[2]   : Validation result for PDF "AngleThWh background training": 
---- LikelihoodD PDF Bkg[2]   :     chi2/ndof(!=0) = 7.6/159 = 0.05 (Prob = 1.00)
---- LikelihoodD PDF Bkg[2]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [0(50),0(7),0(0),0(0)]
---- LikelihoodD PDF Sig[3]   : Validation result for PDF "AngleThBh signal training": 
---- LikelihoodD PDF Sig[3]   :     chi2/ndof(!=0) = 1602.6/276 = 5.81 (Prob = 0.00)
---- <WARNING> LikelihoodD PDF Sig[3]   : Comparison of the original histogram "AngleThBh signal training"
---- <WARNING> LikelihoodD PDF Sig[3]   : with the corresponding PDF gave a chi2/ndof of 5.80649,
---- <WARNING> LikelihoodD PDF Sig[3]   : which corresponds to a deviation of more than 5 sigma! Please check!
---- LikelihoodD PDF Sig[3]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [166(87),97(12),51(0),6(0)]
---- LikelihoodD PDF Bkg[3]   : Validation result for PDF "AngleThBh background training": 
---- LikelihoodD PDF Bkg[3]   :     chi2/ndof(!=0) = 14.6/410 = 0.04 (Prob = 1.00)
---- LikelihoodD PDF Bkg[3]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [0(130),0(18),0(1),0(0)]
---- LikelihoodD PDF Sig[4]   : Validation result for PDF "HadrWmass signal training": 
---- LikelihoodD PDF Sig[4]   :     chi2/ndof(!=0) = 456.8/70 = 6.53 (Prob = 0.00)
---- <WARNING> LikelihoodD PDF Sig[4]   : Comparison of the original histogram "HadrWmass signal training"
---- <WARNING> LikelihoodD PDF Sig[4]   : with the corresponding PDF gave a chi2/ndof of 6.52572,
---- <WARNING> LikelihoodD PDF Sig[4]   : which corresponds to a deviation of more than 5 sigma! Please check!
---- LikelihoodD PDF Sig[4]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [49(22),32(3),18(0),2(0)]
---- LikelihoodD PDF Bkg[4]   : Validation result for PDF "HadrWmass background training": 
---- LikelihoodD PDF Bkg[4]   :     chi2/ndof(!=0) = 46.4/174 = 0.27 (Prob = 1.00)
---- LikelihoodD PDF Bkg[4]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [11(55),1(7),0(0),0(0)]
---- LikelihoodD PDF Sig[5]   : Validation result for PDF "TopMass signal training": 
---- LikelihoodD PDF Sig[5]   :     chi2/ndof(!=0) = 1147.0/47 = 24.40 (Prob = 0.00)
---- <WARNING> LikelihoodD PDF Sig[5]   : Comparison of the original histogram "TopMass signal training"
---- <WARNING> LikelihoodD PDF Sig[5]   : with the corresponding PDF gave a chi2/ndof of 24.4035,
---- <WARNING> LikelihoodD PDF Sig[5]   : which corresponds to a deviation of more than 5 sigma! Please check!
---- LikelihoodD PDF Sig[5]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [36(14),20(2),10(0),3(0)]
---- LikelihoodD PDF Bkg[5]   : Validation result for PDF "TopMass background training": 
---- LikelihoodD PDF Bkg[5]   :     chi2/ndof(!=0) = 779.0/72 = 10.82 (Prob = 0.00)
---- <WARNING> LikelihoodD PDF Bkg[5]   : Comparison of the original histogram "TopMass background training"
---- <WARNING> LikelihoodD PDF Bkg[5]   : with the corresponding PDF gave a chi2/ndof of 10.8198,
---- <WARNING> LikelihoodD PDF Bkg[5]   : which corresponds to a deviation of more than 5 sigma! Please check!
---- LikelihoodD PDF Bkg[5]   :     #bins-found(#expected-bins) deviating > [1,2,3,6] sigmas: [10(22),6(3),4(0),2(0)]
---- LikelihoodD              : End of training                                              
---- LikelihoodD              : Elapsed time for training with 2754843 events: 9.89 sec         
---- LikelihoodD              : Create MVA output for classification on training sample
---- LikelihoodD              : Evaluation of LikelihoodD on training sample (2754843 events)
---- LikelihoodD              : Elapsed time for evaluation of 2754843 events: 10.5 sec       
---- LikelihoodD              : Creating weight file in xml format: weights/JetCombTrainer_LikelihoodD.weights.xml
---- LikelihoodD              : Creating standalone response class: weights/JetCombTrainer_LikelihoodD.class.C
---- LikelihoodD              : Write monitoring histograms to file: MVAOutput_TTbarJES.root:/Method_Likelihood/LikelihoodD
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
-Warning in <TH1F::Rebin>: ngroup=5 is not an exact divider of nbins=657.
---- Factory                  : Training finished
---- Factory                  : Train method: MLP for Classification
---- MLP                      : 
---- MLP                      : ================================================================
---- MLP                      : H e l p   f o r   M V A   m e t h o d   [ MLP ] :
---- MLP                      : 
---- MLP                      : --- Short description:
---- MLP                      : 
---- MLP                      : The MLP artificial neural network (ANN) is a traditional feed-
---- MLP                      : forward multilayer perceptron impementation. The MLP has a user-
---- MLP                      : defined hidden layer architecture, while the number of input (output)
---- MLP                      : nodes is determined by the input variables (output classes, i.e., 
---- MLP                      : signal and one background). 
---- MLP                      : 
---- MLP                      : --- Performance optimisation:
---- MLP                      : 
---- MLP                      : Neural networks are stable and performing for a large variety of 
---- MLP                      : linear and non-linear classification problems. However, in contrast
---- MLP                      : to (e.g.) boosted decision trees, the user is advised to reduce the 
---- MLP                      : number of input variables that have only little discrimination power. 
---- MLP                      : 
---- MLP                      : In the tests we have carried out so far, the MLP and ROOT networks
---- MLP                      : (TMlpANN, interfaced via TMVA) performed equally well, with however
---- MLP                      : a clear speed advantage for the MLP. The Clermont-Ferrand neural 
---- MLP                      : net (CFMlpANN) exhibited worse classification performance in these
---- MLP                      : tests, which is partly due to the slow convergence of its training
---- MLP                      : (at least 10k training cycles are required to achieve approximately
---- MLP                      : competitive results).
---- MLP                      : 
---- MLP                      : Overtraining: only the TMlpANN performs an explicit separation of the
---- MLP                      : full training sample into independent training and validation samples.
---- MLP                      : We have found that in most high-energy physics applications the 
---- MLP                      : avaliable degrees of freedom (training events) are sufficient to 
---- MLP                      : constrain the weights of the relatively simple architectures required
---- MLP                      : to achieve good performance. Hence no overtraining should occur, and 
---- MLP                      : the use of validation samples would only reduce the available training
---- MLP                      : information. However, if the perrormance on the training sample is 
---- MLP                      : found to be significantly better than the one found with the inde-
---- MLP                      : pendent test sample, caution is needed. The results for these samples 
---- MLP                      : are printed to standard output at the end of each training job.
---- MLP                      : 
---- MLP                      : --- Performance tuning via configuration options:
---- MLP                      : 
---- MLP                      : The hidden layer architecture for all ANNs is defined by the option
---- MLP                      : "HiddenLayers=N+1,N,...", where here the first hidden layer has N+1
---- MLP                      : neurons and the second N neurons (and so on), and where N is the number  
---- MLP                      : of input variables. Excessive numbers of hidden layers should be avoided,
---- MLP                      : in favour of more neurons in the first hidden layer.
---- MLP                      : 
---- MLP                      : The number of cycles should be above 500. As said, if the number of
---- MLP                      : adjustable weights is small compared to the training sample size,
---- MLP                      : using a large number of training samples should not lead to overtraining.
---- MLP                      : 
---- MLP                      : <Suppress this message by specifying "!H" in the booking option>
---- MLP                      : ================================================================
---- MLP                      : 
---- Norm                     : Preparing the transformation.
---- TFHandler_MLP            : ------------------------------------------------------------------------------------
---- TFHandler_MLP            :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_MLP            : ------------------------------------------------------------------------------------
---- TFHandler_MLP            :          btag:        0.43448        0.43972   [        -1.0000         1.0000 ]
---- TFHandler_MLP            : ThPtOverSumPt:       -0.13198        0.41452   [        -1.0000         1.0000 ]
---- TFHandler_MLP            :     AngleThWh:       -0.69470        0.35898   [        -1.0000         1.0000 ]
---- TFHandler_MLP            :     AngleThBh:       -0.14790        0.52223   [        -1.0000         1.0000 ]
---- TFHandler_MLP            :     HadrWmass:       -0.80074        0.10117   [        -1.0000         1.0000 ]
---- TFHandler_MLP            :       TopMass:       -0.80042        0.11543   [        -1.0000         1.0000 ]
---- TFHandler_MLP            : ------------------------------------------------------------------------------------
---- MLP                      : Begin training
---- MLP                      : Training Network
---- MLP                      : End of training                                              
---- MLP                      : Elapsed time for training with 2754843 events: 1.49e+04 sec         
---- MLP                      : Create MVA output for classification on training sample
---- MLP                      : Evaluation of MLP on training sample (2754843 events)
---- MLP                      : Elapsed time for evaluation of 2754843 events: 9.01 sec       
---- MLP                      : Creating weight file in xml format: weights/JetCombTrainer_MLP.weights.xml
---- MLP                      : Creating standalone response class: weights/JetCombTrainer_MLP.class.C
---- MLP                      : Write special histos to file: MVAOutput_TTbarJES.root:/Method_MLP/MLP
---- Factory                  : Training finished
---- Factory                  : Train method: BDT for Classification
---- TFHandler_BDT            : ------------------------------------------------------------------------------------
---- TFHandler_BDT            :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_BDT            : ------------------------------------------------------------------------------------
---- TFHandler_BDT            :          btag:        0.43448        0.43972   [        -1.0000         1.0000 ]
---- TFHandler_BDT            : ThPtOverSumPt:        0.42807        0.20442   [         0.0000        0.98630 ]
---- TFHandler_BDT            :     AngleThWh:        0.47954        0.56386   [         0.0000         3.1415 ]
---- TFHandler_BDT            :     AngleThBh:         1.3385        0.82031   [         0.0000         3.1416 ]
---- TFHandler_BDT            :     HadrWmass:         100.19         50.871   [         0.0000         1005.7 ]
---- TFHandler_BDT            :       TopMass:         254.84         147.40   [         0.0000         2553.9 ]
---- TFHandler_BDT            : ------------------------------------------------------------------------------------
---- BDT                      : Begin training
---- BDT                      : Training 400 Decision Trees ... patience please
---- BDT                      : <Train> elapsed time: 1.68e+03 sec                              
---- BDT                      : <Train> average number of nodes (w/o pruning) : 5
---- BDT                      : End of training                                              
---- BDT                      : Elapsed time for training with 2754843 events: 1.68e+03 sec         
---- BDT                      : Create MVA output for classification on training sample
---- BDT                      : Evaluation of BDT on training sample (2754843 events)
---- BDT                      : Elapsed time for evaluation of 2754843 events: 92.1 sec       
---- BDT                      : Creating weight file in xml format: weights/JetCombTrainer_BDT.weights.xml
---- BDT                      : Creating standalone response class: weights/JetCombTrainer_BDT.class.C
---- BDT                      : Write monitoring histograms to file: MVAOutput_TTbarJES.root:/Method_BDT/BDT
---- Factory                  : Training finished
---- Factory                  : Train method: RuleFit for Classification
---- RuleFit                  : 
---- RuleFit                  : ================================================================
---- RuleFit                  : H e l p   f o r   M V A   m e t h o d   [ RuleFit ] :
---- RuleFit                  : 
---- RuleFit                  : --- Short description:
---- RuleFit                  : 
---- RuleFit                  : This method uses a collection of so called rules to create a
---- RuleFit                  : discriminating scoring function. Each rule consists of a series
---- RuleFit                  : of cuts in parameter space. The ensemble of rules are created
---- RuleFit                  : from a forest of decision trees, trained using the training data.
---- RuleFit                  : Each node (apart from the root) corresponds to one rule.
---- RuleFit                  : The scoring function is then obtained by linearly combining
---- RuleFit                  : the rules. A fitting procedure is applied to find the optimum
---- RuleFit                  : set of coefficients. The goal is to find a model with few rules
---- RuleFit                  : but with a strong discriminating power.
---- RuleFit                  : 
---- RuleFit                  : --- Performance optimisation:
---- RuleFit                  : 
---- RuleFit                  : There are two important considerations to make when optimising:
---- RuleFit                  : 
---- RuleFit                  :   1. Topology of the decision tree forest
---- RuleFit                  :   2. Fitting of the coefficients
---- RuleFit                  : 
---- RuleFit                  : The maximum complexity of the rules is defined by the size of
---- RuleFit                  : the trees. Large trees will yield many complex rules and capture
---- RuleFit                  : higher order correlations. On the other hand, small trees will
---- RuleFit                  : lead to a smaller ensemble with simple rules, only capable of
---- RuleFit                  : modeling simple structures.
---- RuleFit                  : Several parameters exists for controlling the complexity of the
---- RuleFit                  : rule ensemble.
---- RuleFit                  : 
---- RuleFit                  : The fitting procedure searches for a minimum using a gradient
---- RuleFit                  : directed path. Apart from step size and number of steps, the
---- RuleFit                  : evolution of the path is defined by a cut-off parameter, tau.
---- RuleFit                  : This parameter is unknown and depends on the training data.
---- RuleFit                  : A large value will tend to give large weights to a few rules.
---- RuleFit                  : Similarily, a small value will lead to a large set of rules
---- RuleFit                  : with similar weights.
---- RuleFit                  : 
---- RuleFit                  : A final point is the model used; rules and/or linear terms.
---- RuleFit                  : For a given training sample, the result may improve by adding
---- RuleFit                  : linear terms. If best performance is optained using only linear
---- RuleFit                  : terms, it is very likely that the Fisher discriminant would be
---- RuleFit                  : a better choice. Ideally the fitting procedure should be able to
---- RuleFit                  : make this choice by giving appropriate weights for either terms.
---- RuleFit                  : 
---- RuleFit                  : --- Performance tuning via configuration options:
---- RuleFit                  : 
---- RuleFit                  : I.  TUNING OF RULE ENSEMBLE:
---- RuleFit                  : 
---- RuleFit                  :    ForestType  : Recomended is to use the default "AdaBoost".
---- RuleFit                  :    nTrees      : More trees leads to more rules but also slow
---- RuleFit                  :                  performance. With too few trees the risk is
---- RuleFit                  :                  that the rule ensemble becomes too simple.
---- RuleFit                  :    fEventsMin  
---- RuleFit                  :    fEventsMax  : With a lower min, more large trees will be generated
---- RuleFit                  :                  leading to more complex rules.
---- RuleFit                  :                  With a higher max, more small trees will be
---- RuleFit                  :                  generated leading to more simple rules.
---- RuleFit                  :                  By changing this range, the average complexity
---- RuleFit                  :                  of the rule ensemble can be controlled.
---- RuleFit                  :    RuleMinDist : By increasing the minimum distance between
---- RuleFit                  :                  rules, fewer and more diverse rules will remain.
---- RuleFit                  :                  Initially it is a good idea to keep this small
---- RuleFit                  :                  or zero and let the fitting do the selection of
---- RuleFit                  :                  rules. In order to reduce the ensemble size,
---- RuleFit                  :                  the value can then be increased.
---- RuleFit                  : 
---- RuleFit                  : II. TUNING OF THE FITTING:
---- RuleFit                  : 
---- RuleFit                  :    GDPathEveFrac : fraction of events in path evaluation
---- RuleFit                  :                  Increasing this fraction will improve the path
---- RuleFit                  :                  finding. However, a too high value will give few
---- RuleFit                  :                  unique events available for error estimation.
---- RuleFit                  :                  It is recomended to usethe default = 0.5.
---- RuleFit                  :    GDTau         : cutoff parameter tau
---- RuleFit                  :                  By default this value is set to -1.0.
---- RuleFit                  :                  This means that the cut off parameter is
---- RuleFit                  :                  automatically estimated. In most cases
---- RuleFit                  :                  this should be fine. However, you may want
---- RuleFit                  :                  to fix this value if you already know it
---- RuleFit                  :                  and want to reduce on training time.
---- RuleFit                  :    GDTauPrec     : precision of estimated tau
---- RuleFit                  :                  Increase this precision to find a more
---- RuleFit                  :                  optimum cut-off parameter.
---- RuleFit                  :    GDNStep       : number of steps in path search
---- RuleFit                  :                  If the number of steps is too small, then
---- RuleFit                  :                  the program will give a warning message.
---- RuleFit                  : 
---- RuleFit                  : III. WARNING MESSAGES
---- RuleFit                  : 
---- RuleFit                  : Risk(i+1)>=Risk(i) in path
---- RuleFit                  : Chaotic behaviour of risk evolution.
---- RuleFit                  :                  The error rate was still decreasing at the end
---- RuleFit                  :                  By construction the Risk should always decrease.
---- RuleFit                  :                  However, if the training sample is too small or
---- RuleFit                  :                  the model is overtrained, such warnings can
---- RuleFit                  :                  occur.
---- RuleFit                  :                  The warnings can safely be ignored if only a
---- RuleFit                  :                  few (<3) occur. If more warnings are generated,
---- RuleFit                  :                  the fitting fails.
---- RuleFit                  :                  A remedy may be to increase the value
---- RuleFit                  :                  GDValidEveFrac to 1.0 (or a larger value).
---- RuleFit                  :                  In addition, if GDPathEveFrac is too high
---- RuleFit                  :                  the same warnings may occur since the events
---- RuleFit                  :                  used for error estimation are also used for
---- RuleFit                  :                  path estimation.
---- RuleFit                  :                  Another possibility is to modify the model - 
---- RuleFit                  :                  See above on tuning the rule ensemble.
---- RuleFit                  : 
---- RuleFit                  : The error rate was still decreasing at the end of the path
---- RuleFit                  :                  Too few steps in path! Increase GDNSteps.
---- RuleFit                  : 
---- RuleFit                  : Reached minimum early in the search
---- RuleFit                  :                  Minimum was found early in the fitting. This
---- RuleFit                  :                  may indicate that the used step size GDStep.
---- RuleFit                  :                  was too large. Reduce it and rerun.
---- RuleFit                  :                  If the results still are not OK, modify the
---- RuleFit                  :                  model either by modifying the rule ensemble
---- RuleFit                  :                  or add/remove linear terms
---- RuleFit                  : 
---- RuleFit                  : <Suppress this message by specifying "!H" in the booking option>
---- RuleFit                  : ================================================================
---- RuleFit                  : 
---- TFHandler_RuleFit        : ------------------------------------------------------------------------------------
---- TFHandler_RuleFit        :      Variable             Mean             RMS     [        Min             Max ]
---- TFHandler_RuleFit        : ------------------------------------------------------------------------------------
---- TFHandler_RuleFit        :          btag:        0.43448        0.43972   [        -1.0000         1.0000 ]
---- TFHandler_RuleFit        : ThPtOverSumPt:        0.42807        0.20442   [         0.0000        0.98630 ]
---- TFHandler_RuleFit        :     AngleThWh:        0.47954        0.56386   [         0.0000         3.1415 ]
---- TFHandler_RuleFit        :     AngleThBh:         1.3385        0.82031   [         0.0000         3.1416 ]
---- TFHandler_RuleFit        :     HadrWmass:         100.19         50.871   [         0.0000         1005.7 ]
---- TFHandler_RuleFit        :       TopMass:         254.84         147.40   [         0.0000         2553.9 ]
---- TFHandler_RuleFit        : ------------------------------------------------------------------------------------
---- RuleFit                  : Begin training
---- RuleFit                  : -------------------RULE ENSEMBLE SUMMARY------------------------
---- RuleFit                  : Tree training method               : AdaBoost
---- RuleFit                  : Number of events per tree          : 5509686
---- RuleFit                  : Number of trees                    : 20
---- RuleFit                  : Number of generated rules          : 126
---- RuleFit                  : Idem, after cleanup                : 55
---- RuleFit                  : Average number of cuts per rule    :     2.02
---- RuleFit                  : Spread in number of cuts per rules :     0.76
---- RuleFit                  : ----------------------------------------------------------------
---- RuleFit                  : 
---- RuleFit                  : GD path scan - the scan stops when the max num. of steps is reached or a min is found
---- RuleFit                  : Estimating the cutoff parameter tau. The estimated time is a pessimistic maximum.
---- RuleFit                  : Best path found with tau = 0.7700 after 4.27e+03 sec      
---- RuleFit                  : Fitting model...
-
- *** Break *** segmentation violation
