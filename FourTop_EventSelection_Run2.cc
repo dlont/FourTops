@@ -114,7 +114,7 @@ int main (int argc, char *argv[])
 {
 
     //Checking Passed Arguments to ensure proper execution of MACRO
-    if(argc != 12)
+    if(argc != 14)
     {
         std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
         return 1;
@@ -132,6 +132,8 @@ int main (int argc, char *argv[])
     const float xSect               = strtod(argv[9], NULL);
     const float PreselEff           = strtod(argv[10], NULL);
     string fileName                 = argv[11];
+    const int startEvent            = strtol(argv[12], NULL, 10);
+    const int endEvent              = strtol(argv[13], NULL, 10);
     vector<string> vecfileNames;
     vecfileNames.push_back(fileName);
 
@@ -147,6 +149,8 @@ int main (int argc, char *argv[])
     cout << "Dataset EqLumi: " << EqLumi << endl;
     cout << "Dataset xSect: " << xSect << endl;
     cout << "Dataset File Name: " << vecfileNames[0] << endl;
+    cout << "Beginning Event: " << startEvent << endl;
+    cout << "Ending Event: " << endEvent << endl;
     cout << "----------------------------------------" << endl;
 //    cin.get();
 
@@ -270,7 +274,9 @@ int main (int argc, char *argv[])
     double newlumi;
 
     //Output ROOT file
-    string rootFileName ("FourTop"+postfix+channelpostfix+".root");
+    string outputDirectory("MACRO_Output"+channelpostfix);
+    mkdir(outputDirectory.c_str(),0777);
+    string rootFileName (outputDirectory+"/FourTop"+postfix+channelpostfix+".root");
     TFile *fout = new TFile (rootFileName.c_str(), "RECREATE");
 
     //vector of objects
@@ -298,6 +304,7 @@ int main (int argc, char *argv[])
     //Jets
     MSPlot["JetEta"]                                        = new MultiSamplePlot(datasets, "JetEta", 40,-4, 4, "Jet #eta");
     MSPlot["HT_SelectedJets"]                               = new MultiSamplePlot(datasets, "HT_SelectedJets", 30, 0, 1500, "HT");
+    MSPlot["HTExcess2M"]                                    = new MultiSamplePlot(datasets, "HTExcess2M", 30, 0, 1500, "HT_{Excess 2 b-tags}");
     //MET
     MSPlot["MET"]                                           = new MultiSamplePlot(datasets, "MET", 70, 0, 700, "MET");
 
@@ -306,7 +313,7 @@ int main (int argc, char *argv[])
     ///////////////////
 
     //Plots
-    string pathPNG = "FourTop"+postfix+channelpostfix;
+    string pathPNG = "MSPlots_FourTop"+postfix+channelpostfix;
     pathPNG += "_MSPlots/";
     //pathPNG = pathPNG +"/";
     mkdir(pathPNG.c_str(),0777);
@@ -432,7 +439,7 @@ int main (int argc, char *argv[])
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"HT:3rdJetPt:4thJetPt:5thJetPt:6thJetPt:ScaleFactor:NormFactor:Luminosity");
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nMtags:HT:LeadingMuonPt:LeadingElectronPt:LeadingBJetPt:HT2M:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
         //////////////////////////////////////////////////
         // Loop on events
@@ -443,17 +450,21 @@ int main (int argc, char *argv[])
         int start = 0;
         unsigned int ending = datasets[d]->NofEvtsToRunOver();
 
-        cout <<"Number of events = "<<  ending  <<endl;
+        cout <<"Number of events in total dataset = "<<  ending  <<endl;
 
-        int event_start = 0;
+        int event_start = startEvent;
         if (verbose > 1) cout << " - Loop over events " << endl;
 
         double MHT, MHTSig, STJet, EventMass, EventMassX , SumJetMass, SumJetMassX,H,HX , HT, HTX,HTH,HTXHX, sumpx_X, sumpy_X, sumpz_X, sume_X, sumpx, sumpy, sumpz, sume, jetpt,PTBalTopEventX,PTBalTopSumJetX , PTBalTopMuMet;
 
         double currentfrac =0.;
-        double end_d = ending;
+        double end_d;
+        if(endEvent > ending)
+            end_d = ending;
+        else
+            end_d = endEvent;
 
-        cout <<"Will run over "<<  end_d<< " events..."<<endl;
+        cout <<"Will run over "<<  (end_d - event_start) << " events..."<<endl;
         cout <<"Starting event = = = = "<< event_start  << endl;
 
         //define object containers
@@ -690,15 +701,26 @@ int main (int argc, char *argv[])
 
             for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
             {
+                if(nMtags>=2 && seljet1>=2)
+                {
+                    jetpt = selectedJets[seljet1]->Pt();
+                    HT2M = HT2M + jetpt;
+                    H2M = H2M + selectedJets[seljet1]->P();
+                }
                 MSPlot["BdiscBJetCand_CSV"]->Fill(selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags(),datasets[d], true, Luminosity*scaleFactor);
                 MSPlot["JetEta"]->Fill(selectedJets[seljet1]->Eta() , datasets[d], true, Luminosity*scaleFactor);
                 //Event-level variables
                 jetpt = selectedJets[seljet1]->Pt();
                 HT = HT + jetpt;
             }
+            MSPlot["HTExcess2M"]->Fill(HT2M, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity*scaleFactor);
             sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
-            tup->Fill(HT,selectedJets[2]->Pt(),selectedJets[3]->Pt(),selectedJets[4]->Pt(),selectedJets[5]->Pt(),scaleFactor,datasets[d]->NormFactor(),Luminosity);
+
+            //////////////////
+            //Filling nTuple//
+            //////////////////
+            tup->Fill(nJets,nMtags,HT,selectedMuons[0]->Pt(),selectedElectrons[0]->Pt(),selectedMBJets[0]->Pt(),HT2M,scaleFactor,vertex.size(),datasets[d]->NormFactor(),Luminosity,weight_0);
 
         } //End Loop on Events
 
@@ -728,7 +750,7 @@ int main (int argc, char *argv[])
     selecTable.TableCalculator(  true, true, true, true, true);
 
     //Options : WithError (false), writeMerged (true), useBookTabs (false), addRawsyNumbers (false), addEfficiencies (false), addTotalEfficiencies (false), writeLandscape (false)
-    selecTable.Write(  "FourTop"+postfix+"_Table"+channelpostfix+".tex",    false,true,true,true,false,false,true);
+    selecTable.Write(  outputDirectory+"/FourTop"+postfix+"_Table"+channelpostfix+".tex",    false,true,true,true,false,false,true);
 
     fout->cd();
     TFile *foutmva = new TFile ("foutMVA.root","RECREATE");
