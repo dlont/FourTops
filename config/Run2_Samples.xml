@@ -2,14 +2,6 @@
 <data>
 <datasets>
 
-<!-- <d name="Data"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="18848.367" filenames="/user/keaveney/public_html/TopTrees/53X_v4/SingleMu/2217_2012A_v2/*.root,/user/keaveney/public_html/TopTrees/53X_v4/SingleMu/2227_2012B_v2/*.root,/user/keaveney/public_html/TopTrees/53X_v4/SingleMu/2262_2012C/*.root,/user/keaveney/public_html/TopTrees/53X_v4/SingleMu/2423_2012C/*.root,/user/keaveney/public_html/TopTrees/53X_v4/SingleMu/2435_2012D/*.root,/user/keaveney/public_html/TopTrees/53X_v4/SingleMu/2417_2012D/*.root"/>
-
-<d name="tttt" title="SM tttt"  add="0"   color="40" ls="1"  lw="2" normf="1"  EqLumi="50000000" xsection=".001" PreselEff="0.0" filenames="/home/jesse/CMS/EventSamples/53X_v6/tttt/13TeV/*.root"/>
-
-<d name="Zjjj" title="Z+3Jets"  add="0"   color="50" ls="1"  lw="2" normf="1"  EqLumi="50000000" xsection=".001" PreselEff="0.0" filenames="/home/jesse/CMS/EventSamples/53X_v6/Zjjj/13TeV/*.root"/>
-
-<d name="TTJets"  title="t\bar{t}+jets"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="223000.0" xsection="103.04"   PreselEff="0.0"   filenames="/home/jesse/CMS/EventSamples/53X_v6/TTbar/13TeV/*.root"/>
--->
 <d name="ttttNLO" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="1"  EqLumi="4925535.5" xsection=".008823" PreselEff="0.0" filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/CRAB_PrivateMC/FOURTOP_NLO_13TeV_aMCatNLO_LHE_pythia8_miniAOD_CRAB3_v3/141201_105227/0000/TOPTREE_*.root"/>
 
 <d name="ttttLO" title="LO SM tttt"  add="0"   color="50" ls="0"  lw="2" normf="1"  EqLumi="11117287.3" xsection=".008995" PreselEff="0.0" filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TopTrees/72x/FOURTOP_LO_TOPTREE.root"/>
