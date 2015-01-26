@@ -179,6 +179,17 @@ int main (int argc, char *argv[])
 
     clock_t start = clock();
 
+    BTagWeightTools * bTool = new BTagWeightTools("SFb-pt_NOttbar_payload_EPS13.txt", "CSVM") ;
+
+    int doJESShift = 0; // 0: off 1: minus 2: plus
+    cout << "doJESShift: " << doJESShift << endl;
+
+    int doJERShift = 0; // 0: off (except nominal scalefactor for jer) 1: minus 2: plus
+    cout << "doJERShift: " << doJERShift << endl;
+
+    int dobTagEffShift = 0; //0: off (except nominal scalefactor for btag eff) 1: minus 2: plus
+    cout << "dobTagEffShift: " << dobTagEffShift << endl;
+
     cout << "*************************************************************" << endl;
     cout << " Beginning of the program for the FourTop search ! "           << endl;
     cout << "*************************************************************" << endl;
@@ -252,7 +263,7 @@ int main (int argc, char *argv[])
     float Luminosity = 5000.0; //pb^-1??
     vector<string> MVAvars;
 
-        string dataSetName;
+    string dataSetName;
 
 
     /////////////////////////////////
@@ -440,6 +451,38 @@ int main (int argc, char *argv[])
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
 
         TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nMtags:HT:LeadingMuonPt:LeadingElectronPt:LeadingBJetPt:HT2M:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+
+        //////////////////////////////////////////////////
+        /// Initialize JEC factors ///////////////////////
+        //////////////////////////////////////////////////
+
+        vector<JetCorrectorParameters> vCorrParam;
+
+        if(dataSetName.find("Data") == 0 || dataSetName.find("data") == 0 || dataSetName.find("DATA") == 0 ) // Data!
+        {
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L1FastJet_AK5PFchs.txt");
+            vCorrParam.push_back(*L1JetCorPar);
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L2Relative_AK5PFchs.txt");
+            vCorrParam.push_back(*L2JetCorPar);
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L3Absolute_AK5PFchs.txt");
+            vCorrParam.push_back(*L3JetCorPar);
+            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L2L3Residual_AK5PFchs.txt");
+            vCorrParam.push_back(*L2L3ResJetCorPar);
+        }
+        else
+        {
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L1FastJet_AK5PFchs.txt");
+            vCorrParam.push_back(*L1JetCorPar);
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L2Relative_AK5PFchs.txt");
+            vCorrParam.push_back(*L2JetCorPar);
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L3Absolute_AK5PFchs.txt");
+            vCorrParam.push_back(*L3JetCorPar);
+        }
+        JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty("../../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_Uncertainty_AK5PFchs.txt");
+//    JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(*(new JetCorrectorParameters("JECFiles/Fall12_V7_DATA_UncertaintySources_AK5PFchs.txt", "SubTotalMC")));
+//    JetCorrectionUncertainty *jecUncTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("JECFiles/Fall12_V7_DATA_UncertaintySources_AK5PFchs.txt", "Total")));
+
+        JetTools *jetTools = new JetTools(vCorrParam, jecUnc, true);
 
         //////////////////////////////////////////////////
         // Loop on events
