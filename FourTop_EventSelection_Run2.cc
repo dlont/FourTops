@@ -190,12 +190,32 @@ int main (int argc, char *argv[])
     int dobTagEffShift = 0; //0: off (except nominal scalefactor for btag eff) 1: minus 2: plus
     cout << "dobTagEffShift: " << dobTagEffShift << endl;
 
+    int domisTagEffShift = 0; //0: off (except nominal scalefactor for mistag eff) 1: minus 2: plus
+    cout << "domisTagEffShift: " << domisTagEffShift << endl;
+
     cout << "*************************************************************" << endl;
     cout << " Beginning of the program for the FourTop search ! "           << endl;
     cout << "*************************************************************" << endl;
 
 
     string postfix = "_Run2_TopTree_Study_" + dName; // to relabel the names of the output file
+
+    if (doJESShift == 1)
+        postfix= postfix+"_JESMinus";
+    if (doJESShift == 2)
+        postfix= postfix+"_JESPlus";
+    if (doJERShift == 1)
+        postfix= postfix+"_JERMinus";
+    if (doJERShift == 2)
+        postfix= postfix+"_JERPlus";
+    if (dobTagEffShift == -1)
+        postfix= postfix+"_bTagMinus";
+    if (dobTagEffShift == 1)
+        postfix= postfix+"_bTagPlus";
+    if(domisTagEffShift == -1)
+        postfix= postfix+"_misTagMinus";
+    if(domisTagEffShift == 1)
+        postfix= postfix+"_misTagPlus";
 
     ///////////////////////////////////////
     // Configuration
@@ -249,6 +269,8 @@ int main (int argc, char *argv[])
     anaEnv.JetType = 2;
     anaEnv.METType = 2;
     int verbose = 2;//anaEnv.Verbose;
+
+
 
     ////////////////////////////////
     //  Load datasets
@@ -460,25 +482,25 @@ int main (int argc, char *argv[])
 
         if(dataSetName.find("Data") == 0 || dataSetName.find("data") == 0 || dataSetName.find("DATA") == 0 ) // Data!
         {
-            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L1FastJet_AK5PFchs.txt");
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L1FastJet_AK5PFchs.txt");
             vCorrParam.push_back(*L1JetCorPar);
-            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L2Relative_AK5PFchs.txt");
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L2Relative_AK5PFchs.txt");
             vCorrParam.push_back(*L2JetCorPar);
-            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L3Absolute_AK5PFchs.txt");
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L3Absolute_AK5PFchs.txt");
             vCorrParam.push_back(*L3JetCorPar);
-            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L2L3Residual_AK5PFchs.txt");
+            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L2L3Residual_AK5PFchs.txt");
             vCorrParam.push_back(*L2L3ResJetCorPar);
         }
         else
         {
-            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L1FastJet_AK5PFchs.txt");
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L1FastJet_AK5PFchs.txt");
             vCorrParam.push_back(*L1JetCorPar);
-            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L2Relative_AK5PFchs.txt");
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L2Relative_AK5PFchs.txt");
             vCorrParam.push_back(*L2JetCorPar);
-            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L3Absolute_AK5PFchs.txt");
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L3Absolute_AK5PFchs.txt");
             vCorrParam.push_back(*L3JetCorPar);
         }
-        JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty("../../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_Uncertainty_AK5PFchs.txt");
+        JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_Uncertainty_AK5PFchs.txt");
 //    JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(*(new JetCorrectorParameters("JECFiles/Fall12_V7_DATA_UncertaintySources_AK5PFchs.txt", "SubTotalMC")));
 //    JetCorrectionUncertainty *jecUncTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("JECFiles/Fall12_V7_DATA_UncertaintySources_AK5PFchs.txt", "Total")));
 
@@ -554,6 +576,43 @@ int main (int argc, char *argv[])
             if (debug)cout <<"Rho: " << rho <<endl;
             string graphName;
 
+            //////////////////
+            //Loading Gen jets
+            //////////////////
+
+            vector<TRootGenJet*> genjets;
+            if( ! (dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA" ) )
+            {
+                // loading GenJets as I need them for JER
+                genjets = treeLoader.LoadGenJet(ievt);
+            }
+
+            ///////////////////////
+            // JER smearing
+            //////////////////////
+
+            if( ! (dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA" ) )
+            {
+                //JER
+                doJERShift == 0;
+                if(doJERShift == 1)
+                    jetTools->correctJetJER(init_jets, genjets, mets[0], "minus");
+                else if(doJERShift == 2)
+                    jetTools->correctJetJER(init_jets, genjets, mets[0], "plus");
+                else
+                    jetTools->correctJetJER(init_jets, genjets, mets[0], "nominal");
+
+                //     coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"After JER correction:");
+
+                // JES sysematic!
+                if (doJESShift == 1)
+                    jetTools->correctJetJESUnc(init_jets, mets[0], "minus");
+                else if (doJESShift == 2)
+                    jetTools->correctJetJESUnc(init_jets, mets[0], "plus");
+
+                //            coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"Before JES correction:");
+
+            }
 
             ///////////////////////////////////////////////////////////
             // Event selection
@@ -606,8 +665,50 @@ int main (int argc, char *argv[])
             // Summing HT and calculating leading, lagging, and ratio for Selected and BJets //
             ///////////////////////////////////////////////////////////////////////////////////
             double temp_HT = 0., HTb = 0.;
+
+            double p_tags_tagged_mc = 1.;
+            double p_tags_untagged_mc = 1.;
+            double p_tags_tagged_data = 1.;
+            double p_tags_untagged_data = 1.;
+            double p_mc = 1., p_data = 1.;
+            int jet_flavor;
+            float eff=1   ;
+            float scaled_eff=1 ;
+            float a_eff = 1;
+            float sf_a_eff = 1;
+            double LightJeteff;
+            double JetPt, JetEta;
+            double SF_tag =1.;
+            double event_weight = 1.;
             for (Int_t seljet =0; seljet < selectedJets.size(); seljet++ )
             {
+                jet_flavor = selectedJets[seljet]->partonFlavour();
+                JetPt = selectedJets[seljet]->Pt() ;
+                JetEta = selectedJets[seljet]->Eta() ;
+                if (JetPt > 800.) JetPt = 800;
+                if (JetEta > 2.4)
+                {
+                    JetEta = 2.4;
+                }
+                else if (JetEta < -2.4)
+                {
+                    JetEta = -2.4;
+                }
+
+
+                if(fabs(jet_flavor) == 5 || fabs(jet_flavor) == 4  )
+                {
+                    SF_tag =  bTool->getSF(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,dobTagEffShift );
+                    //  cout <<" "<<endl;
+                    ////cout <<"jet SF nom "<< bTool->getWeight(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,0 )    <<endl;
+                    //cout <<"jet SF minus "<< bTool->getWeight(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,-1 )    <<endl;
+                    //cout <<"jet SF plus "<< bTool->getWeight(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,1 )    <<endl;
+                }
+                else
+                {
+                    //  cout <<" light jet... "<<endl;
+                    SF_tag =  bTool->getSF(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,domisTagEffShift);
+                }
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
                 {
                     selectedLBJets.push_back(selectedJets[seljet]);
