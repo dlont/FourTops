@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
-////         Analysis code for search for Four Top Production.                  ////
-////////////////////////////////////////////////////////////////////////////////////
+////         Analysis code for search for Four Top Production.            ////
+//////////////////////////////////////////////////////////////////////////////
 
 // ttbar @ NLO 13 TeV:
 //all-had ->679 * .46 = 312.34
@@ -36,6 +36,7 @@
 #include "TopTreeProducer/interface/TRootEvent.h"
 #include "TopTreeAnalysisBase/Selection/interface/SelectionTable.h"
 //#include "TopTreeAnalysisBase/Selection/interface/FourTopSelectionTable.h"
+#include "TopTreeAnalysisBase/Selection/interface/Run2Selection.h"
 
 #include "TopTreeAnalysisBase/Content/interface/AnalysisEnvironment.h"
 #include "TopTreeAnalysisBase/Content/interface/Dataset.h"
@@ -74,7 +75,6 @@ using namespace reweight;
 bool split_ttbar = false;
 bool debug = false;
 
-
 pair<float, vector<unsigned int> > MVAvals1;
 pair<float, vector<unsigned int> > MVAvals2;
 pair<float, vector<unsigned int> > MVAvals2ndPass;
@@ -90,7 +90,7 @@ map<string,MultiSamplePlot*> MSPlot;
 
 /// MultiPadPlot
 map<string,MultiSamplePlot*> MultiPadPlot;
-
+/*
 struct HighestTCHEBtag
 {
     bool operator()( TRootJet* j1, TRootJet* j2 ) const
@@ -98,6 +98,7 @@ struct HighestTCHEBtag
         return j1->btag_trackCountingHighEffBJetTags() > j2->btag_trackCountingHighEffBJetTags();
     }
 };
+*/
 struct HighestCVSBtag
 {
     bool operator()( TRootJet* j1, TRootJet* j2 ) const
@@ -107,9 +108,6 @@ struct HighestCVSBtag
 };
 
 bool match;
-
-//To cout the Px, Py, Pz, E and Pt of objects
-int Factorial(int N);
 
 int main (int argc, char *argv[])
 {
@@ -189,8 +187,8 @@ int main (int argc, char *argv[])
     bool dilepton = false;
     bool SingleLepton = true;
 
-    bool Muon = true;
-    bool Electron = false;
+    bool Muon = false;
+    bool Electron = true;
  
     	
     if(Muon && Electron && dilepton)
@@ -408,55 +406,7 @@ int main (int argc, char *argv[])
         //////////////////////////////////////////////
         // Setup Date string and nTuple for output  //
         //////////////////////////////////////////////
-/*
-        time_t t = time(0);   // get time now
-        struct tm * now = localtime( & t );
 
-        int year = now->tm_year + 1900;
-        int month =  now->tm_mon + 1;
-        int day = now->tm_mday;
-        int hour = now->tm_hour;
-        int min = now->tm_min;
-        int sec = now->tm_sec;
-
-        string year_str;
-        string month_str;
-        string day_str;
-        string hour_str;
-        string min_str;
-        string sec_str;
-
-        ostringstream convert;   // stream used for the conversion
-        convert << year;      // insert the textual representation of 'Number' in the characters in the stream
-        year_str = convert.str();
-        convert.str("");
-        convert.clear();
-        convert << month;      // insert the textual representation of 'Number' in the characters in the stream
-        month_str = convert.str();
-        convert.str("");
-        convert.clear();
-        convert << day;      // insert the textual representation of 'Number' in the characters in the stream
-        day_str = convert.str();
-        convert.str("");
-        convert.clear();
-        convert << hour;      // insert the textual representation of 'Number' in the characters in the stream
-        hour_str = convert.str();
-        convert.str("");
-        convert.clear();
-        convert << min;      // insert the textual representation of 'Number' in the characters in the stream
-        min_str = convert.str();
-        convert.str("");
-        convert.clear();
-        convert << day;      // insert the textual representation of 'Number' in the characters in the stream
-        sec_str = convert.str();
-        convert.str("");
-        convert.clear();
-
-
-        string date_str = day_str + "_" + month_str + "_" + year_str;
-
-        cout <<"DATE STRING   "<<date_str << endl;
-*/
         SourceDate *strdate = new SourceDate();
         string date_str = strdate->ReturnDateStr();
 
@@ -499,7 +449,7 @@ int main (int argc, char *argv[])
 
         //define object containers
         vector<TRootElectron*> selectedElectrons;
-        vector<TRootPFJet*>    selectedJets;
+        vector<TRootJet*>      selectedJets;
         vector<TRootMuon*>     selectedMuons;
         vector<TRootElectron*> selectedExtraElectrons;
         vector<TRootMuon*>     selectedExtraMuons;
@@ -553,15 +503,17 @@ int main (int argc, char *argv[])
             if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
             // Declare selection instance
             Selection selection(init_jets, init_muons, init_electrons, mets);
+            Run2Selection r2selection(init_jets, init_muons, init_electrons, mets);
             // Define object selection cuts
             if (Muon && Electron && dilepton)
             {
                 selection.setJetCuts(30.,2.5,0.01,1.,0.98,0,0); //Pt, Eta, EMF, n90Hits, fHPD, dRJetElectron, DRJets
+                //selection.setElectronCuts(20,2.5,.15,0.04,.5,1,0); //Pt,Eta,RelIso,d0,MVAId,DistVzPVz, DRJets, MaxMissingHits
                 selection.setElectronCuts(20,2.5,.15,0.04,.5,1,0); //Pt,Eta,RelIso,d0,MVAId,DistVzPVz, DRJets, MaxMissingHits
                 selection.setMuonCuts(20, 2.4, 0.20, 1, 0.3, 1, 1, 0, 0);
 
                 if (debug)cout<<"Getting Jets"<<endl;
-                selectedJets                                        = selection.GetSelectedPFJets(true); // ApplyJetId
+                selectedJets                                        = selection.GetSelectedJets(); // ApplyJetId
                 if (debug)cout<<"Getting Tight Muons"<<endl;
                 selectedMuons                                       = selection.GetSelectedMuons();
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
@@ -569,16 +521,26 @@ int main (int argc, char *argv[])
             }
 
             else if(SingleLepton && Electron){
+                /*
                 selection.setJetCuts(30.,2.5,0.01,1.,0.98,0,0); //Pt, Eta, EMF, n90Hits, fHPD, dRJetElectron, DRJets
-                selection.setElectronCuts(20,2.5,.15,0.04,.5,1,0); //Pt,Eta,RelIso,d0,MVAId,DistVzPVz, DRJets, MaxMissingHits
+                selection.setElectronCuts(30,2.5,.1,0.02,.5,1,0); //Pt,Eta,RelIso,d0,MVAId,DistVzPVz, DRJets, MaxMissingHits
                 selection.setMuonCuts(20, 2.4, 0.20, 1, 0.3, 1, 1, 0, 0);
-
+               
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = selection.GetSelectedPFJets(true); // ApplyJetId
                 if (debug)cout<<"Getting Loose Muons"<<endl;
                 selectedMuons                                       = selection.GetSelectedMuons();
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
-                selectedElectrons                                   = selection.GetSelectedElectrons(20,2.5,0.15); // VBTF ID       
+                selectedElectrons                                   = selection.GetSelectedElectrons(20,2.5,0.15); // VBTF ID 
+                */
+                if (debug)cout<<"Getting Jets"<<endl;
+                selectedJets                                        = r2selection.GetSelectedJets(); // ApplyJetId
+                if (debug)cout<<"Getting Tight Muons"<<endl;
+                selectedMuons                                       = r2selection.GetSelectedMuons();
+                if (debug)cout<<"Getting Tight Electrons"<<endl;
+                selectedElectrons                                   = r2selection.GetSelectedElectrons("Tight", "PHYS14", true); // VBTF ID                       
+                if (debug)cout<<"Getting Loose Electrons"<<endl;
+                selectedExtraElectrons                              = r2selection.GetSelectedElectrons("Loose", "PHYS14", true);
             }
             else if(SingleLepton && Muon){
                 selection.setJetCuts(30.,2.5,0.01,1.,0.98,0,0); //Pt, Eta, EMF, n90Hits, fHPD, dRJetElectron, DRJets
@@ -586,11 +548,13 @@ int main (int argc, char *argv[])
                 selection.setMuonCuts(20, 2.4, 0.20, 1, 0.3, 1, 1, 0, 0);
 
                 if (debug)cout<<"Getting Jets"<<endl;
-                selectedJets                                        = selection.GetSelectedPFJets(true); // ApplyJetId
+                selectedJets                                        = selection.GetSelectedJets(); // ApplyJetId
                 if (debug)cout<<"Getting Tight Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons();
-                if (debug)cout<<"Getting Loose Electrons"<<endl;
-                selectedElectrons                                   = selection.GetSelectedElectrons(20,2.5,0.15); // VBTF ID                       
+                selectedMuons                                       = r2selection.GetSelectedMuons();
+                if (debug)cout<<"Getting Tight Electrons"<<endl;
+                selectedElectrons                                   = r2selection.GetSelectedElectrons("Tight", "PHYS14"); // VBTF ID    
+                if (debug)cout<<"Getting Loose Muons"<<endl;
+                selectedExtraMuons                                  = r2selection.GetSelectedMuons(20, 2.4, 0.20);                                   
             }
 
             vector<TRootJet*>      selectedMBJets;
@@ -599,18 +563,20 @@ int main (int argc, char *argv[])
 
             int JetCut =0;
             int nMu, nEl, nLooseIsoMu;
-            if(Muon && Electron)
+            if(Dilepton && Muon && Electron)
             {
                 nMu = selectedMuons.size(); //Number of Muons in Event
                 nEl = selectedElectrons.size(); //Number of Electrons in Event
             }
             else if(SingleLepton && Muon){
                 nMu = selectedMuons.size(); //Number of Muons in Event
-                nEl = selectedElectrons.size(); //Number of Electrons in Event            
+                nEl = selectedElectrons.size(); //Number of Electrons in Event   
+                nLooseMu = selectedExtraMuons.size();   //Number of loose muons      
             }
             else if(SingleLepton && Electron){
                 nMu = selectedMuons.size(); //Number of Muons in Event
                 nEl = selectedElectrons.size(); //Number of Electrons in Event
+                nLooseEl = selectedExtraElectrons.size(); //Number of loose muons
             }
             bool isTagged =false;
 
@@ -755,10 +721,10 @@ int main (int argc, char *argv[])
             }
             else if (SingleLepton && Muon)
             {
-                if  (  !( nMu == 1 && nEl == 0 )) continue; // Muon-Electron Channel Selection
+                if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1)) continue; // Muon Channel Selection
             }
             else if(SingleLepton && Electron){
-                if  (  !( nMu == 0 && nEl == 1 )) continue; // Muon-Electron Channel Selection
+                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1)) continue; // Electron Channel Selection
             }
             else{
                 cerr<<"Correct Channel not selected."<<endl;
@@ -774,13 +740,13 @@ int main (int argc, char *argv[])
             }
             else if (SingleLepton && Muon)
             {
-                if (!(nJets>=6 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
-//                if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                if (!(nJets>=6 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu dilepton channel
+//                if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu dilepton channel
             }
             else if (SingleLepton && Electron)
             {
-                if (!(nJets>=6 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
-//                if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                if (!(nJets>=6 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for El dilepton channel
+//                if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for El dilepton channel
             }
             if(debug)
             {
@@ -893,12 +859,4 @@ int main (int argc, char *argv[])
     cout << "********************************************" << endl;
 
     return 0;
-}
-
-int Factorial(int N = 1)
-{
-    int fact = 1;
-    for( int i=1; i<=N; i++ )
-        fact = fact * i;  // OR fact *= i;
-    return fact;
 }
