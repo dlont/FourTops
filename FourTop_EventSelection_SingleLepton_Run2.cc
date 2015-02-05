@@ -209,7 +209,7 @@ int main (int argc, char *argv[])
     }
     else
     {
-        cerr<<"Correct Di-lepton Channel not selected."<<endl;
+        cerr<<"Correct Channel not selected."<<endl;
         exit(1);
     }
 
@@ -449,7 +449,7 @@ int main (int argc, char *argv[])
 
         //define object containers
         vector<TRootElectron*> selectedElectrons;
-        vector<TRootJet*>      selectedJets;
+        vector<TRootPFJet*>    selectedJets;
         vector<TRootMuon*>     selectedMuons;
         vector<TRootElectron*> selectedExtraElectrons;
         vector<TRootMuon*>     selectedExtraMuons;
@@ -513,11 +513,11 @@ int main (int argc, char *argv[])
                 selection.setMuonCuts(20, 2.4, 0.20, 1, 0.3, 1, 1, 0, 0);
 
                 if (debug)cout<<"Getting Jets"<<endl;
-                selectedJets                                        = selection.GetSelectedJets(); // ApplyJetId
+                selectedJets                                        = r2selection.GetSelectedJets(); // ApplyJetId
                 if (debug)cout<<"Getting Tight Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons();
+                selectedMuons                                       = r2selection.GetSelectedMuons();
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
-                selectedElectrons                                   = selection.GetSelectedElectrons(20,2.5,0.15); // VBTF ID
+                selectedElectrons                                   = r2selection.GetSelectedElectrons("Tight", "PHYS14", true); // VBTF ID
             }
 
             else if(SingleLepton && Electron){
@@ -548,11 +548,11 @@ int main (int argc, char *argv[])
                 selection.setMuonCuts(20, 2.4, 0.20, 1, 0.3, 1, 1, 0, 0);
 
                 if (debug)cout<<"Getting Jets"<<endl;
-                selectedJets                                        = selection.GetSelectedJets(); // ApplyJetId
+                selectedJets                                        = r2selection.GetSelectedJets(); // ApplyJetId
                 if (debug)cout<<"Getting Tight Muons"<<endl;
                 selectedMuons                                       = r2selection.GetSelectedMuons();
                 if (debug)cout<<"Getting Tight Electrons"<<endl;
-                selectedElectrons                                   = r2selection.GetSelectedElectrons("Tight", "PHYS14"); // VBTF ID    
+                selectedElectrons                                   = r2selection.GetSelectedElectrons("Tight", "PHYS14",true); // VBTF ID    
                 if (debug)cout<<"Getting Loose Muons"<<endl;
                 selectedExtraMuons                                  = r2selection.GetSelectedMuons(20, 2.4, 0.20);                                   
             }
@@ -562,8 +562,8 @@ int main (int argc, char *argv[])
             vector<TRootJet*>      selectedLightJets;
 
             int JetCut =0;
-            int nMu, nEl, nLooseIsoMu;
-            if(Dilepton && Muon && Electron)
+            int nMu, nEl, nLooseMu, nLooseEl;
+            if(dilepton && Muon && Electron)
             {
                 nMu = selectedMuons.size(); //Number of Muons in Event
                 nEl = selectedElectrons.size(); //Number of Electrons in Event
