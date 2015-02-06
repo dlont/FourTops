@@ -35,6 +35,7 @@
 #include "TopTreeProducer/interface/TRootRun.h"
 #include "TopTreeProducer/interface/TRootEvent.h"
 #include "TopTreeAnalysisBase/Selection/interface/SelectionTable.h"
+#include "TopTreeAnalysisBase/Selection/interface/Run2Selection.h"
 //#include "TopTreeAnalysisBase/Selection/interface/FourTopSelectionTable.h"
 
 #include "TopTreeAnalysisBase/Content/interface/AnalysisEnvironment.h"
@@ -367,10 +368,10 @@ int main (int argc, char *argv[])
             CutsselecTable.push_back(string("At least 4 Jets"));
             CutsselecTable.push_back(string("At least 1 CSVM Jet"));
             CutsselecTable.push_back(string("At least 2 CSVM Jets"));
-            CutsselecTable.push_back(string("HT $\\geq 100 GeV$"));
-            CutsselecTable.push_back(string("HT $\\geq 200 GeV$"));
-            CutsselecTable.push_back(string("HT $\\geq 300 GeV$"));
-            CutsselecTable.push_back(string("HT $\\geq 400 GeV$"));
+            CutsselecTable.push_back(string("Exactly 5 Jets"));
+            CutsselecTable.push_back(string("Exactly 6 Jets"));
+            CutsselecTable.push_back(string("Exactly 7 jets"));
+            CutsselecTable.push_back(string("At Least 8 Jets"));
         }
     }
 
@@ -468,7 +469,7 @@ int main (int argc, char *argv[])
         //     string Ntupname = "Craneens/Craneen_" + dataSetName +postfix + "_" + date_str+  ".root";
 
         string Ntupname = "Craneens"+channelpostfix+"/Craneens"+ date_str  +"/Craneen_" + dataSetName +postfix + ".root";
-        string Ntuptitle = "Craneen_" + dataSetName;
+        string Ntuptitle = "Craneen_" + channelpostfix;
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
 
@@ -591,28 +592,28 @@ int main (int argc, char *argv[])
             // JER smearing
             //////////////////////
 
-            if( ! (dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA" ) )
-            {
-                //JER
-                doJERShift == 0;
-                if(doJERShift == 1)
-                    jetTools->correctJetJER(init_jets, genjets, mets[0], "minus");
-                else if(doJERShift == 2)
-                    jetTools->correctJetJER(init_jets, genjets, mets[0], "plus");
-                else
-                    jetTools->correctJetJER(init_jets, genjets, mets[0], "nominal");
-
-                //     coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"After JER correction:");
-
-                // JES sysematic!
-                if (doJESShift == 1)
-                    jetTools->correctJetJESUnc(init_jets, mets[0], "minus");
-                else if (doJESShift == 2)
-                    jetTools->correctJetJESUnc(init_jets, mets[0], "plus");
-
-                //            coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"Before JES correction:");
-
-            }
+//            if( ! (dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA" ) )
+//            {
+//                //JER
+//                doJERShift == 0;
+//                if(doJERShift == 1)
+//                    jetTools->correctJetJER(init_jets, genjets, mets[0], "minus");
+//                else if(doJERShift == 2)
+//                    jetTools->correctJetJER(init_jets, genjets, mets[0], "plus");
+//                else
+//                    jetTools->correctJetJER(init_jets, genjets, mets[0], "nominal");
+//
+//                //     coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"After JER correction:");
+//
+//                // JES sysematic!
+//                if (doJESShift == 1)
+//                    jetTools->correctJetJESUnc(init_jets, mets[0], "minus");
+//                else if (doJESShift == 2)
+//                    jetTools->correctJetJESUnc(init_jets, mets[0], "plus");
+//
+//                //            coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"Before JES correction:");
+//
+//            }
 
             ///////////////////////////////////////////////////////////
             // Event selection
@@ -624,20 +625,16 @@ int main (int argc, char *argv[])
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
             if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
             // Declare selection instance
-            Selection selection(init_jets, init_muons, init_electrons, mets);
+            Run2Selection selection(init_jets, init_muons, init_electrons, mets);
             // Define object selection cuts
             if (Muon && Electron && dilepton)
             {
-                selection.setJetCuts(30.,2.5,0.01,1.,0.98,0,0); //Pt, Eta, EMF, n90Hits, fHPD, dRJetElectron, DRJets
-                selection.setElectronCuts(20,2.5,.15,0.04,.5,1,0); //Pt,Eta,RelIso,d0,MVAId,DistVzPVz, DRJets, MaxMissingHits
-                selection.setMuonCuts(20, 2.4, 0.20, 1, 0.3, 1, 1, 0, 0);
-
                 if (debug)cout<<"Getting Jets"<<endl;
-                selectedJets                                        = selection.GetSelectedPFJets(true); // ApplyJetId
+                selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
                 if (debug)cout<<"Getting Tight Muons"<<endl;
                 selectedMuons                                       = selection.GetSelectedMuons();
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
-                selectedElectrons                                   = selection.GetSelectedElectrons(20,2.5,0.15); // VBTF ID
+                selectedElectrons                                   = selection.GetSelectedElectrons("Loose","PHYS14",true); // VBTF ID
             }
 
 
@@ -759,6 +756,22 @@ int main (int argc, char *argv[])
                                     if(nMtags>=2)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
+                                        if(nJets==5)
+                                        {
+                                            selecTable.Fill(d,7,scaleFactor);
+                                            if(nJets==6)
+                                            {
+                                                selecTable.Fill(d,8,scaleFactor);
+                                                if(nJets==7)
+                                                {
+                                                    selecTable.Fill(d,9,scaleFactor);
+                                                    if(nJets==8)
+                                                    {
+                                                        selecTable.Fill(d,10,scaleFactor);
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
