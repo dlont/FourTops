@@ -6,19 +6,19 @@
 
 <d name="ttttLO" title="LO SM tttt"  add="0"   color="50" ls="0"  lw="2" normf="1"  EqLumi="11117287.3" xsection=".008995" PreselEff="0.0" filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TopTrees/72x/FOURTOP_LO_TOPTREE.root"/>
 
-<d name="TTJets"  title="t\bar{t}+jets MadGraph PHYS14"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="30594.15" xsection="831.76"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/crab_TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola_TOPTREE_v4/141205_074006/0000/TOPTREE_*.root"/>
+<d name="TTJets"  title="t\bar{t}+jets MadGraph PHYS14"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="30594.15" xsection="831.76"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/crab_TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola_TOPTREE_v4/141205_074006/0000/TOPTREE_*.root"/>
 
 <d name="TTScaleup"  title="t\bar{t} PHYS14 Scale Up"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2300.59" xsection="831.76"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TT_scaleup_Tune4C_13TeV-pythia8-tauola/crab_TT_scaleup_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v1/150121_152236/0000/TOPTREE_*.root"/>
 
-<d name="TTScaledown"  title="t\bar{t} PHYS14 Scale Down"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2257.28" xsection="831.76"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TT_scaledown_Tune4C_13TeV-pythia8-tauola/crab_TT_scaledown_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v4/150127_073733/0000/TOPTREE_*.root"/>
+<d name="TTScaledown"  title="t\bar{t} PHYS14 Scale Down"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2257.28" xsection="831.76"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TT_scaledown_Tune4C_13TeV-pythia8-tauola/crab_TT_scaledown_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v4/150127_073733/0000/TOPTREE_*.root"/>
 
 <d name="TToLeptons"  title="Single t"   add="0"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="223000.0" xsection="103.04"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/crab_TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola_TOPTREE_v4/141205_074006/0000/TOPTREE_*.root"/>
 
 <d name="TbarToLeptons"  title="Single tbar"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="223000.0" xsection="103.04"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TBarToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/crab_TbarToLeptons_TOPTREE_v1/141125_144851/0000/TOPTREE_*.root"/>
 
-<d name="T_tW"  title="t tW"  add="0"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="27699.43" xsection="35.6"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/crab_T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola_PHYS14_TOPTREE_v1/150122_085329/0000/TOPTREE_*.root"/>
+<d name="T_tW"  title="t tW"  add="1"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="27699.43" xsection="35.6"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/crab_T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola_PHYS14_TOPTREE_v1/150122_085329/0000/TOPTREE_*.root"/>
 
-<d name="Tbar_tW"  title="tbar tW"  add="0"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="27297.75" xsection="35.6"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/crab_Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola_PHYS14_TOPTREE_v1/150122_092929/0000/*.root"/>
+<d name="Tbar_tW"  title="tbar tW"  add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="27297.75" xsection="35.6"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/crab_Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola_PHYS14_TOPTREE_v1/150122_092929/0000/*.root"/>
 
 <d name="TbarToLeptons-tchannel"  title="tbar-tchannel"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="32464.3" xsection="61.6"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TBarToLeptons_t-channel_Tune4C_CSA14_13TeV-aMCatNLO-tauola/crab_TbarToLeptons_t-channel_TOPTREE_v1/141204_092219/0000/TOPTREE_*.root"/>
 
