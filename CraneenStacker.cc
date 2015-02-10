@@ -15,7 +15,6 @@
 #include "TopTreeAnalysisBase/Tools/interface/AnalysisEnvironmentLoader.h"
 #include "TopTreeAnalysisBase/Content/interface/AnalysisEnvironment.h"
 #include "TopTreeAnalysisBase/Tools/interface/TTreeLoader.h"
-#include "CraneenStacker.h"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -35,8 +34,7 @@ int main ()
   TFile * f1;
   bool debug = true;
 
-  string xmlFileName = "Craneens.xml"; 
-  //  string xmlFileName = "config/Run2sgluon_Samples.xml"; 
+  string xmlFileName = "config/Craneens_sgluons.xml"; 
   const char *xmlfile = xmlFileName.c_str();
 
   AnalysisEnvironment anaEnv;
@@ -85,27 +83,14 @@ int main ()
 
       getline(linestream, var1, '\t'); 
       linestream >> var2 >>  var3 >> var4;
-
-      param.name = var1;
-      param.nbins = var2;
-      param.xlo = var3;
-      param.xhi = var4;
-
-      cout << "var1 " << var1 <<  "  var2 " << var2 << " var3 " << var3 << " var4 " << var4 << endl;
-
       MSPlot[var1] = new MultiSamplePlot(datasets, var1, var2, var3, var4, var1);
 
-    vars.push_back(line);
-   
+      vars.push_back(line);
+ 
     }
   }
 
  varlist.close();
-
-  //  for (int i=0;  i< vars.size(); i++  )  cout << vars[i] << '\n';
-
- //to be replaced with input from text file
- // MSPlot["HT"] = new MultiSamplePlot(datasets, "HT", 20, 0, 2500, "HT");
 
   for (unsigned int d = 0; d < datasets.size(); d++){
   samp_name =  datasets[d]->Filenames();
