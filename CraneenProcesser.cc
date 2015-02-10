@@ -27,8 +27,8 @@ map<string,TFile*> FileObj;
 map<string,TNtuple*> nTuple;
 map<string,MultiSamplePlot*> MSPlot;
 
-void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile);
-void DatasetPlotter(int nBins, string lepton, string leptoAbbr, TFile *shapefile, TFile *errorfile);
+void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel);
+void DatasetPlotter(int nBins, string lepton, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel);
 
 
 int main()
@@ -41,19 +41,22 @@ int main()
 	{
 		string lepton;
 		string leptoAbbr;
+		string channel;
 		if(num==0)
 		{
 			lepton = "Muon";
 			leptoAbbr = "Mu";
+			channel = "ttttmu__";
 		}
 		else
 		{
 			lepton = "Electron";
 			leptoAbbr = "El";
+			channel = "ttttel__";
 		}
 
-		SystematicsAnalyser(NumberOfBins, lepton, leptoAbbr, false, shapefile, errorfile);
-		DatasetPlotter(NumberOfBins, lepton, leptoAbbr, shapefile, errorfile);
+		SystematicsAnalyser(NumberOfBins, lepton, leptoAbbr, false, shapefile, errorfile, channel);
+		DatasetPlotter(NumberOfBins, lepton, leptoAbbr, shapefile, errorfile, channel);
 	}
 
 	errorfile->Close();
@@ -63,7 +66,7 @@ int main()
 }
 
 
-void DatasetPlotter(int nBins, string lepton, string leptoAbbr, TFile *shapefile, TFile *errorfile)
+void DatasetPlotter(int nBins, string lepton, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel)
 {
 	string xmlFileName = "";  xmlFileName = "config/Run2SingleLepton_samples.xml";		//xmlFileName += lepton;		xmlFileName += "Full.xml";
 	const char *xmlfile = xmlFileName.c_str();	cout << "used config file: " << xmlfile << endl; 
@@ -147,29 +150,26 @@ void DatasetPlotter(int nBins, string lepton, string leptoAbbr, TFile *shapefile
 		TCanvas *canv = new TCanvas();
 
 		histo1D[filename.c_str()]->Draw();
-		histo1D[filename.c_str()]->Write((dataSetName).c_str());
+		string writename = ""; writename = channel + dataSetName +"__nominal";	cout<<"writename  :"<<writename<<endl;
+		histo1D[filename.c_str()]->Write((writename).c_str());
 
 		canv->SaveAs((pathPNG+dataSetName+".pdf").c_str());
 	}
 
-		treeLoader.UnLoadDataset();
-	
-		MSPlot[plainplotname.c_str()]->setErrorBandFile("ScaleFilesMu_light/Error.root");
+	treeLoader.UnLoadDataset();
 
-		for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++){
-			string name = it->first;
-			MultiSamplePlot *temp = it->second;
-			temp->Draw("HT", 0, false, true, false, 100);
-			//temp->Draw_wSysUnc(false,"ScaleFilesMu_light", name, true, true, false, false, false,100,true, false, false, true); // merge TT/QCD/W/Z/ST/
-			//temp->Draw(false, ("CMSPlot"), true, false, true, true, false, 100, false, false, false);
-			temp->Write(shapefile, name, true, pathPNG, "pdf");
-		}
+	MSPlot[plainplotname.c_str()]->setErrorBandFile("ScaleFilesMu_light/Error.root");
 
-	//delete fout;
+	for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++){
+		string name = it->first;
+		MultiSamplePlot *temp = it->second;
+		temp->Draw("HT", 0, false, true, false, 100);
+		temp->Write(shapefile, name, true, pathPNG, "pdf");
+	}
 };
 
 
-void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile)
+void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel)
 {
 	string xmlFileName = ""; xmlFileName = "config/Run2SingleLepton_samples_Sys.xml"; //xmlFileName += lepton; xmlFileName += "Sys.xml";
 	const char *xmlfile = xmlFileName.c_str();	cout << "used config file: " << xmlfile << endl; 
@@ -228,7 +228,9 @@ void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normal
 			histo1D[plotname.c_str()]->Scale(1./dIntegral);
 		}
 		histo1D[plotname.c_str()]->Draw();
-		histo1D[plotname.c_str()]->Write((plotname).c_str());
+		string writename = ""; writename = channel + "TTJets__" + dataSetName;	cout<<"writename  :"<<writename<<endl;
+
+		histo1D[plotname.c_str()]->Write((writename).c_str());
 		canv2->SaveAs(("Sys_"+plotname+".pdf").c_str());
 
 		if(dataSetName == "TTScaledown")
