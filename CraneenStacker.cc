@@ -33,7 +33,7 @@ int main ()
   TFile * f1;
   bool debug = true;
 
-  string xmlFileName = "Run2sgluon_Craneens.xml"; 
+  string xmlFileName = "Craneens.xml"; 
   //  string xmlFileName = "config/Run2sgluon_Samples.xml"; 
   const char *xmlfile = xmlFileName.c_str();
 
@@ -49,10 +49,10 @@ int main ()
  
   vector<string> samp_name;
  
-//read in vector of craneens
+  //read in vector of craneens
   string craneen_dir = "Craneens_MuEl/Craneens6_2_2015/merged/";  
- //first read in list of samples 
- ifstream samplist;
+  //first read in list of samples 
+  ifstream samplist;
   samplist.open ("samples_emu.txt");
   string line;
   vector < string > samps;
@@ -75,27 +75,11 @@ int main ()
  for (int i=0;  i< vars.size(); i++  )  cout << vars[i] << '\n';
 
  
- //loop over samples
-vector<string> sgluon_filenames;
-sgluon_filenames.push_back("Craneens_MuEl/Craneens6_2_2015/merged/Craneen_sgluon_ttttNLO_m800_Run2.root");
-vector<string> ttbar_filenames;
-ttbar_filenames.push_back("Craneens_MuEl/Craneens6_2_2015/merged/Craneen_TTJets_Run2.root");
+//to be replaced with input from text file
+MSPlot["HT"] = new MultiSamplePlot(datasets, "HT", 20, 0, 2500, "HT");
 
-vector<Dataset*> Datasets;
-Dataset* sgluonDataset = new Dataset("sgluon", "sgluon", true, 22 , 1 , 1, 1, 1, sgluon_filenames); 
-Datasets.push_back(sgluonDataset);
-
-Dataset* ttbarDataset = new Dataset("ttjets", "ttjets", true, 633 , 1 , 2, 1, 1, ttbar_filenames); 
-Datasets.push_back(ttbarDataset);
-
-
-MSPlot["HT"] = new MultiSamplePlot(Datasets, "HT", 20, 0, 2500, "HT");
-
-  for (unsigned int d = 0; d < Datasets.size(); d++){
-
- if (debug)cout <<" here 3 looping samples "<< endl;
-
-  samp_name =  Datasets[d]->Filenames();
+  for (unsigned int d = 0; d < datasets.size(); d++){
+  samp_name =  datasets[d]->Filenames();
   TFile *f = new TFile(samp_name[0].c_str());
   TNtuple * tup  = (TNtuple*)f->Get("Craneen__MuEl");
   int nEvents = tup->GetEntries();
@@ -107,8 +91,8 @@ MSPlot["HT"] = new MultiSamplePlot(Datasets, "HT", 20, 0, 2500, "HT");
 
   for (int ev = 0; ev < nEvents; ev++){
     tup->GetEntry(ev);
-    MSPlot["HT"]->Fill(HT, Datasets[d], false, NormFactor*Luminosity );
-    if (debug)cout <<" here 4 looping events "<< HT << endl;
+    MSPlot["HT"]->Fill(HT, datasets[d], false, NormFactor*Luminosity );
+    //  if (debug)cout <<" here 4 looping events "<< HT << endl;
 
 }
   f1 = new TFile("StackCraneens.root", "RECREATE");
@@ -121,7 +105,7 @@ MSPlot["HT"] = new MultiSamplePlot(Datasets, "HT", 20, 0, 2500, "HT");
 string name = it->first;
 MultiSamplePlot *temp = it->second;
 
-temp->Draw("CMSPlot", 0, false, false, false, 1);
+temp->Draw("CMSPlot", 1, true, true, true, 1);
 void Write(TFile* file, string label = string(""), bool savePNG = false, string pathPNG = string(""), string ext = string("png"));
 temp->Write(f1, name, true, ".", "pdf");
 
