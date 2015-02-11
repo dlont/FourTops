@@ -27,37 +27,58 @@ map<string,TFile*> FileObj;
 map<string,TNtuple*> nTuple;
 map<string,MultiSamplePlot*> MSPlot;
 
-void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel);
-void DatasetPlotter(int nBins, string lepton, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel);
+void SystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath);
+void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath);
 
 
 int main()
 {
 	int NumberOfBins = 10;	//fixed width nBins
-	TFile *shapefile = new TFile("shapefile.root", "RECREATE");
+
+	//------- Set Channel --------//
+	bool DileptonMuEl = false;
+	bool SingleMu = true;
+	bool SingleEl = false;
+
+	string VoI = "HT"; //variable of interest for plotting
+
+	string leptoAbbr;
+	string channel;
+	string xmlFileName;
+	string xmlFileNameSys;
+	string CraneenPath;
+
+	if(SingleMu)
+	{
+		leptoAbbr = "Mu";
+		channel = "ttttmu__";
+		xmlFileName = "config/Run2SingleLepton_samples.xml";	
+		xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";	
+		CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens5_2_2015/Craneen_";
+	}
+	else if(SingleEl)
+	{
+		leptoAbbr = "El";
+		channel = "ttttel__";
+		xmlFileName = "config/Run2SingleLepton_samples.xml";
+		xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";
+		CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens5_2_2015/Craneen_";
+	}
+	else if(DileptonMuEl)
+	{
+		leptoAbbr = "MuEl";
+		channel = "ttttmuel__";
+		xmlFileName = "config/Run2_Samples.xml";
+		xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";
+		CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens5_2_2015/Craneen_";
+
+	}
+
+	TFile *shapefile = new TFile(("shapefile"+leptoAbbr+".root").c_str(), "RECREATE");
 	TFile *errorfile = new TFile("ScaleFilesMu_light/Error.root","RECREATE");
 
-	for(int num=0; num<1; num++)
-	{
-		string lepton;
-		string leptoAbbr;
-		string channel;
-		if(num==0)
-		{
-			lepton = "Muon";
-			leptoAbbr = "Mu";
-			channel = "ttttmu__";
-		}
-		else
-		{
-			lepton = "Electron";
-			leptoAbbr = "El";
-			channel = "ttttel__";
-		}
-
-		SystematicsAnalyser(NumberOfBins, lepton, leptoAbbr, false, shapefile, errorfile, channel);
-		DatasetPlotter(NumberOfBins, lepton, leptoAbbr, shapefile, errorfile, channel);
-	}
+	SystematicsAnalyser(NumberOfBins, leptoAbbr, false, shapefile, errorfile, channel, VoI, xmlFileNameSys, CraneenPath);
+	DatasetPlotter(NumberOfBins, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath);
 
 	errorfile->Close();
 	shapefile->Close();
@@ -66,136 +87,106 @@ int main()
 }
 
 
-void DatasetPlotter(int nBins, string lepton, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel)
-{
-	string xmlFileName = "";  xmlFileName = "config/Run2SingleLepton_samples.xml";		//xmlFileName += lepton;		xmlFileName += "Full.xml";
-	const char *xmlfile = xmlFileName.c_str();	cout << "used config file: " << xmlfile << endl; 
+void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath)
+{	
+	cout<<""<<endl; cout<<"RUNNING NOMINAL DATASETS"<<endl; cout<<""<<endl;
+	shapefile->cd();
 
-	string pathPNG = "FourTop_Light"; 	pathPNG += leptoAbbr;//name for output directory and root plots
-	//TFile *fout = new TFile ((pathPNG+".root").c_str(), "RECREATE");   
-	//TFile *fnom = new TFile("LimitSettingLight/NominalShapes_Mu_light.root","RECREATE"); //file for writing
+	const char *xmlfile = xmlNom.c_str();	cout << "used config file: " << xmlfile << endl; 
 
-	pathPNG += "_MSPlots/"; 	//add MSplot name to directory
+	string pathPNG = "FourTop_Light"; 	pathPNG += leptoAbbr;	pathPNG += "_MSPlots/";
 	mkdir(pathPNG.c_str(),0777);  	cout <<"Making directory :"<< pathPNG  <<endl;		//make directory
 
-	///////////////////////////////////////////////////////////// Load Datasets ////////////////////////////////////////////////////////////////////
-    //cout<<"loading...."<<endl;
+	///////////////////////////////////////////////////////////// Load Datasets //////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
 	TTreeLoader treeLoader;
-	vector < Dataset* > datasets; cout<<"vector filled"<<endl;
-	treeLoader.LoadDatasets (datasets, xmlfile);	cout<<"datasets loaded"<<endl;
+	vector < Dataset* > datasets; 					//cout<<"vector filled"<<endl;
+	treeLoader.LoadDatasets (datasets, xmlfile);	//cout<<"datasets loaded"<<endl;
 
 	//***************************************************CREATING PLOTS****************************************************
-	////////////////////for i bins////////////////
-	//string ni = static_cast<ostringstream*>( &(ostringstream() << nBins) )->str();
-	string plainplotname = "HT";   ///// Non Jet Split plot
-	//string nk;
-	MSPlot[plainplotname.c_str()] = new MultiSamplePlot(datasets, plainplotname.c_str(), nBins, 0, 1000, "BDT Discriminator");
+	string plotname = sVarofinterest;   ///// Non Jet Split plot
+	MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, 0, 1000, "BDT Discriminator");
 
 	//***********************************************OPEN FILES & GET NTUPLES**********************************************
-	string dataSetName, filename, filepath;
-	int nEntries; 
-	float MVA, ScaleFactor, NormFactor, Luminosity, nJets, Ntags, HTb, HTX, HTH, HT;
-	//cout<<"plotname  "<<plainplotname<<endl;
-	cout<<"dataset size: "<<datasets.size()<<endl;
+	string dataSetName, filepath;		int nEntries; 
+	float ScaleFactor, NormFactor, Luminosity, varofInterest;
 
 	for (int d = 0; d < datasets.size(); d++){ //Loop through datasets
-		dataSetName = datasets[d]->Name();	cout<<"Dataset:  :"<<dataSetName<<endl;
+		dataSetName = datasets[d]->Name();		cout<<"Dataset:  :"<<dataSetName<<endl;
 		
-		if(lepton == "Muon")//muon
-		{
-			filepath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens5_2_2015/Craneen_"+dataSetName + "_Run2_TopTree_Study_"+dataSetName+".root";
-		}
-		else if (lepton == "Electron") 
-		{
-			//filepath = "/Users/lb8075/JamesCode/TopBrussels/LightTrees_El/140206/"+ dataSetName + "_El.root";
-		}
-		else{cout<<"lepton error"<<endl;}
-		filename = dataSetName;
-		cout<<"filepath: "<<filepath<<endl; 
-		cout<<"filename"<<filename<<endl;
-		FileObj[filename.c_str()] = new TFile((filepath).c_str());
-		string nTuplename = "Craneen_"+ dataSetName;
-		nTuple[filename.c_str()] = (TNtuple*)FileObj[filename.c_str()]->Get(nTuplename.c_str());
-		nEntries = (int)nTuple[filename.c_str()]->GetEntries();		cout<<"                 nEntries: "<<nEntries<<endl;
+		filepath = CraneenPath+dataSetName + "_Run2_TopTree_Study_"+dataSetName+".root";
+		//cout<<"filepath: "<<filepath<<endl; 
 
-		nTuple[filename.c_str()]->SetBranchAddress("HT",&HT);
-		nTuple[filename.c_str()]->SetBranchAddress("nJets",&nJets);
-		nTuple[filename.c_str()]->SetBranchAddress("ScaleFactor",&ScaleFactor);
-		nTuple[filename.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
-		nTuple[filename.c_str()]->SetBranchAddress("Luminosity",&Luminosity);			//cout<<"got ntuple vars"<<endl;
+		FileObj[dataSetName.c_str()] = new TFile((filepath).c_str()); //create TFile for each dataset
+		string nTuplename = "Craneen_"+ dataSetName;
+		nTuple[dataSetName.c_str()] = (TNtuple*)FileObj[dataSetName.c_str()]->Get(nTuplename.c_str()); //get ntuple for each dataset
+		nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();			cout<<"                 nEntries: "<<nEntries<<endl;
+
+		nTuple[dataSetName.c_str()]->SetBranchAddress(sVarofinterest.c_str(),&varofInterest);
+		nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor",&ScaleFactor);
+		nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
+		nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);			
 
 		//for fixed bin width
-		histo1D[filename.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 1000);
+		histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 1000);
 		/////*****loop through entries and fill plots*****
 		for (int j = 0; j<nEntries; j++){
-			nTuple[filename.c_str()]->GetEntry(j);
+			nTuple[dataSetName.c_str()]->GetEntry(j);
 
-			MSPlot[plainplotname.c_str()]->Fill(HT, datasets[d], true, ScaleFactor*Luminosity);
-			histo1D[filename.c_str()]->Fill(HT,NormFactor*ScaleFactor*Luminosity);
+			MSPlot[plotname.c_str()]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
+			histo1D[dataSetName.c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
 		}
-
-		if(dataSetName == "TTJets")
+		if(dataSetName == "TTJets")  //to put nominal histo into error file
 		{
 			errorfile->cd();
-			errorfile->cd("MultiSamplePlot_HT");
-
-			histo1D[filename.c_str()]->Write("Nominal");
+			errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
+			histo1D[dataSetName.c_str()]->Write("Nominal");
 			errorfile->Write();
-			//errorfile->Close();
-			//delete errorfile;
-
 		}
 
 		shapefile->cd();
 		TCanvas *canv = new TCanvas();
 
-		histo1D[filename.c_str()]->Draw();
+		histo1D[dataSetName.c_str()]->Draw();
 		string writename = ""; writename = channel + dataSetName +"__nominal";	cout<<"writename  :"<<writename<<endl;
-		histo1D[filename.c_str()]->Write((writename).c_str());
+		histo1D[dataSetName.c_str()]->Write((writename).c_str());
 
 		canv->SaveAs((pathPNG+dataSetName+".pdf").c_str());
 	}
 
+
 	treeLoader.UnLoadDataset();
 
-	MSPlot[plainplotname.c_str()]->setErrorBandFile("ScaleFilesMu_light/Error.root");
+	MSPlot[plotname.c_str()]->setErrorBandFile("ScaleFilesMu_light/Error.root"); //set error file for uncertainty bands on multisample plot
 
 	for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++){
 		string name = it->first;
 		MultiSamplePlot *temp = it->second;
-		temp->Draw("HT", 0, false, true, false, 100);
+		temp->Draw(sVarofinterest.c_str(), 0, false, true, false, 100);
 		temp->Write(shapefile, name, true, pathPNG, "pdf");
 	}
 };
 
 
-void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel)
+void SystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
 {
-	string xmlFileName = ""; xmlFileName = "config/Run2SingleLepton_samples_Sys.xml"; //xmlFileName += lepton; xmlFileName += "Sys.xml";
-	const char *xmlfile = xmlFileName.c_str();	cout << "used config file: " << xmlfile << endl; 
+	cout<<""<<endl; cout<<"RUNNING SYS"<<endl; cout<<""<<endl;
+	const char *xmlfile = xmlSys.c_str();	cout << "used config file: " << xmlfile << endl; 
 
 	string pathPNG = "FourTop_SysPlots_" + leptoAbbr; 	//add MSplot name to directory
 	mkdir(pathPNG.c_str(),0777);  	cout <<"Making directory :"<< pathPNG  <<endl;		//make directory
 
-	///////////////////////////////////////////////////////////// Load Datasets ////////////////////////////////////////////////////////////////////
-    cout<<"loading...."<<endl;
+	///////////////////////////////////////////////////////////// Load Datasets ////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
 	TTreeLoader treeLoader;
-	vector < Dataset* > datasets; cout<<"vector filled"<<endl;
+	vector < Dataset* > datasets; //cout<<"vector filled"<<endl; 
 	treeLoader.LoadDatasets (datasets, xmlfile);	cout<<"datasets loaded"<<endl;
+
 	///////////////////////////Open files and get ntuples//////////////////////////////////////////////////
 	string dataSetName, filepath;	int nEntries;	float varofInterest, ScaleFactor, NormFactor, Luminosity, Njets, Ntags, HTb, HTX, HTH;
 
 	for (int d = 0; d < datasets.size(); d++){ //Loop through datasets
 		dataSetName = datasets[d]->Name();		cout<<"	Dataset:  :"<<dataSetName<<endl;
-		if (lepton =="Muon")
-		{
-			filepath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens6_2_2015/Craneen_"+dataSetName + "_Run2_TopTree_Study_"+dataSetName+".root";
-		}
-		else if(lepton == "Electron")
-		{
-			//filepath = "/Users/lb8075/JamesCode/TopBrussels/LightTrees_El/140206/Sys/"+ filename + ".root";
-		}
-		else{cout<<"lepton error"<<endl;}
+		filepath = CraneenPath + dataSetName + "_Run2_TopTree_Study_"+dataSetName+".root";
+
 		cout<<""<<endl;	cout<<"file in use: "<<filepath<<endl;
 
 		FileObj[dataSetName.c_str()] = new TFile((filepath).c_str());		cout<<"initialised file"<<endl;
@@ -204,13 +195,14 @@ void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normal
 		nTuple[dataSetName.c_str()] = (TNtuple*)FileObj[dataSetName.c_str()]->Get(nTupleName.c_str());
 		nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();		cout<<"                 nEntries: "<<nEntries<<endl;
 
-		nTuple[dataSetName.c_str()]->SetBranchAddress("HT",&varofInterest);
+		//sVarofinterest = "HT";
+		nTuple[dataSetName.c_str()]->SetBranchAddress(sVarofinterest.c_str(),&varofInterest);
 		nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor",&ScaleFactor);
 		nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
 		nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
 
-		////****************************************************Define plots************************************************////
-		string plotname = "HT_"+dataSetName;
+		////****************************************************Define plots***********************************************
+		string plotname = sVarofinterest+"_"+dataSetName;
 		histo1D[plotname.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 1000);
 
 		for (int i = 0; i<nEntries; i++){  //Fill histo with variable of interest
@@ -218,7 +210,7 @@ void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normal
 			histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
 		}
 
-		////****************************************************Fill plots************************************************////
+		////****************************************************Fill plots***********************************************
 		shapefile->cd();
 
 		TCanvas *canv2 = new TCanvas();
@@ -236,20 +228,18 @@ void SystematicsAnalyser(int nBins, string lepton, string leptoAbbr, bool Normal
 		if(dataSetName == "TTScaledown")
 		{
 			errorfile->cd();
-			errorfile->mkdir("MultiSamplePlot_HT");
-			errorfile->cd("MultiSamplePlot_HT");
+			errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
+			errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
 			histo1D[plotname.c_str()]->Write("Minus");
 			//errorfile->Write();
-			//errorfile->Close();
 		}
 
 		if(dataSetName == "TTScaleup")
 		{
 			errorfile->cd();
-			errorfile->cd("MultiSamplePlot_HT");
+			errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
 			histo1D[plotname.c_str()]->Write("Plus");
 			//errorfile->Write();
-			//errorfile->Close();
 		}
 	}
 };
