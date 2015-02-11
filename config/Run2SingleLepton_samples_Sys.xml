@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<datasets>
+
+<d name="TTScaledown"  title="t\bar{t} PHYS14 Scale Down"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2257.28" xsection="831.76"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TT_scaledown_Tune4C_13TeV-pythia8-tauola/crab_TT_scaledown_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v4/150127_073733/0000/TOPTREE_*.root"/>
+
+
+<d name="TTScaleup"  title="t\bar{t} PHYS14 Scale Up"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2300.59" xsection="831.76"   PreselEff="0.0"   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TT_scaleup_Tune4C_13TeV-pythia8-tauola/crab_TT_scaleup_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v1/150121_152236/0000/TOPTREE_*.root"/>
+
+</datasets>
+
+
+<analysis>
+<a type="Collections" PVCollection="PrimaryVertex" JetType="2" JetCollection="PFJets_slimmedJets" METType="2" METCollection="PFMET_slimmedMETs" MuonCollection="Muons_slimmedMuons" ElectronCollection="Electrons_slimmedElectrons" loadGenJetCollection="0" GenJetCollection="GenJets_slimmedGenJets" loadGenEventCollection="0" GenEventCollection="GenEvent" loadNPGenEventCollection="0" NPGenEventCollection="NPGenEvent" loadMCParticles="1" MCParticlesCollection="MCParticles" TrackMETCollection="" loadTrackMET="0"/>
+</analysis>
