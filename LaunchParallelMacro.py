@@ -2,7 +2,7 @@ import xml.etree.cElementTree as ET
 import subprocess
 import time
 import os
-tree = ET.ElementTree(file='config/Run2_Samples.xml')
+tree = ET.ElementTree(file='config/Run2sgluon_Samples.xml')
 
 root = tree.getroot()
 datasets = root.find('datasets')

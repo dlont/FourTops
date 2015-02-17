@@ -36,8 +36,8 @@ int main()
 	int NumberOfBins = 10;	//fixed width nBins
 
 	//------- Set Channel --------//
-	bool DileptonMuEl = false;
-	bool SingleMu = true;
+	bool DileptonMuEl = true;
+	bool SingleMu = false;
 	bool SingleEl = false;
 
 	string VoI = "HT"; //variable of interest for plotting
