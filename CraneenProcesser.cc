@@ -89,7 +89,7 @@ int main()
 
 void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath)
 {	
-	cout<<""<<endl; cout<<"RUNNING NOMINAL DATASETS"<<endl; cout<<""<<endl;
+	cout<<""<<endl; cout<<"RUNNING NOMINAL DATASETS!"<<endl; cout<<""<<endl;
 	shapefile->cd();
 
 	const char *xmlfile = xmlNom.c_str();	cout << "used config file: " << xmlfile << endl; 
@@ -104,7 +104,7 @@ void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorf
 
 	//***************************************************CREATING PLOTS****************************************************
 	string plotname = sVarofinterest;   ///// Non Jet Split plot
-	MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, 0, 1000, "BDT Discriminator");
+	MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, 0, 2000, "BDT Discriminator");
 
 	//***********************************************OPEN FILES & GET NTUPLES**********************************************
 	string dataSetName, filepath;		int nEntries; 
@@ -127,13 +127,13 @@ void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorf
 		nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);			
 
 		//for fixed bin width
-		histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 1000);
+		histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 2000);
 		/////*****loop through entries and fill plots*****
 		for (int j = 0; j<nEntries; j++){
 			nTuple[dataSetName.c_str()]->GetEntry(j);
 
-			MSPlot[plotname.c_str()]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
-			histo1D[dataSetName.c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
+			MSPlot[plotname.c_str()]->Fill(varofInterest, datasets[d], true, 1);
+			histo1D[dataSetName.c_str()]->Fill(varofInterest,NormFactor);
 		}
 		if(dataSetName == "TTJets")  //to put nominal histo into error file
 		{
@@ -161,7 +161,7 @@ void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorf
 	for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++){
 		string name = it->first;
 		MultiSamplePlot *temp = it->second;
-		temp->Draw(sVarofinterest.c_str(), 0, false, true, false, 100);
+		temp->Draw(sVarofinterest.c_str(), 0, false, true, true, 1);
 		temp->Write(shapefile, name, true, pathPNG, "pdf");
 	}
 };
@@ -169,7 +169,7 @@ void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorf
 
 void SystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
 {
-	cout<<""<<endl; cout<<"RUNNING SYS"<<endl; cout<<""<<endl;
+	cout<<""<<endl; cout<<"RUNNING SYS!"<<endl; cout<<""<<endl;
 	const char *xmlfile = xmlSys.c_str();	cout << "used config file: " << xmlfile << endl; 
 
 	string pathPNG = "FourTop_SysPlots_" + leptoAbbr; 	//add MSplot name to directory
@@ -203,11 +203,11 @@ void SystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile* sha
 
 		////****************************************************Define plots***********************************************
 		string plotname = sVarofinterest+"_"+dataSetName;
-		histo1D[plotname.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 1000);
+		histo1D[plotname.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 2000);
 
 		for (int i = 0; i<nEntries; i++){  //Fill histo with variable of interest
 			nTuple[dataSetName.c_str()]->GetEntry(i);
-			histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
+			histo1D[plotname.c_str()]->Fill(varofInterest,NormFactor);
 		}
 
 		////****************************************************Fill plots***********************************************
