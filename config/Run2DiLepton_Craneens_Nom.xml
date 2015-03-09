@@ -1,17 +1,21 @@
 <?xml version="1.0"?>
 <datasets>
 
-<d name="NP_overlay_PseudoData"  title="Fake Data"   add="1"   color="1"  ls="1"  lw="2" normf="1"  EqLumi="1" xsection="1"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_2_2015/merge/Craneen_NP_overlay_PseudoData_Run2_TopTree_Study.root"/>
+<d name="NP_overlay_PseudoData"  title="Fake Data"   add="1"   color="1"  ls="1"  lw="2" normf="1"  EqLumi="1" xsection="1"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_NP_overlay_PseudoData_Run2_TopTree_Study.root"/>
 
-<d name="ttttNLO" title="NLO SM tttt"  add="1"   color="1" ls="1"  lw="2" normf="1"  EqLumi="11334013.37" xsection=".008823" PreselEff="0.0" filenames="./Craneens_MuEl/Craneens5_2_2015/merge/Craneen_ttttNLO_Run2_TopTree_Study.root"/>
+<d name="ttttNLO" title="NLO SM tttt"  add="1"   color="1" ls="1"  lw="2" normf="1"  EqLumi="11334013.37" xsection=".008823" PreselEff="0.0" filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_ttttNLO_Run2_TopTree_Study.root"/>
 
 <d name="ttttLO" title="LO SM tttt"  add="0"   color="50" ls="0"  lw="2" normf="1"  EqLumi="11117287.3" xsection=".008995" PreselEff="0.0" filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TopTrees/72x/FOURTOP_LO_TOPTREE.root"/>
 
-<d name="tW"  title="Combined tW"  add="1"   color="616"  ls="0"  lw="2" normf="1"  EqLumi="54997.18" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_2_2015/merge/Craneen_tW_Run2_TopTree_Study.root"/>
+<d name="tW"  title="Combined tW"  add="1"   color="616"  ls="0"  lw="2" normf="1"  EqLumi="27699.43" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_tW_Run2_TopTree_Study.root"/>
 
-<d name="DYJets"  title="DY+jets"   add="1"   color="858"  ls="1"  lw="2" normf="1"  EqLumi="1408.6656" xsection="2008.4"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_2_2015/merge/Craneen_DYJets_Run2_TopTree_Study.root"/>
+<d name="T_tW"  title="t-tW"  add="0"   color="616"  ls="0"  lw="2" normf="1"  EqLumi="27699.43" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_tW_Run2_TopTree_Study.root"/>
 
-<d name="TTJets"  title="ttbar+jets MadGraph PHYS14"   add="1"   color="635"  ls="1"  lw="2" normf="1"  EqLumi="30594.15" xsection="831.76"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_2_2015/merge/Craneen_TTJets_Run2_TopTree_Study.root"/>
+<d name="Tbar_tW"  title="tbar-tW"  add="0"   color="616"  ls="0"  lw="2" normf="1"  EqLumi="27297.75" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_tW_Run2_TopTree_Study.root"/>
+
+<d name="DYJets"  title="DY+jets"   add="1"   color="858"  ls="1"  lw="2" normf="1"  EqLumi="1408.6656" xsection="2008.4"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_DYJets_Run2_TopTree_Study.root"/>
+
+<d name="TTJets"  title="ttbar+jets MadGraph PHYS14"   add="1"   color="635"  ls="1"  lw="2" normf="1"  EqLumi="30594.15" xsection="831.76"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_TTJets_Run2_TopTree_Study.root"/>
 
 </datasets>
 

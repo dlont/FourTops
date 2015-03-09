@@ -28,6 +28,8 @@ for row in args:
         title = row[1]
 
         totalEvents = float(row[8])*float(row[9])
+#        tempList = list(row)
+#        tempList.extend(["", ""])
         if (totalEvents > jobSize):
             endEvent = 0
             while (totalEvents-(endEvent*jobSize) > 0):
@@ -45,6 +47,8 @@ for row in args:
                 #processes.append(popen)
                 endEvent += 1
         else:
+            tempList = list(row)
+            tempList.extend(["", ""])
             tempList[12] = "0"
             tempList[13] = str(jobSize)
             fileNames.append("Terminal_Output/"+tempList[1]+".out")
@@ -58,8 +62,9 @@ for i, row in enumerate(execCommands):
     outfile = open(fileNames[i], 'w')
     print 'File {} opened'.format(fileNames[i])
     outfiles.append(outfile)
+    row.insert(0, "nohup")
     popen = subprocess.Popen(row, stdout=outfiles[i])
-    print 'Job {} begun'.format(row[1])
+    print 'Job {} begun'.format(row[2])
     processes.append(popen)
     procsStarted += 1
     print 'Jobs {} of {} started.  Timestamp: {}'.format(procsStarted, len(execCommands), time.ctime())
