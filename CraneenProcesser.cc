@@ -28,25 +28,34 @@ map<string,TFile*> FileObj;
 map<string,TNtuple*> nTuple;
 map<string,MultiSamplePlot*> MSPlot;
 
-void SystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath);
-void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath);
+void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath);
+void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath);
 
-void SplitDatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath);
-void SplitSystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath);
+void SplitDatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath);
+void SplitSystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath);
 
 
 
 int main()
 {
-    int NumberOfBins = 20;	//fixed width nBins
+    int NumberOfBins = 30;	//fixed width nBins
 
     //------- Set Channel --------//
     bool DileptonMuEl = true;
     bool SingleMu = false;
     bool SingleEl = false;
-    bool jetSplit = true;
+    bool jetSplit = false;
 
-    string VoI = "HT2M"; //variable of interest for plotting
+    string VoI = "MVAvals1"; //variable of interest for plotting
+    float uBound = 0.2;
+    float lBound = -1.0;
+    vector<string> vars;
+    vars.push_back("HT");
+    vars.push_back("LeadingMuonPt");
+    vars.push_back("LeadingElectronPt");
+    vars.push_back("LeadingBJetPt");
+    vars.push_back("HT2M");
+    vars.push_back("MVAvals1");
 
     string leptoAbbr;
     string channel;
@@ -79,7 +88,7 @@ int main()
         channel = "ttttmuel";
         xmlFileName = "config/Run2DiLepton_Craneens_Nom.xml";
         xmlFileNameSys = "config/Run2DiLepton_Craneens_Sys.xml";
-        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens5_2_2015/merge/Craneen_";
+        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens5_3_2015/merge/Craneen_";
 
     }
 
@@ -93,13 +102,19 @@ int main()
         bSplit = 4; //Lower bound of jetSplit bins
         tSplit = 8; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar
         wSplit = 1; //width of the bins
-        SplitSystematicsAnalyser(NumberOfBins, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
-        SplitDatasetPlotter(NumberOfBins, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
+        SplitSystematicsAnalyser(NumberOfBins, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
+        SplitDatasetPlotter(NumberOfBins, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
+//        for(int k=0; k<vars.size(); k++)
+//        {
+//            string varchannel = channel + vars[k];
+//            SplitSystematicsAnalyser(NumberOfBins, leptoAbbr, false, shapefile, errorfile, varchannel, vars[k], splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
+//            SplitDatasetPlotter(NumberOfBins, leptoAbbr, shapefile, errorfile, varchannel, vars[k], splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
+//        }
     }
     else
     {
-        SystematicsAnalyser(NumberOfBins, leptoAbbr, false, shapefile, errorfile, channel, VoI, xmlFileNameSys, CraneenPath);
-        DatasetPlotter(NumberOfBins, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath);
+        SystematicsAnalyser(NumberOfBins, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, xmlFileNameSys, CraneenPath);
+        DatasetPlotter(NumberOfBins, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath);
     }
 
 
@@ -110,7 +125,7 @@ int main()
 }
 
 
-void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath)
+void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING NOMINAL DATASETS"<<endl;
@@ -133,7 +148,7 @@ void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorf
 
     //***************************************************CREATING PLOTS****************************************************
     string plotname = sVarofinterest;   ///// Non Jet Split plot
-    MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, 0, 2000, "HT2M");
+    MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, "HT2M");
 
     //***********************************************OPEN FILES & GET NTUPLES**********************************************
     string dataSetName, filepath;
@@ -159,12 +174,16 @@ void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorf
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
 
+
+
         //for fixed bin width
-        histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 2000);
+        histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, plotLow, plotHigh);
         /////*****loop through entries and fill plots*****
         for (int j = 0; j<nEntries; j++)
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
+            //artificial Lumi
+            //Luminosity = 50000;
 
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
@@ -223,7 +242,7 @@ void DatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorf
 };
 
 
-void SystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
+void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING SYS"<<endl;
@@ -269,13 +288,17 @@ void SystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile* sha
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
 
+
+
         ////****************************************************Define plots***********************************************
         string plotname = sVarofinterest+"_"+dataSetName;
-        histo1D[plotname.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, 0, 2000);
+        histo1D[plotname.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, plotLow, plotHigh);
 
         for (int i = 0; i<nEntries; i++)   //Fill histo with variable of interest
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
+            //artificial Lumi
+            //Luminosity = 50000;
             histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
         }
 
@@ -315,7 +338,7 @@ void SystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile* sha
     }
 };
 
-void SplitDatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath)
+void SplitDatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING NOMINAL DATASETS"<<endl;
@@ -346,7 +369,7 @@ void SplitDatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *e
     {
         numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
         plotname = sVarofinterest + numStr + sSplitVar;
-        MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, 0, 2000, sVarofinterest.c_str());
+        MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
     }
     plotname = "";
 
@@ -375,17 +398,21 @@ void SplitDatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *e
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar.c_str(), &splitVar);
 
+
+
         //for fixed bin width
         for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
         {
             numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
             histoName = dataSetName + numStr + sSplitVar;
-            histo1D[histoName.c_str()] = new TH1F(histoName.c_str(),histoName.c_str(), nBins, 0, 2000);
+            histo1D[histoName.c_str()] = new TH1F(histoName.c_str(),histoName.c_str(), nBins, plotLow, plotHigh);
         }
         /////*****loop through entries and fill plots*****
         for (int j = 0; j<nEntries; j++)
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
+            //artificial Lumi
+            Luminosity = 50000;
 
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
@@ -469,7 +496,7 @@ void SplitDatasetPlotter(int nBins, string leptoAbbr, TFile *shapefile, TFile *e
 };
 
 
-void SplitSystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath)
+void SplitSystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING SYS"<<endl;
@@ -519,17 +546,21 @@ void SplitSystematicsAnalyser(int nBins, string leptoAbbr, bool Normalise, TFile
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar.c_str(), &splitVar);
 
+
+
         ////****************************************************Define plots***********************************************
         for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
         {
             numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
             histoName = dataSetName + numStr + sSplitVar;
-            histo1D[histoName.c_str()] = new TH1F(histoName.c_str(),histoName.c_str(), nBins, 0, 2000);
+            histo1D[histoName.c_str()] = new TH1F(histoName.c_str(),histoName.c_str(), nBins, plotLow, plotHigh);
         }
 
         for (int i = 0; i<nEntries; i++)   //Fill histo with variable of interest
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
+            //artificial Lumi
+            Luminosity = 50000;
 
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {

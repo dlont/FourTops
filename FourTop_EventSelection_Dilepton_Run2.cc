@@ -894,70 +894,70 @@ int main (int argc, char *argv[])
                 MVAvals1 = jetCombiner->getMVAValue(MVAmethod, 1); // 1 means the highest MVA value
                 MSPlot["MVA1TriJet"]->Fill(MVAvals1.first, datasets[d], true, Luminosity*scaleFactor );
 
-//                for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
-//                {
-//                    if (seljet1 == MVAvals1.second[0] || seljet1 == MVAvals1.second[1] || seljet1 == MVAvals1.second[2])
-//                    {
-//                        MVASelJets1.push_back(selectedJets[seljet1]);
-//                    }
-//
-//                }
-//
-//                //check data-mc agreement of kin. reco. variables.
-//                float mindeltaR =100.;
-//                float mindeltaR_temp =100.;
-//                int wj1;
-//                int wj2;
-//                int bj1;
-//
-//                //define the jets from W as the jet pair with smallest deltaR
-//                for (int m=0; m<MVASelJets1.size(); m++)
-//                {
-//                    for (int n=0; n<MVASelJets1.size(); n++)
-//                    {
-//                        if(n==m) continue;
-//                        TLorentzVector lj1  = *MVASelJets1[m];
-//                        TLorentzVector lj2  = *MVASelJets1[n];
-//                        mindeltaR_temp  = lj1.DeltaR(lj2);
-//                        if (mindeltaR_temp < mindeltaR)
-//                        {
-//                            mindeltaR = mindeltaR_temp;
-//                            wj1 = m;
-//                            wj2 = n;
-//                        }
-//                    }
-//                }
-//                // find the index of the jet not chosen as a W-jet
-//                for (unsigned int p=0; p<MVASelJets1.size(); p++)
-//                {
-//                    if(p!=wj1 && p!=wj2) bj1 = p;
-//                }
-//
-//                if (debug) cout <<"Processing event with jetcombiner : 3 "<< endl;
-//
-//                //now that putative b and W jets are chosen, calculate the six kin. variables.
-//                TLorentzVector Wh = *MVASelJets1[wj1]+*MVASelJets1[wj2];
-//                TLorentzVector Bh = *MVASelJets1[bj1];
-//                TLorentzVector Th = Wh+Bh;
-//
-//                double TriJetMass = Th.M();
-//
-//                double DiJetMass = Wh.M();
-//                //DeltaR
-//                float AngleThWh = fabs(Th.DeltaPhi(Wh));
-//                float AngleThBh = fabs(Th.DeltaPhi(Bh));
-//
-//                float btag = MVASelJets1[bj1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
-//
-//                double PtRat = (( *MVASelJets1[0] + *MVASelJets1[1] + *MVASelJets1[2] ).Pt())/( MVASelJets1[0]->Pt() + MVASelJets1[1]->Pt() + MVASelJets1[2]->Pt() );
-//                if (debug) cout <<"Processing event with jetcombiner : 4 "<< endl;
-//
-//                MSPlot["MVA1TriJetMass"]->Fill(TriJetMass,  datasets[d], true, Luminosity*scaleFactor );
-//                MSPlot["MVA1DiJetMass"]->Fill(DiJetMass,  datasets[d], true, Luminosity*scaleFactor );
-//                MSPlot["MVA1BTag"]->Fill(btag,  datasets[d], true, Luminosity*scaleFactor );
-//                MSPlot["MVA1PtRat"]->Fill(PtRat,  datasets[d], true, Luminosity*scaleFactor );
-//                MSPlot["MVA1AnThWh"]->Fill(AngleThWh,  datasets[d], true, Luminosity*scaleFactor );
-//                MSPlot["MVA1AnThBh"]->Fill(AngleThBh,  datasets[d], true, Luminosity*scaleFactor );
+                for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
+                {
+                    if (seljet1 == MVAvals1.second[0] || seljet1 == MVAvals1.second[1] || seljet1 == MVAvals1.second[2])
+                    {
+                        MVASelJets1.push_back(selectedJets[seljet1]);
+                    }
+
+                }
+
+                //check data-mc agreement of kin. reco. variables.
+                float mindeltaR =100.;
+                float mindeltaR_temp =100.;
+                int wj1;
+                int wj2;
+                int bj1;
+
+                //define the jets from W as the jet pair with smallest deltaR
+                for (int m=0; m<MVASelJets1.size(); m++)
+                {
+                    for (int n=0; n<MVASelJets1.size(); n++)
+                    {
+                        if(n==m) continue;
+                        TLorentzVector lj1  = *MVASelJets1[m];
+                        TLorentzVector lj2  = *MVASelJets1[n];
+                        mindeltaR_temp  = lj1.DeltaR(lj2);
+                        if (mindeltaR_temp < mindeltaR)
+                        {
+                            mindeltaR = mindeltaR_temp;
+                            wj1 = m;
+                            wj2 = n;
+                        }
+                    }
+                }
+                // find the index of the jet not chosen as a W-jet
+                for (unsigned int p=0; p<MVASelJets1.size(); p++)
+                {
+                    if(p!=wj1 && p!=wj2) bj1 = p;
+                }
+
+                if (debug) cout <<"Processing event with jetcombiner : 3 "<< endl;
+
+                //now that putative b and W jets are chosen, calculate the six kin. variables.
+                TLorentzVector Wh = *MVASelJets1[wj1]+*MVASelJets1[wj2];
+                TLorentzVector Bh = *MVASelJets1[bj1];
+                TLorentzVector Th = Wh+Bh;
+
+                double TriJetMass = Th.M();
+
+                double DiJetMass = Wh.M();
+                //DeltaR
+                float AngleThWh = fabs(Th.DeltaPhi(Wh));
+                float AngleThBh = fabs(Th.DeltaPhi(Bh));
+
+                float btag = MVASelJets1[bj1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+
+                double PtRat = (( *MVASelJets1[0] + *MVASelJets1[1] + *MVASelJets1[2] ).Pt())/( MVASelJets1[0]->Pt() + MVASelJets1[1]->Pt() + MVASelJets1[2]->Pt() );
+                if (debug) cout <<"Processing event with jetcombiner : 4 "<< endl;
+
+                MSPlot["MVA1TriJetMass"]->Fill(TriJetMass,  datasets[d], true, Luminosity*scaleFactor );
+                MSPlot["MVA1DiJetMass"]->Fill(DiJetMass,  datasets[d], true, Luminosity*scaleFactor );
+                MSPlot["MVA1BTag"]->Fill(btag,  datasets[d], true, Luminosity*scaleFactor );
+                MSPlot["MVA1PtRat"]->Fill(PtRat,  datasets[d], true, Luminosity*scaleFactor );
+                MSPlot["MVA1AnThWh"]->Fill(AngleThWh,  datasets[d], true, Luminosity*scaleFactor );
+                MSPlot["MVA1AnThBh"]->Fill(AngleThBh,  datasets[d], true, Luminosity*scaleFactor );
 
 
                 if (debug) cout <<"Processing event with jetcombiner : 8 "<< endl;
