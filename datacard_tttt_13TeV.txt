@@ -1,0 +1,20 @@
+imax 1
+jmax 4
+kmax 6
+---------------
+shapes * * ./shapefile_Mu.root  $CHANNEL__$PROCESS__nominal  $CHANNEL__$PROCESS__$SYSTEMATIC
+---------------
+bin                         ttttmu
+observation                  80497.6
+---------------------------
+bin                         ttttmu          ttttmu      ttttmu         ttttmu         ttttmu	
+process                     ttttNLO         TTJets       DYJets         WJets       SingleTop_tW		
+process                       0               1           2              3              4 		
+rate                         8.4         78437.5         92.3           31.9          1925.0
+---------------------------
+lumi                 lnN    1.026             1.026       1.026         1.026          1.026	
+tt_norm              lnN       -              1.04         -             -               -		
+tttt_norm            lnN     1.1               -           -             -               -		
+DY_norm              lnN      -                -          1.04           -               -		
+WJets_norm           lnN      -                -           -            1.04             -	
+SingleTop_norm		 lnN	  -                -           -             -              1.04
