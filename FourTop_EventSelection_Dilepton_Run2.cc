@@ -495,7 +495,7 @@ int main (int argc, char *argv[])
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nMtags:HT:LeadingMuonPt:LeadingElectronPt:LeadingBJetPt:HT2M:MVAvals1:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nMtags:HT:LeadingMuonPt:LeadingElectronPt:LeadingBJetPt:HT2M:MVAvals1:DiJetMass:TriJetMass:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
         //////////////////////////////////////////////////
         /// Initialize JEC factors ///////////////////////
@@ -888,6 +888,8 @@ int main (int argc, char *argv[])
             //////////////////////////////////////
 
             jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedMuonTLV_JC[0], genEvt, scaleFactor);
+            double TriJetMass, DiJetMass;
+            vector<TRootPFJet*> MVASelJets1;
 
             if(!TrainMVA)
             {
@@ -940,9 +942,9 @@ int main (int argc, char *argv[])
                 TLorentzVector Bh = *MVASelJets1[bj1];
                 TLorentzVector Th = Wh+Bh;
 
-                double TriJetMass = Th.M();
+                TriJetMass = Th.M();
 
-                double DiJetMass = Wh.M();
+                DiJetMass = Wh.M();
                 //DeltaR
                 float AngleThWh = fabs(Th.DeltaPhi(Wh));
                 float AngleThBh = fabs(Th.DeltaPhi(Bh));
@@ -1023,7 +1025,7 @@ int main (int argc, char *argv[])
             //////////////////
             //Filling nTuple//
             //////////////////
-            tup->Fill(nJets,nMtags,HT,selectedMuons[0]->Pt(),selectedElectrons[0]->Pt(),selectedMBJets[0]->Pt(),HT2M,MVAvals1.first,scaleFactor,vertex.size(),datasets[d]->NormFactor(),Luminosity,weight_0);
+            tup->Fill(nJets,nMtags,HT,selectedMuons[0]->Pt(),selectedElectrons[0]->Pt(),selectedMBJets[0]->Pt(),HT2M,MVAvals1.first,DiJetMass,TriJetMass,scaleFactor,vertex.size(),datasets[d]->NormFactor(),Luminosity,weight_0);
 
         } //End Loop on Events
 
