@@ -73,7 +73,7 @@ using namespace reweight;
 
 bool split_ttbar = false;
 bool debug = false;
-
+float topness;
 
 pair<float, vector<unsigned int> > MVAvals1;
 pair<float, vector<unsigned int> > MVAvals2;
@@ -291,6 +291,25 @@ int main (int argc, char *argv[])
     float Luminosity = 5000.0; //pb^-1??
     vector<string> MVAvars;
 
+    MVAvars.push_back("topness");
+    MVAvars.push_back("muonpt");
+    MVAvars.push_back("muoneta");
+    MVAvars.push_back("HTH");
+    MVAvars.push_back("HTRat");
+    MVAvars.push_back("HTb");
+    MVAvars.push_back("nLtags");
+    MVAvars.push_back("nMtags");
+    MVAvars.push_back("nTtags");
+    MVAvars.push_back("nJets");
+    MVAvars.push_back("Jet3Pt");
+    MVAvars.push_back("Jet4Pt");
+
+    MVAComputer* Eventcomputer_ = new MVAComputer("BDT","MasterMVA_Mu_10thMarch.root","MasterMVA_Mu_10March",MVAvars, "_10thMarch2015");
+
+    cout << " Initialized Eventcomputer_" << endl;
+
+
+
     string dataSetName;
 
     string MVAmethod = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
@@ -495,7 +514,11 @@ int main (int argc, char *argv[])
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nMtags:HT:LeadingMuonPt:LeadingElectronPt:LeadingBJetPt:HT2M:MVAvals1:DiJetMass:TriJetMass:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+
+	// TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+
+	TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+
 
         //////////////////////////////////////////////////
         /// Initialize JEC factors ///////////////////////
@@ -543,7 +566,7 @@ int main (int argc, char *argv[])
         int event_start = startEvent;
         if (verbose > 1) cout << " - Loop over events " << endl;
 
-        double MHT, MHTSig, STJet, EventMass, EventMassX , SumJetMass, SumJetMassX,H,HX , HT, HTX,HTH,HTXHX, sumpx_X, sumpy_X, sumpz_X, sume_X, sumpx, sumpy, sumpz, sume, jetpt,PTBalTopEventX,PTBalTopSumJetX , PTBalTopMuMet;
+        float BDTScore, MHT, MHTSig, STJet,muoneta, muonpt,electronpt,bjetpt, EventMass, EventMassX , SumJetMass, SumJetMassX,H,HX ,HTHi,HTRat, HT, HTX,HTH,HTXHX, sumpx_X, sumpy_X, sumpz_X, sume_X, sumpx, sumpy, sumpz, sume, jetpt,PTBalTopEventX,PTBalTopSumJetX , PTBalTopMuMet;
 
         double currentfrac =0.;
         double end_d;
@@ -558,6 +581,7 @@ int main (int argc, char *argv[])
         //define object containers
         vector<TRootElectron*> selectedElectrons;
         vector<TRootPFJet*>    selectedJets;
+        vector<TRootPFJet*>    MVASelJets1;
         vector<TRootMuon*>     selectedMuons;
         vector<TRootElectron*> selectedExtraElectrons;
         vector<TRootMuon*>     selectedExtraMuons;
@@ -570,7 +594,7 @@ int main (int argc, char *argv[])
 
         for (unsigned int ievt = event_start; ievt < end_d; ievt++)
         {
-            MHT = 0.,MHTSig = 0., STJet = 0., EventMass =0., EventMassX =0., SumJetMass = 0., SumJetMassX=0.  ,H = 0., HX =0., HT = 0., HTX = 0.,HTH=0.,HTXHX=0., sumpx_X = 0., sumpy_X= 0., sumpz_X =0., sume_X= 0. , sumpx =0., sumpy=0., sumpz=0., sume=0., jetpt =0., PTBalTopEventX = 0., PTBalTopSumJetX =0.;
+	  BDTScore= -99999.0, MHT = 0.,MHTSig = 0.,muoneta = 0., muonpt =0., electronpt=0., bjetpt =0., STJet = 0., EventMass =0., EventMassX =0., SumJetMass = 0., SumJetMassX=0., HTHi =0., HTRat = 0;  H = 0., HX =0., HT = 0., HTX = 0.,HTH=0.,HTXHX=0., sumpx_X = 0., sumpy_X= 0., sumpz_X =0., sume_X= 0. , sumpx =0., sumpy=0., sumpz=0., sume=0., jetpt =0., PTBalTopEventX = 0., PTBalTopSumJetX =0.;
 
             double ievt_d = ievt;
             currentfrac = ievt_d/end_d;
@@ -660,12 +684,9 @@ int main (int argc, char *argv[])
             }
 
 
-
-
-
-
-            vector<TRootJet*>      selectedMBJets;
             vector<TRootJet*>      selectedLBJets;
+	    vector<TRootJet*>      selectedMBJets;
+	    vector<TRootJet*>      selectedTBJets;
             vector<TRootJet*>      selectedLightJets;
 
             int JetCut =0;
@@ -697,7 +718,7 @@ int main (int argc, char *argv[])
             // Preselection looping over Jet Collection                                      //
             // Summing HT and calculating leading, lagging, and ratio for Selected and BJets //
             ///////////////////////////////////////////////////////////////////////////////////
-            double temp_HT = 0., HTb = 0.;
+            float temp_HT = 0., HTb = 0.;
 
             double p_tags_tagged_mc = 1.;
             double p_tags_untagged_mc = 1.;
@@ -744,11 +765,18 @@ int main (int argc, char *argv[])
                 }
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
                 {
+		  selectedLBJets.push_back(selectedJets[seljet]);
                     selectedLBJets.push_back(selectedJets[seljet]);
                     if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > workingpointvalue)
                     {
                         selectedMBJets.push_back(selectedJets[seljet]);
                         HTb += selectedJets[seljet]->Pt();
+
+			if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.898)
+                    {
+                        selectedTBJets.push_back(selectedJets[seljet]);
+                    }
+
                     }
                 }
                 else
@@ -756,9 +784,12 @@ int main (int argc, char *argv[])
                     selectedLightJets.push_back(selectedJets[seljet]);
                 }
             }
-            int nJets = selectedJets.size(); //Number of Jets in Event
-            int nMtags = selectedMBJets.size(); //Number of CSVM tags in Event
-            int nLtags = selectedLBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
+
+            float nJets = selectedJets.size(); //Number of Jets in Event
+            float nMtags = selectedMBJets.size(); //Number of CSVM tags in Event
+            float nLtags = selectedLBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
+            float nTtags = selectedTBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
+
 
             //////////////////////
             // Sync'ing cutflow //
@@ -895,7 +926,7 @@ int main (int argc, char *argv[])
             {
                 MVAvals1 = jetCombiner->getMVAValue(MVAmethod, 1); // 1 means the highest MVA value
                 MSPlot["MVA1TriJet"]->Fill(MVAvals1.first, datasets[d], true, Luminosity*scaleFactor );
-
+		topness = MVAvals1.first;
                 for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
                 {
                     if (seljet1 == MVAvals1.second[0] || seljet1 == MVAvals1.second[1] || seljet1 == MVAvals1.second[2])
@@ -1001,7 +1032,7 @@ int main (int argc, char *argv[])
             //////////////////////
 
             HT = 0;
-            double HT1M2L=0, H1M2L=0, HTbjets=0, HT2M=0, H2M=0;
+            float HT1M2L=0, H1M2L=0, HTbjets=0, HT2M=0, H2M=0;
 
 
             for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
@@ -1017,15 +1048,59 @@ int main (int argc, char *argv[])
                 //Event-level variables
                 jetpt = selectedJets[seljet1]->Pt();
                 HT = HT + jetpt;
+                H = H +  selectedJets[seljet1]->P();
+		if (seljet1 > 2  )  HTHi +=  selectedJets[seljet1]->Pt();
             }
+
+            HTRat = HTHi/HT;
+            HTH = HT/H;
+
             MSPlot["HTExcess2M"]->Fill(HT2M, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity*scaleFactor);
             sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
 
+          muonpt = selectedMuons[0]->Pt();
+          muoneta = selectedMuons[0]->Eta();
+          electronpt  = selectedElectrons[0]->Pt();
+
+          bjetpt= selectedMBJets[0]->Pt();
+
+	  Eventcomputer_->FillVar("topness",topness);
+	  Eventcomputer_->FillVar("muonpt",muonpt);
+	  Eventcomputer_->FillVar("muoneta",muoneta);
+	  Eventcomputer_->FillVar("HTH", HTH);
+          Eventcomputer_->FillVar("HTRat",HTRat);
+          Eventcomputer_->FillVar("HTb", HTb);
+          Eventcomputer_->FillVar("nLtags",nLtags );
+          Eventcomputer_->FillVar("nMtags",nMtags );
+          Eventcomputer_->FillVar("nTtags",nTtags );
+          Eventcomputer_->FillVar("nJets", selectedJets.size() );
+	  Eventcomputer_->FillVar("Jet3Pt", selectedJets[2]->Pt() );
+          Eventcomputer_->FillVar("Jet4Pt", selectedJets[3]->Pt() );
+
+	  std::map<std::string,Float_t> MVAVals = Eventcomputer_->GetMVAValues();
+
+	  for (std::map<std::string,Float_t>::const_iterator it = MVAVals.begin(); it != MVAVals.end(); ++it){
+
+          //  cout <<"MVA Method : "<< it->first    <<" Score : "<< it->second <<endl;
+          BDTScore = it->second;
+
+        }
+
+
+	  float nvertices = vertex.size();
+	  float normfactor = datasets[d]->NormFactor();
+
             //////////////////
             //Filling nTuple//
             //////////////////
-            tup->Fill(nJets,nMtags,HT,selectedMuons[0]->Pt(),selectedElectrons[0]->Pt(),selectedMBJets[0]->Pt(),HT2M,MVAvals1.first,DiJetMass,TriJetMass,scaleFactor,vertex.size(),datasets[d]->NormFactor(),Luminosity,weight_0);
+
+	  //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
+
+	  float vals[20] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
+
+	  tup->Fill(vals);
+
 
         } //End Loop on Events
 
