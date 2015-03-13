@@ -161,7 +161,7 @@ int main (int argc, char *argv[])
     float weightCount = 0.0;
     int eventCount = 0;
 
-    string btagger = "CSVM";
+    string btagger = "CSVL";
     float scalefactorbtageff, mistagfactor;
     float workingpointvalue = 0.679; //working points updated to 2012 BTV-POG recommendations.
     bool bx25 = false;
@@ -396,8 +396,8 @@ int main (int argc, char *argv[])
             CutsselecTable.push_back(string("Event cleaning and Trigger"));
             CutsselecTable.push_back(string("At least 1 Loose Isolated Muon"));
             CutsselecTable.push_back(string("At least 6 Jets"));
-            CutsselecTable.push_back(string("At least 1 CSVM Jet"));
-            CutsselecTable.push_back(string("At least 2 CSVM Jets"));
+            CutsselecTable.push_back(string("At least 1 CSVL Jet"));
+            CutsselecTable.push_back(string("At least 2 CSVL Jets"));
             CutsselecTable.push_back(string("HT $\\geq 100 GeV$"));
             CutsselecTable.push_back(string("HT $\\geq 200 GeV$"));
             CutsselecTable.push_back(string("HT $\\geq 300 GeV$"));
@@ -410,8 +410,8 @@ int main (int argc, char *argv[])
             CutsselecTable.push_back(string("Event cleaning and Trigger"));
             CutsselecTable.push_back(string("At least 1 Loose Electron"));
             CutsselecTable.push_back(string("At least 6 Jets"));
-            CutsselecTable.push_back(string("At least 1 CSVM Jet"));
-            CutsselecTable.push_back(string("At least 2 CSVM Jets"));
+            CutsselecTable.push_back(string("At least 1 CSVL Jet"));
+            CutsselecTable.push_back(string("At least 2 CSVL Jets"));
             CutsselecTable.push_back(string("HT $\\geq 100 GeV$"));
             CutsselecTable.push_back(string("HT $\\geq 200 GeV$"));
             CutsselecTable.push_back(string("HT $\\geq 300 GeV$"));
@@ -515,7 +515,7 @@ int main (int argc, char *argv[])
         //////////////////////////////////////
         // Begin Event Loop
         //////////////////////////////////////
-        //end_d = event_start+10;
+        end_d = event_start+10;
         for (unsigned int ievt = event_start; ievt < end_d; ievt++)
         {
             MHT = 0.,MHTSig = 0., STJet = 0., EventMass =0., EventMassX =0., SumJetMass = 0., SumJetMassX=0.  ,H = 0., HX =0., HT = 0., HTX = 0.,HTH=0.,HTXHX=0., sumpx_X = 0., sumpy_X= 0., sumpz_X =0., sume_X= 0. , sumpx =0., sumpy=0., sumpz=0., sume=0., jetpt =0., PTBalTopEventX = 0., PTBalTopSumJetX =0.;
@@ -685,10 +685,10 @@ int main (int argc, char *argv[])
                             if(nJets>=4)
                             {
                                 selecTable.Fill(d,4,scaleFactor);
-                                if(nMtags>=1)
+                                if(nLtags>=1)
                                 {
                                     selecTable.Fill(d,5,scaleFactor);
-                                    if(nMtags>=2)
+                                    if(nLtags>=2)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
                                     }
@@ -713,10 +713,10 @@ int main (int argc, char *argv[])
                             if(nJets>=4)
                             {
                                 selecTable.Fill(d,4,scaleFactor);
-                                if(nMtags>=1)
+                                if(nLtags>=1)
                                 {
                                     selecTable.Fill(d,5,scaleFactor);
-                                    if(nMtags>=2)
+                                    if(nLtags>=2)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
                                     }
@@ -741,10 +741,10 @@ int main (int argc, char *argv[])
                             if(nJets>=4)
                             {
                                 selecTable.Fill(d,4,scaleFactor);
-                                if(nMtags>=1)
+                                if(nLtags>=1)
                                 {
                                     selecTable.Fill(d,5,scaleFactor);
-                                    if(nMtags>=2)
+                                    if(nLtags>=2)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
                                     }
@@ -764,7 +764,7 @@ int main (int argc, char *argv[])
             if (!isGoodPV) continue; // Check that there is a good Primary Vertex
             ////  if (!(selectedJets.size() >= 6)) continue; //Selection of a minimum of 6 Jets in Event
 
-            if (debug) cout <<"Number of Muons, Electrons, Jets, BJets, JetCut, MuonChannel, ElectronChannel ===>  "<< nMu <<"  "  <<nEl<<" "<< selectedJets.size()   <<"  " <<  nMtags   <<"  "<<JetCut  <<"  "<<Muon<<" "<<Electron<<endl;
+            if (debug) cout <<"Number of Muons, Electrons, Jets, BJets, JetCut, MuonChannel, ElectronChannel ===>  "<< nMu <<"  "  <<nEl<<" "<< selectedJets.size()   <<"  " <<  nLtags   <<"  "<<JetCut  <<"  "<<Muon<<" "<<Electron<<endl;
 
             if (debug)	cout <<" applying baseline event selection..."<<endl;
             //Apply the lepton, btag and HT selections
@@ -788,17 +788,17 @@ int main (int argc, char *argv[])
 
             if (dilepton && Muon && Electron)
             {
-                if (!(nJets>=4 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                if (!(nJets>=4 && nLtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
                 //if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
             }
             else if (SingleLepton && Muon)
             {
-                if (!(nJets>=6 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu dilepton channel
+                if (!(nJets>=6 && nLtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu dilepton channel
                 //if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu dilepton channel
             }
             else if (SingleLepton && Electron)
             {
-                if (!(nJets>=6 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for El dilepton channel
+                if (!(nJets>=6 && nLtags >=2 )) continue; //Jet Tag Event Selection Requirements for El dilepton channel
                 //if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for El dilepton channel
             }
             if(debug)
@@ -1061,7 +1061,7 @@ int main (int argc, char *argv[])
 
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity*scaleFactor);
             sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
-            tup->Fill(HT,nJets,nMtags,selectedJets[4]->Pt(),selectedJets[5]->Pt(),HTRat,HTb,MultiTopness,scaleFactor,datasets[d]->NormFactor(),Luminosity);
+            tup->Fill(HT,nJets,nLtags,selectedJets[4]->Pt(),selectedJets[5]->Pt(),HTRat,HTb,MultiTopness,scaleFactor,datasets[d]->NormFactor(),Luminosity);
 
         } //End Loop on Events
 
