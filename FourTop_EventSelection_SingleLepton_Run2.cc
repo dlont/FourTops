@@ -107,6 +107,7 @@ struct HighestCVSBtag
     }
 };
 
+
 bool match;
 
 int main (int argc, char *argv[])
@@ -468,7 +469,7 @@ int main (int argc, char *argv[])
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"HT:nJets:nTags:5thJetPt:6thJetPt:HTRat:HTb:Multitopness:ScaleFactor:NormFactor:Luminosity");
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"HT:nJets:nTags:nLights:5thJetPt:6thJetPt:HTRat:HTb:HT2L2J:Multitopness:ScaleFactor:NormFactor:Luminosity");
 
         //////////////////////////////////////////////////
         // Loop on events
@@ -515,7 +516,7 @@ int main (int argc, char *argv[])
         //////////////////////////////////////
         // Begin Event Loop
         //////////////////////////////////////
-        end_d = event_start+10;
+        //end_d = 10;
         for (unsigned int ievt = event_start; ievt < end_d; ievt++)
         {
             MHT = 0.,MHTSig = 0., STJet = 0., EventMass =0., EventMassX =0., SumJetMass = 0., SumJetMassX=0.  ,H = 0., HX =0., HT = 0., HTX = 0.,HTH=0.,HTXHX=0., sumpx_X = 0., sumpy_X= 0., sumpz_X =0., sume_X= 0. , sumpx =0., sumpy=0., sumpz=0., sume=0., jetpt =0., PTBalTopEventX = 0., PTBalTopSumJetX =0.;
@@ -1038,7 +1039,7 @@ int main (int argc, char *argv[])
             //////////////////////
 
             HT = 0;
-            double HT1M2L=0, H1M2L=0, HTbjets=0, HT2M=0, H2M=0;
+            double HT1M2L=0, H1M2L=0, HTbjets=0, HT2M=0, H2M=0, HT2L2J=0,nLights;
 
 
             for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
@@ -1049,6 +1050,17 @@ int main (int argc, char *argv[])
                 jetpt = selectedJets[seljet1]->Pt();
                 HT = HT + jetpt;
             }
+            sort(selectedLightJets.begin(),selectedLightJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
+            nLights=selectedLightJets.size();
+            if(selectedLightJets.size()>2){
+                HT2L2J = HT - selectedJets[0]->Pt() - selectedJets[1]->Pt() - selectedLightJets[0]->Pt() - selectedLightJets[1]->Pt();    
+            }
+            else{
+                cout<<"!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+                cout<<"LESS THAN 2 LIGHT JETS!!"<<endl;
+                cout<<"!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+            }
+
             MSPlot["HTb_SelectedJets"]->Fill(HTb, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["HTRat"]->Fill(HTRat, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["NbOfSelectedBJets"]->Fill(selectedMBJets.size(), datasets[d], true, Luminosity*scaleFactor);
@@ -1061,7 +1073,7 @@ int main (int argc, char *argv[])
 
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity*scaleFactor);
             sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
-            tup->Fill(HT,nJets,nLtags,selectedJets[4]->Pt(),selectedJets[5]->Pt(),HTRat,HTb,MultiTopness,scaleFactor,datasets[d]->NormFactor(),Luminosity);
+            tup->Fill(HT,nJets,nLtags,nLights,selectedJets[4]->Pt(),selectedJets[5]->Pt(),HTRat,HTb,HT2L2J,MultiTopness,scaleFactor,datasets[d]->NormFactor(),Luminosity);
 
         } //End Loop on Events
 
