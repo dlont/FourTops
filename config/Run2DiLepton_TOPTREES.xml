@@ -2,7 +2,7 @@
 <data>
 <datasets>
 
-<d name="ttttNLO" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="1"  EqLumi="11334013.37" xsection=".008823" PreselEff="0.0" filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/CRAB_PrivateMC/FOURTOP_NLO_13TeV_aMCatNLO_LHE_pythia8_miniAOD_CRAB3_v3/141201_105227/0000/TOPTREE_*.root"/>
+<d name="ttttNLO" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="1"  EqLumi="4925535.53" xsection=".008823" PreselEff="0.0" filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/CRAB_PrivateMC/FOURTOP_NLO_13TeV_aMCatNLO_LHE_pythia8_miniAOD_CRAB3_v3/141201_105227/0000/TOPTREE_*.root"/>
 
 <d name="ttttLO" title="LO SM tttt"  add="0"   color="50" ls="0"  lw="2" normf="1"  EqLumi="11117287.3" xsection=".008995" PreselEff="0.0" filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TopTrees/72x/FOURTOP_LO_TOPTREE.root"/>
 

@@ -44,9 +44,9 @@ int main()
     bool DileptonMuEl = true;
     bool SingleMu = false;
     bool SingleEl = false;
-    bool jetSplit = false;
+    bool jetSplit = true;
 
-    string VoI = "MVAvals1"; //variable of interest for plotting
+    string VoI = "topness"; //variable of interest for plotting
     float uBound = 0.2;
     float lBound = -1.0;
     vector<string> vars;
@@ -88,7 +88,7 @@ int main()
         channel = "ttttmuel";
         xmlFileName = "config/Run2DiLepton_Craneens_Nom.xml";
         xmlFileNameSys = "config/Run2DiLepton_Craneens_Sys.xml";
-        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens5_3_2015/merge/Craneen_";
+        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens12_3_2015/merge/Craneen_";
 
     }
 
@@ -183,7 +183,7 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             //artificial Lumi
-            //Luminosity = 50000;
+            Luminosity = 50000;
 
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
@@ -298,7 +298,7 @@ void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoA
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
             //artificial Lumi
-            //Luminosity = 50000;
+            Luminosity = 50000;
             histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
         }
 
