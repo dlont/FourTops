@@ -41,22 +41,23 @@ int main()
     int NumberOfBins = 30;	//fixed width nBins
 
     //------- Set Channel --------//
-    bool DileptonMuEl = true;
-    bool SingleMu = false;
+    bool DileptonMuEl = false;
+    bool SingleMu = true;
     bool SingleEl = false;
     bool jetSplit = true;
 
-    string VoI = "topness"; //variable of interest for plotting
+    string VoI = "Multitopness"; //variable of interest for plotting
+    float lBound = -1;
     float uBound = 0.2;
-    float lBound = -1.0;
-    vector<string> vars;
+
+    /*vector<string> vars;
     vars.push_back("HT");
     vars.push_back("LeadingMuonPt");
     vars.push_back("LeadingElectronPt");
     vars.push_back("LeadingBJetPt");
     vars.push_back("HT2M");
     vars.push_back("MVAvals1");
-
+    */
     string leptoAbbr;
     string channel;
     string xmlFileName;
@@ -72,7 +73,7 @@ int main()
         channel = "ttttmu";
         xmlFileName = "config/Run2SingleLepton_samples.xml";
         xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";
-        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens5_2_2015/Craneen_";
+        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens16_3_2015_merge/Craneen_";
     }
     else if(SingleEl)
     {
@@ -99,9 +100,9 @@ int main()
     {
         //Control variables for splitting in nJets
         splitVar = "nJets";
-        bSplit = 4; //Lower bound of jetSplit bins
-        tSplit = 8; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar
-        wSplit = 1; //width of the bins
+        bSplit = 6; //Lower bound of jetSplit bins
+        tSplit = 10; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar
+        wSplit = 2; //width of the bins
         SplitSystematicsAnalyser(NumberOfBins, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
         SplitDatasetPlotter(NumberOfBins, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
 //        for(int k=0; k<vars.size(); k++)
@@ -148,7 +149,7 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
 
     //***************************************************CREATING PLOTS****************************************************
     string plotname = sVarofinterest;   ///// Non Jet Split plot
-    MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, "HT2M");
+    MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
 
     //***********************************************OPEN FILES & GET NTUPLES**********************************************
     string dataSetName, filepath;
@@ -183,7 +184,7 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             //artificial Lumi
-            Luminosity = 50000;
+            //Luminosity = 50000;
 
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
@@ -298,7 +299,7 @@ void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoA
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
             //artificial Lumi
-            Luminosity = 50000;
+            //Luminosity = 50000;
             histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
         }
 
