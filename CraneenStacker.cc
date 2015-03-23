@@ -41,7 +41,7 @@ int main ()
   TFile * f1;
   TFile * f2;
   double nom_norm;
-  bool debug = true;
+  bool debug = false;
   double scalefac;
   bool write_sys = false;
   TH1F *hnom;
@@ -105,6 +105,9 @@ int main ()
 
       getline(linestream, var1, '\t'); 
       linestream >> var2 >>  var3 >> var4;
+
+      if (debug) cout <<var1<<" " << var2 << "  " << var3 << "  " <<var4 <<  endl;;
+
       MSPlot[var1] = new MultiSamplePlot(datasets, var1, var2, var3, var4, var1);
       histos1D_Up[var1] = new TH1F(var1.c_str(), var1.c_str(), var2, var3, var4);
       histos1D_Down[var1] = new TH1F(var1.c_str(), var1.c_str(), var2, var3, var4);
@@ -121,12 +124,14 @@ int main ()
 
   dataset_name =  datasets[d]->Name();
 
-  cout <<"datset name "<< dataset_name << endl; 
+  if (debug)   cout <<"datset name "<< dataset_name << endl; 
 
   TFile *f = new TFile(samp_name[0].c_str());
   TNtuple * tup  = (TNtuple*)f->Get("Craneen__MuEl");
+  if (debug)   cout <<"got craneen " << endl; 
+
   int nEvents = tup->GetEntries();
-  Float_t HT, NormFactor, GenWeight, HT2M, nMtags,LeadingMuonPt, LeadingElectronPt, LeadingBJetPt, PU, ScaleFactor, nJets;
+  Float_t HT,dmass, NormFactor, GenWeight, HT2M, nMtags,LeadingMuonPt, LeadingElectronPt, LeadingBJetPt, PU, ScaleFactor, nJets;
 
     tup->SetBranchAddress("NormFactor",&NormFactor);
     tup->SetBranchAddress("GenWeight",&GenWeight);
@@ -139,11 +144,14 @@ int main ()
     tup->SetBranchAddress("LeadingElectronPt",&LeadingElectronPt);
     tup->SetBranchAddress("LeadingBJetPt",&LeadingBJetPt);
     tup->SetBranchAddress("PU",&PU);
+    tup->SetBranchAddress("dmass",&dmass);
+ if (debug)    cout <<"set branch addresses " << endl; 
 
   for (int ev = 0; ev < nEvents; ev++){
     tup->GetEntry(ev);
     double final_weight = Luminosity;
     // double final_weight = 100.;
+  cout <<"looping events " << endl; 
 
     if ( write_sys ){
 
@@ -157,10 +165,10 @@ int main ()
     histos1D["LeadingElectronPt"]->Fill(LeadingElectronPt);
     histos1D["LeadingBJetPt"]->Fill(LeadingBJetPt);
   
-    cout <<"filling ttjets... "<<  endl; 
+ if (debug)      cout <<"filling ttjets... "<<  endl; 
  }
 
-else    if (dataset_name == "Plus"){
+else if (dataset_name == "Plus"){
 
     histos1D_Up["PU"]->Fill(PU);
     histos1D_Up["HT"]->Fill(HT);
@@ -186,7 +194,9 @@ else    if (dataset_name == "Plus"){
 
     }
     if(dataset_name != "Plus" && dataset_name != "Minus" ){
+      if (debug)  cout <<"filling ms plots"<< endl;
     MSPlot["PU"]->Fill(PU, datasets[d], true, final_weight );
+    MSPlot["dmass"]->Fill(dmass, datasets[d], true, final_weight );
     MSPlot["HT"]->Fill(HT, datasets[d], true, final_weight );
     MSPlot["HT2M"]->Fill(HT2M, datasets[d], true, final_weight );
     MSPlot["nMtags"]->Fill(nMtags, datasets[d], true, final_weight );
