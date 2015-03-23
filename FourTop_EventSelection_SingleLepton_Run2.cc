@@ -257,7 +257,7 @@ int main (int argc, char *argv[])
     vector<string> MVAvars;
 
     ////////BDT stuff/////////
-    MVAvars.push_back("topness");
+    MVAvars.push_back("multitopness");
     MVAvars.push_back("muonpt");
     MVAvars.push_back("muoneta");
     MVAvars.push_back("HTH");
@@ -267,10 +267,10 @@ int main (int argc, char *argv[])
     MVAvars.push_back("nMtags");
     MVAvars.push_back("nTtags");
     MVAvars.push_back("nJets");
-    MVAvars.push_back("Jet3Pt");
-    MVAvars.push_back("Jet4Pt");
+    MVAvars.push_back("Jet5Pt");
+    MVAvars.push_back("Jet6Pt");
 
-    MVAComputer* Eventcomputer_ = new MVAComputer("BDT","MasterMVA_Mu_10thMarch.root","MasterMVA_Mu_10March",MVAvars, "_10thMarch2015");
+    MVAComputer* Eventcomputer_ = new MVAComputer("BDT","MasterMVA_SingleMuon_23rdMarch.root","MasterMVA_SingleMuon_23rdMarch",MVAvars, "_SingleMuon23rdMarch2015");
     cout << " Initialized Eventcomputer_ for event_level BDT" << endl;
 
     //////// Top Reco MVA ////////////
@@ -1083,7 +1083,7 @@ int main (int argc, char *argv[])
 
             bjetpt= selectedLBJets[0]->Pt();
 
-            Eventcomputer_->FillVar("topness",topness);
+            Eventcomputer_->FillVar("multitopness", MultiTopness);
             Eventcomputer_->FillVar("muonpt",muonpt);
             Eventcomputer_->FillVar("muoneta",muoneta);
             Eventcomputer_->FillVar("HTH", HTH);
@@ -1093,8 +1093,8 @@ int main (int argc, char *argv[])
             Eventcomputer_->FillVar("nMtags",nMtags );     
             Eventcomputer_->FillVar("nTtags",nTtags );     
             Eventcomputer_->FillVar("nJets", selectedJets.size() );
-            Eventcomputer_->FillVar("Jet3Pt", selectedJets[2]->Pt() );
-            Eventcomputer_->FillVar("Jet4Pt", selectedJets[3]->Pt() );
+            Eventcomputer_->FillVar("Jet5Pt", selectedJets[4]->Pt() );
+            Eventcomputer_->FillVar("Jet6Pt", selectedJets[5]->Pt() );
 
             std::map<std::string,Float_t> MVAVals = Eventcomputer_->GetMVAValues();
             
@@ -1108,7 +1108,7 @@ int main (int argc, char *argv[])
                 float nvertices = vertex.size();
                 float normfactor = datasets[d]->NormFactor();
 
-            float vals[20] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
+            float vals[20] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,bjetpt,HT2M,HTb,HTH,HTRat,MultiTopness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
 
             tup->Fill(vals);
 

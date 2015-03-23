@@ -50,7 +50,7 @@ int main()
     bool DileptonElEl = false;
     bool SingleMu = true;
     bool SingleEl = false;
-    bool jetSplit = true;
+    bool jetSplit = false;
 
     string VoI = "BDT"; //variable of interest for plotting
     float lBound = -0.3;   //-1->0.2 topness
@@ -81,7 +81,7 @@ int main()
         channel = "ttttmu";
         xmlFileName = "config/Run2SingleLepton_samples.xml";
         xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";
-        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens17_3_2015_merge/Craneen_";
+        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens23_3_2015/Craneen_";
     }
     else if(SingleEl)
     {
@@ -131,7 +131,7 @@ int main()
         bSplit = 6; //Lower bound of jetSplit bins
         tSplit = 10; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar
         wSplit = 1; //width of the bins
-        SplitSystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
+        //SplitSystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
         SplitDatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
 //        for(int k=0; k<vars.size(); k++)
 //        {
