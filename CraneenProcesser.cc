@@ -18,6 +18,8 @@
 #include "TopTreeAnalysisBase/Tools/interface/MultiSamplePlot.h"
 //#include "../macros/Style.C"
 
+#include <sstream>
+
 using namespace std;
 using namespace TopTree;
 
@@ -28,27 +30,32 @@ map<string,TFile*> FileObj;
 map<string,TNtuple*> nTuple;
 map<string,MultiSamplePlot*> MSPlot;
 
+std::string intToStr (int number);
+
 void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath);
 void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath);
 
-void SplitDatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath);
-void SplitSystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath);
+void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath);
+void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath);
 
 
 
 int main()
 {
     int NumberOfBins = 30;	//fixed width nBins
+    int lumiScale = 50;  //Amount of luminosity to scale to in fb^-1
 
     //------- Set Channel --------//
-    bool DileptonMuEl = true;
+    bool DileptonMuEl = false;
+    bool DileptonMuMu = false;
+    bool DileptonElEl = true;
     bool SingleMu = false;
     bool SingleEl = false;
-    bool jetSplit = false;
+    bool jetSplit = true;
 
-    string VoI = "MVAvals1"; //variable of interest for plotting
-    float uBound = 0.2;
-    float lBound = -1.0;
+    string VoI = "BDT"; //variable of interest for plotting
+    float uBound = 1.0;
+    float lBound = -0.5;
     vector<string> vars;
     vars.push_back("HT");
     vars.push_back("LeadingMuonPt");
@@ -88,11 +95,31 @@ int main()
         channel = "ttttmuel";
         xmlFileName = "config/Run2DiLepton_Craneens_Nom.xml";
         xmlFileNameSys = "config/Run2DiLepton_Craneens_Sys.xml";
-        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens5_3_2015/merge/Craneen_";
+        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/Craneen_";
+
+    }
+    else if(DileptonMuMu)
+    {
+        leptoAbbr = "MuMu";
+        channel = "ttttmumu";
+        xmlFileName = "config/Run2DiLepton_Craneens_Nom.xml";
+        xmlFileNameSys = "config/Run2DiLepton_Craneens_Sys.xml";
+        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuMu/Craneens17_3_2015/merge/Craneen_";
+
+    }
+    else if(DileptonElEl)
+    {
+        leptoAbbr = "ElEl";
+        channel = "ttttelel";
+        xmlFileName = "config/Run2DiLepton_Craneens_Nom.xml";
+        xmlFileNameSys = "config/Run2DiLepton_Craneens_Sys.xml";
+        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_ElEl/Craneens18_3_2015/merge/Craneen_";
 
     }
 
-    TFile *shapefile = new TFile(("shapefile"+leptoAbbr+".root").c_str(), "RECREATE");
+    std::string slumiScale = intToStr(lumiScale);
+
+    TFile *shapefile = new TFile(("shapefile"+leptoAbbr+"_"+slumiScale+"_"+VoI+".root").c_str(), "RECREATE");
     TFile *errorfile = new TFile(("ScaleFiles"+leptoAbbr+"_light/Error.root").c_str(),"RECREATE");
 
     if(jetSplit)
@@ -102,8 +129,8 @@ int main()
         bSplit = 4; //Lower bound of jetSplit bins
         tSplit = 8; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar
         wSplit = 1; //width of the bins
-        SplitSystematicsAnalyser(NumberOfBins, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
-        SplitDatasetPlotter(NumberOfBins, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
+        SplitSystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
+        SplitDatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
 //        for(int k=0; k<vars.size(); k++)
 //        {
 //            string varchannel = channel + vars[k];
@@ -183,7 +210,7 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             //artificial Lumi
-            //Luminosity = 50000;
+            Luminosity = 15000;
 
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
@@ -298,7 +325,7 @@ void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoA
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
             //artificial Lumi
-            //Luminosity = 50000;
+            Luminosity = 15000;
             histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
         }
 
@@ -338,7 +365,7 @@ void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoA
     }
 };
 
-void SplitDatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath)
+void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING NOMINAL DATASETS"<<endl;
@@ -412,7 +439,11 @@ void SplitDatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoA
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             //artificial Lumi
-            Luminosity = 50000;
+            if(lScale > 0 )
+            {
+                Luminosity = 1000*lScale;
+            }
+
 
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
@@ -496,7 +527,7 @@ void SplitDatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoA
 };
 
 
-void SplitSystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath)
+void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING SYS"<<endl;
@@ -560,7 +591,10 @@ void SplitSystematicsAnalyser(int nBins, float plotLow, float plotHigh, string l
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
             //artificial Lumi
-            Luminosity = 50000;
+            if(lScale > 0 )
+            {
+                Luminosity = 1000*lScale;
+            }
 
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
@@ -662,4 +696,10 @@ void SplitSystematicsAnalyser(int nBins, float plotLow, float plotHigh, string l
 //        }
     }
 };
+
+std::string intToStr (int number){
+    std::ostringstream buff;
+    buff<<number;
+    return buff.str();
+}
 

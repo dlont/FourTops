@@ -166,7 +166,7 @@ int main (int argc, char *argv[])
     float weightCount = 0.0;
     int eventCount = 0;
 
-    string btagger = "CSVM";
+    string btagger = "CSVL";
     float scalefactorbtageff, mistagfactor;
     float workingpointvalue = 0.679; //working points updated to 2012 BTV-POG recommendations.
     bool bx25 = false;
@@ -227,13 +227,25 @@ int main (int argc, char *argv[])
 
     //Setting Lepton Channels (Setting both flags true will select Muon-Electron Channel when dilepton is also true)
     bool dilepton = true;
-    bool Muon = true;
+    bool Muon = false;
     bool Electron = true;
 
     if(Muon && Electron && dilepton)
     {
         cout << " --> Using the Muon-Electron channel..." << endl;
         channelpostfix = "_MuEl";
+        xmlFileName = "config/Run2_Samples.xml";
+    }
+    else if(Muon && !Electron && dilepton)
+    {
+        cout << " --> Using the Muon-Electron channel..." << endl;
+        channelpostfix = "_MuMu";
+        xmlFileName = "config/Run2_Samples.xml";
+    }
+    else if(!Muon && Electron && dilepton)
+    {
+        cout << " --> Using the Muon-Electron channel..." << endl;
+        channelpostfix = "_ElEl";
         xmlFileName = "config/Run2_Samples.xml";
     }
     else
@@ -369,7 +381,7 @@ int main (int argc, char *argv[])
     //Jets
     MSPlot["JetEta"]                                        = new MultiSamplePlot(datasets, "JetEta", 40,-4, 4, "Jet #eta");
     MSPlot["HT_SelectedJets"]                               = new MultiSamplePlot(datasets, "HT_SelectedJets", 30, 0, 1500, "HT");
-    MSPlot["HTExcess2M"]                                    = new MultiSamplePlot(datasets, "HTExcess2M", 30, 0, 1500, "HT_{Excess 2 b-tags}");
+    MSPlot["HTExcess2L"]                                    = new MultiSamplePlot(datasets, "HTExcess2L", 30, 0, 1500, "HT_{Excess 2 b-tags}");
     //MET
     MSPlot["MET"]                                           = new MultiSamplePlot(datasets, "MET", 70, 0, 700, "MET");
 
@@ -404,11 +416,39 @@ int main (int argc, char *argv[])
         {
             CutsselecTable.push_back(string("initial"));
             CutsselecTable.push_back(string("Event cleaning and Trigger"));
-            CutsselecTable.push_back(string("At least 1 Loose Isolated Muon"));
-            CutsselecTable.push_back(string("At least 1 Loose Electron"));
+            CutsselecTable.push_back(string("Exactly 1 Loose Isolated Muon"));
+            CutsselecTable.push_back(string("Exactly 1 Loose Electron"));
             CutsselecTable.push_back(string("At least 4 Jets"));
-            CutsselecTable.push_back(string("At least 1 CSVM Jet"));
-            CutsselecTable.push_back(string("At least 2 CSVM Jets"));
+            CutsselecTable.push_back(string("At least 1 CSVL Jet"));
+            CutsselecTable.push_back(string("At least 2 CSVL Jets"));
+            CutsselecTable.push_back(string("Exactly 5 Jets"));
+            CutsselecTable.push_back(string("Exactly 6 Jets"));
+            CutsselecTable.push_back(string("Exactly 7 jets"));
+            CutsselecTable.push_back(string("At Least 8 Jets"));
+        }
+        if(Muon && !Electron)
+        {
+            CutsselecTable.push_back(string("initial"));
+            CutsselecTable.push_back(string("Event cleaning and Trigger"));
+            CutsselecTable.push_back(string("Exactly 2 Loose Isolated Muon"));
+            CutsselecTable.push_back(string("Z Mass Veto"));
+            CutsselecTable.push_back(string("At least 4 Jets"));
+            CutsselecTable.push_back(string("At least 1 CSVL Jet"));
+            CutsselecTable.push_back(string("At least 2 CSVL Jets"));
+            CutsselecTable.push_back(string("Exactly 5 Jets"));
+            CutsselecTable.push_back(string("Exactly 6 Jets"));
+            CutsselecTable.push_back(string("Exactly 7 jets"));
+            CutsselecTable.push_back(string("At Least 8 Jets"));
+        }
+        if(!Muon && Electron)
+        {
+            CutsselecTable.push_back(string("initial"));
+            CutsselecTable.push_back(string("Event cleaning and Trigger"));
+            CutsselecTable.push_back(string("Exactly 2 Loose Electron"));
+            CutsselecTable.push_back(string("Z Mass Veto"));
+            CutsselecTable.push_back(string("At least 4 Jets"));
+            CutsselecTable.push_back(string("At least 1 CSVL Jet"));
+            CutsselecTable.push_back(string("At least 2 CSVL Jets"));
             CutsselecTable.push_back(string("Exactly 5 Jets"));
             CutsselecTable.push_back(string("Exactly 6 Jets"));
             CutsselecTable.push_back(string("Exactly 7 jets"));
@@ -514,9 +554,11 @@ int main (int argc, char *argv[])
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
 
-	// TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
-	TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+        // TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+
 
         //////////////////////////////////////////////////
         /// Initialize JEC factors ///////////////////////
@@ -592,7 +634,8 @@ int main (int argc, char *argv[])
 
         for (unsigned int ievt = event_start; ievt < end_d; ievt++)
         {
-	  BDTScore= -99999.0, MHT = 0.,MHTSig = 0.,muoneta = 0., muonpt =0., electronpt=0., bjetpt =0., STJet = 0., EventMass =0., EventMassX =0., SumJetMass = 0., SumJetMassX=0., HTHi =0., HTRat = 0;  H = 0., HX =0., HT = 0., HTX = 0.,HTH=0.,HTXHX=0., sumpx_X = 0., sumpy_X= 0., sumpz_X =0., sume_X= 0. , sumpx =0., sumpy=0., sumpz=0., sume=0., jetpt =0., PTBalTopEventX = 0., PTBalTopSumJetX =0.;
+            BDTScore= -99999.0, MHT = 0.,MHTSig = 0.,muoneta = 0., muonpt =0., electronpt=0., bjetpt =0., STJet = 0., EventMass =0., EventMassX =0., SumJetMass = 0., SumJetMassX=0., HTHi =0., HTRat = 0;
+            H = 0., HX =0., HT = 0., HTX = 0.,HTH=0.,HTXHX=0., sumpx_X = 0., sumpy_X= 0., sumpz_X =0., sume_X= 0. , sumpx =0., sumpy=0., sumpz=0., sume=0., jetpt =0., PTBalTopEventX = 0., PTBalTopSumJetX =0.;
 
             double ievt_d = ievt;
             currentfrac = ievt_d/end_d;
@@ -680,20 +723,37 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 selectedElectrons                                   = selection.GetSelectedElectrons("Loose","PHYS14",true); // VBTF ID
             }
+            if (Muon && !Electron && dilepton)
+            {
+                if (debug)cout<<"Getting Jets"<<endl;
+                selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
+                if (debug)cout<<"Getting loose Muons"<<endl;
+                selectedMuons                                       = selection.GetSelectedDiMuons();
+                if (debug)cout<<"Getting Loose Electrons"<<endl;
+                selectedElectrons                                   = selection.GetSelectedElectrons("Loose","PHYS14",true); // VBTF ID
+            }
+            if (!Muon && Electron && dilepton)
+            {
+                if (debug)cout<<"Getting Jets"<<endl;
+                selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
+                if (debug)cout<<"Getting Tight Muons"<<endl;
+                selectedMuons                                       = selection.GetSelectedMuons();
+                if (debug)cout<<"Getting Loose Electrons"<<endl;
+                selectedElectrons                                   = selection.GetSelectedElectrons("Loose","PHYS14",true); // VBTF ID
+            }
 
 
             vector<TRootJet*>      selectedLBJets;
-	    vector<TRootJet*>      selectedMBJets;
-	    vector<TRootJet*>      selectedTBJets;
+            vector<TRootJet*>      selectedMBJets;
+            vector<TRootJet*>      selectedTBJets;
             vector<TRootJet*>      selectedLightJets;
 
             int JetCut =0;
             int nMu, nEl, nLooseIsoMu;
-            if(Muon && Electron)
-            {
+
                 nMu = selectedMuons.size(); //Number of Muons in Event
                 nEl = selectedElectrons.size(); //Number of Electrons in Event
-            }
+
 
             bool isTagged =false;
             vector<TLorentzVector> selectedMuonsTLV_JC, selectedElectronsTLV_JC, selectedLooseIsoMuonsTLV;
@@ -703,12 +763,32 @@ int main (int argc, char *argv[])
             JetPartonMatching muonMatching, jetMatching;
 
             //////////////////////////////////
-            // Preselection Muon Operations //
+            // Preselection Lepton Operations //
             //////////////////////////////////
+
+            float diElMass = 0, diMuMass = 0;
+            bool ZVeto = false;
 
             for(int selmu = 0; selmu < selectedMuons.size(); selmu++)
             {
                 selectedMuonsTLV_JC.push_back(*selectedMuons[selmu]);
+            }
+
+            if(nMu >=2)
+            {
+                TLorentzVector diMu = selectedMuonsTLV_JC[0] + selectedMuonsTLV_JC[1];
+                diMuMass = diMu.M();
+            }
+
+            for(int selel = 0; selel < selectedElectrons.size(); selel++)
+            {
+                selectedElectronsTLV_JC.push_back(*selectedElectrons[selel]);
+            }
+
+            if(nEl >= 2)
+            {
+                TLorentzVector diEl = selectedElectronsTLV_JC[0] + selectedElectronsTLV_JC[1];
+                diElMass = diEl.M();
             }
 
 
@@ -763,17 +843,16 @@ int main (int argc, char *argv[])
                 }
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
                 {
-		  selectedLBJets.push_back(selectedJets[seljet]);
                     selectedLBJets.push_back(selectedJets[seljet]);
-                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > workingpointvalue)
+                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.679)
                     {
                         selectedMBJets.push_back(selectedJets[seljet]);
-                        HTb += selectedJets[seljet]->Pt();
 
-			if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.898)
-                    {
-                        selectedTBJets.push_back(selectedJets[seljet]);
-                    }
+
+                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.898)
+                        {
+                            selectedTBJets.push_back(selectedJets[seljet]);
+                        }
 
                     }
                 }
@@ -806,19 +885,107 @@ int main (int argc, char *argv[])
                 if(isGoodPV && trigged)
                 {
                     selecTable.Fill(d,1,scaleFactor);
-                    if (nMu>=1)
+                    if (nMu==1)
                     {
                         selecTable.Fill(d,2,scaleFactor);
-                        if(nEl>=1)
+                        if(nEl==1)
                         {
                             selecTable.Fill(d,3,scaleFactor);
                             if(nJets>=4)
                             {
                                 selecTable.Fill(d,4,scaleFactor);
-                                if(nMtags>=1)
+                                if(nLtags>=1)
                                 {
                                     selecTable.Fill(d,5,scaleFactor);
-                                    if(nMtags>=2)
+                                    if(nLtags>=2)
+                                    {
+                                        selecTable.Fill(d,6,scaleFactor);
+                                        if(nJets==5)
+                                        {
+                                            selecTable.Fill(d,7,scaleFactor);
+                                            if(nJets==6)
+                                            {
+                                                selecTable.Fill(d,8,scaleFactor);
+                                                if(nJets==7)
+                                                {
+                                                    selecTable.Fill(d,9,scaleFactor);
+                                                    if(nJets==8)
+                                                    {
+                                                        selecTable.Fill(d,10,scaleFactor);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(Muon && !Electron && dilepton)   //Muon-Electron Selection Table
+            {
+                if(diMuMass < 20 || (diMuMass > 76 && diMuMass < 106)) ZVeto = true;
+                if(isGoodPV && trigged)
+                {
+                    selecTable.Fill(d,1,scaleFactor);
+                    if (nMu == 2 && nEl == 0)
+                    {
+                        selecTable.Fill(d,2,scaleFactor);
+                        if(!ZVeto)
+                        {
+                            selecTable.Fill(d,3,scaleFactor);
+                            if(nJets>=4)
+                            {
+                                selecTable.Fill(d,4,scaleFactor);
+                                if(nLtags>=1)
+                                {
+                                    selecTable.Fill(d,5,scaleFactor);
+                                    if(nLtags>=2)
+                                    {
+                                        selecTable.Fill(d,6,scaleFactor);
+                                        if(nJets==5)
+                                        {
+                                            selecTable.Fill(d,7,scaleFactor);
+                                            if(nJets==6)
+                                            {
+                                                selecTable.Fill(d,8,scaleFactor);
+                                                if(nJets==7)
+                                                {
+                                                    selecTable.Fill(d,9,scaleFactor);
+                                                    if(nJets==8)
+                                                    {
+                                                        selecTable.Fill(d,10,scaleFactor);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(!Muon && Electron && dilepton)   //Muon-Electron Selection Table
+            {
+                if(diElMass < 20 || (diElMass > 76 && diElMass < 106)) ZVeto = true;
+                if(isGoodPV && trigged)
+                {
+                    selecTable.Fill(d,1,scaleFactor);
+                    if (nEl==2 && nMu ==0)
+                    {
+                        selecTable.Fill(d,2,scaleFactor);
+                        if(!ZVeto)
+                        {
+                            selecTable.Fill(d,3,scaleFactor);
+                            if(nJets>=4)
+                            {
+                                selecTable.Fill(d,4,scaleFactor);
+                                if(nLtags>=1)
+                                {
+                                    selecTable.Fill(d,5,scaleFactor);
+                                    if(nLtags>=2)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
                                         if(nJets==5)
@@ -861,7 +1028,15 @@ int main (int argc, char *argv[])
             //Apply the lepton, btag and HT selections
             if (Muon && Electron && dilepton)
             {
-                if  (  !( nMu >= 1 && nEl >= 1 )) continue; // Muon-Electron Channel Selection
+                if  (  !( nMu == 1 && nEl == 1 )) continue; // Muon-Electron Channel Selection
+            }
+            else if (Muon && !Electron && dilepton)
+            {
+                if  (  !( nMu == 2 && nEl == 0 && !ZVeto)) continue; // Muon-Electron Channel Selection
+            }
+            else if (!Muon && Electron && dilepton)
+            {
+                if  (  !( nMu == 0 && nEl == 2 && !ZVeto)) continue; // Muon-Electron Channel Selection
             }
             else
             {
@@ -874,7 +1049,17 @@ int main (int argc, char *argv[])
 
             if (dilepton && Muon && Electron)
             {
-                if (!(nJets>=4 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                if (!(nJets>=4 && nLtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+//                if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+            }
+            else if (dilepton && Muon && !Electron)
+            {
+                if (!(nJets>=4 && nLtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+//                if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+            }
+            else if (dilepton && !Muon && Electron)
+            {
+                if (!(nJets>=4 && nLtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
 //                if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
             }
             if(debug)
@@ -917,12 +1102,14 @@ int main (int argc, char *argv[])
             //////////////////////////////////////
 
             jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedMuonTLV_JC[0], genEvt, scaleFactor);
+            double TriJetMass, DiJetMass;
+            vector<TRootPFJet*> MVASelJets1;
 
             if(!TrainMVA)
             {
                 MVAvals1 = jetCombiner->getMVAValue(MVAmethod, 1); // 1 means the highest MVA value
                 MSPlot["MVA1TriJet"]->Fill(MVAvals1.first, datasets[d], true, Luminosity*scaleFactor );
-		topness = MVAvals1.first;
+                topness = MVAvals1.first;
                 for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
                 {
                     if (seljet1 == MVAvals1.second[0] || seljet1 == MVAvals1.second[1] || seljet1 == MVAvals1.second[2])
@@ -969,9 +1156,9 @@ int main (int argc, char *argv[])
                 TLorentzVector Bh = *MVASelJets1[bj1];
                 TLorentzVector Th = Wh+Bh;
 
-                double TriJetMass = Th.M();
+                TriJetMass = Th.M();
 
-                double DiJetMass = Wh.M();
+                DiJetMass = Wh.M();
                 //DeltaR
                 float AngleThWh = fabs(Th.DeltaPhi(Wh));
                 float AngleThBh = fabs(Th.DeltaPhi(Bh));
@@ -1028,16 +1215,20 @@ int main (int argc, char *argv[])
             //////////////////////
 
             HT = 0;
-            float HT1M2L=0, H1M2L=0, HTbjets=0, HT2M=0, H2M=0;
+            float HT1M2L=0, H1M2L=0, HTbjets=0, HT2L=0, H2L=0;
 
 
             for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
             {
-                if(nMtags>=2 && seljet1>=2)
+                if(nLtags>=2 && seljet1>=2)
                 {
                     jetpt = selectedJets[seljet1]->Pt();
-                    HT2M = HT2M + jetpt;
-                    H2M = H2M + selectedJets[seljet1]->P();
+                    HT2L = HT2L + jetpt;
+                    H2L = H2L + selectedJets[seljet1]->P();
+                }
+                if(selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244)
+                {
+                    HTb += selectedJets[seljet1]->Pt();
                 }
                 MSPlot["BdiscBJetCand_CSV"]->Fill(selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags(),datasets[d], true, Luminosity*scaleFactor);
                 MSPlot["JetEta"]->Fill(selectedJets[seljet1]->Eta() , datasets[d], true, Luminosity*scaleFactor);
@@ -1045,58 +1236,73 @@ int main (int argc, char *argv[])
                 jetpt = selectedJets[seljet1]->Pt();
                 HT = HT + jetpt;
                 H = H +  selectedJets[seljet1]->P();
-		if (seljet1 > 2  )  HTHi +=  selectedJets[seljet1]->Pt();
+                if (seljet1 > 2  )  HTHi +=  selectedJets[seljet1]->Pt();
             }
 
             HTRat = HTHi/HT;
             HTH = HT/H;
- 
-            MSPlot["HTExcess2M"]->Fill(HT2M, datasets[d], true, Luminosity*scaleFactor);
+
+            MSPlot["HTExcess2L"]->Fill(HT2L, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity*scaleFactor);
             sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
 
-          muonpt = selectedMuons[0]->Pt();
-          muoneta = selectedMuons[0]->Eta();
-          electronpt  = selectedElectrons[0]->Pt();
-
-          bjetpt= selectedMBJets[0]->Pt();
-
-	  Eventcomputer_->FillVar("topness",topness);
-	  Eventcomputer_->FillVar("muonpt",muonpt);
-	  Eventcomputer_->FillVar("muoneta",muoneta);
-	  Eventcomputer_->FillVar("HTH", HTH);
-          Eventcomputer_->FillVar("HTRat",HTRat);
-          Eventcomputer_->FillVar("HTb", HTb);   
-          Eventcomputer_->FillVar("nLtags",nLtags );     
-          Eventcomputer_->FillVar("nMtags",nMtags );     
-          Eventcomputer_->FillVar("nTtags",nTtags );     
-          Eventcomputer_->FillVar("nJets", selectedJets.size() );
-	  Eventcomputer_->FillVar("Jet3Pt", selectedJets[2]->Pt() );
-          Eventcomputer_->FillVar("Jet4Pt", selectedJets[3]->Pt() );
-
-	  std::map<std::string,Float_t> MVAVals = Eventcomputer_->GetMVAValues();
-        
-	  for (std::map<std::string,Float_t>::const_iterator it = MVAVals.begin(); it != MVAVals.end(); ++it){
-        
-          //  cout <<"MVA Method : "<< it->first    <<" Score : "<< it->second <<endl;
-          BDTScore = it->second;
-
-        }
+            if(dilepton && Muon && Electron)
+            {
+                muonpt = selectedMuons[0]->Pt();
+                muoneta = selectedMuons[0]->Eta();
+                electronpt  = selectedElectrons[0]->Pt();
+            }
+            if(dilepton && Muon && !Electron)
+            {
+                muonpt = selectedMuons[0]->Pt();
+                muoneta = selectedMuons[0]->Eta();
+            }
+            if(dilepton && !Muon && Electron)
+            {
+                muonpt = selectedElectrons[0]->Pt();
+                muoneta = selectedElectrons[0]->Eta();
+            }
 
 
-	  float nvertices = vertex.size();
-	  float normfactor = datasets[d]->NormFactor();
+            bjetpt= selectedLBJets[0]->Pt();
+
+            Eventcomputer_->FillVar("topness",topness);
+            Eventcomputer_->FillVar("muonpt",muonpt);
+            Eventcomputer_->FillVar("muoneta",muoneta);
+            Eventcomputer_->FillVar("HTH", HTH);
+            Eventcomputer_->FillVar("HTRat",HTRat);
+            Eventcomputer_->FillVar("HTb", HTb);
+            Eventcomputer_->FillVar("nLtags",nLtags );
+            Eventcomputer_->FillVar("nMtags",nMtags );
+            Eventcomputer_->FillVar("nTtags",nTtags );
+            Eventcomputer_->FillVar("nJets", selectedJets.size() );
+            Eventcomputer_->FillVar("Jet3Pt", selectedJets[2]->Pt() );
+            Eventcomputer_->FillVar("Jet4Pt", selectedJets[3]->Pt() );
+
+            std::map<std::string,Float_t> MVAVals = Eventcomputer_->GetMVAValues();
+
+            for (std::map<std::string,Float_t>::const_iterator it = MVAVals.begin(); it != MVAVals.end(); ++it)
+            {
+
+                //  cout <<"MVA Method : "<< it->first    <<" Score : "<< it->second <<endl;
+                BDTScore = it->second;
+
+            }
+
+
+            float nvertices = vertex.size();
+            float normfactor = datasets[d]->NormFactor();
 
             //////////////////
             //Filling nTuple//
             //////////////////
-	  //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
 
-	  float vals[20] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
+            //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
 
-	  tup->Fill(vals);
+            float vals[20] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2L,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
 
-	  //	  tup->Fill();
+            tup->Fill(vals);
+
 
         } //End Loop on Events
 
