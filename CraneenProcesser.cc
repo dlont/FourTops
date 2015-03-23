@@ -38,7 +38,7 @@ void SplitSystematicsAnalyser(int nBins, float plotLow, float plotHigh, string l
 
 int main()
 {
-    int NumberOfBins = 30;	//fixed width nBins
+    int NumberOfBins = 11;	//fixed width nBins
 
     //------- Set Channel --------//
     bool DileptonMuEl = false;
@@ -46,9 +46,9 @@ int main()
     bool SingleEl = false;
     bool jetSplit = true;
 
-    string VoI = "Multitopness"; //variable of interest for plotting
-    float lBound = -1;
-    float uBound = 0.2;
+    string VoI = "BDT"; //variable of interest for plotting
+    float lBound = -0.3;   //-1->0.2 topness
+    float uBound = 0.8;
 
     /*vector<string> vars;
     vars.push_back("HT");
@@ -73,7 +73,7 @@ int main()
         channel = "ttttmu";
         xmlFileName = "config/Run2SingleLepton_samples.xml";
         xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";
-        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens16_3_2015_merge/Craneen_";
+        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens17_3_2015_merge/Craneen_";
     }
     else if(SingleEl)
     {
@@ -81,7 +81,7 @@ int main()
         channel = "ttttel";
         xmlFileName = "config/Run2SingleLepton_samples.xml";
         xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";
-        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens5_2_2015/Craneen_";
+        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_El/Craneens17_3_2015_merge/Craneen_";
     }
     else if(DileptonMuEl)
     {
@@ -102,7 +102,7 @@ int main()
         splitVar = "nJets";
         bSplit = 6; //Lower bound of jetSplit bins
         tSplit = 10; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar
-        wSplit = 2; //width of the bins
+        wSplit = 1; //width of the bins
         SplitSystematicsAnalyser(NumberOfBins, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
         SplitDatasetPlotter(NumberOfBins, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
 //        for(int k=0; k<vars.size(); k++)
@@ -184,7 +184,7 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             //artificial Lumi
-            //Luminosity = 50000;
+            Luminosity = 15000;
 
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
@@ -299,7 +299,8 @@ void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoA
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
             //artificial Lumi
-            //Luminosity = 50000;
+            Luminosity = 15000;
+
             histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
         }
 
@@ -413,7 +414,7 @@ void SplitDatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoA
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             //artificial Lumi
-            Luminosity = 50000;
+            Luminosity = 15000;
 
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
@@ -561,7 +562,7 @@ void SplitSystematicsAnalyser(int nBins, float plotLow, float plotHigh, string l
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
             //artificial Lumi
-            Luminosity = 50000;
+            Luminosity = 15000;
 
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
