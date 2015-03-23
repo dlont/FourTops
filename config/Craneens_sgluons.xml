@@ -2,25 +2,25 @@
 
 <datasets>
 
- <d name="Data"     title="Data"    add="1"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="5000.0" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_Data_Run2.root"/>
+ <d name="Data"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="5000.0" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_Data_Run2.root"/>
 
-     <d name="NP_overlay_sgluon_m800"     title="sgluon m800"    add="1"   color="95"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1133.901" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_sgluon_ttttNLO_m800_Run2.root"/>
-
-
-    <d name="DYJets"     title="DYJets"    add="1"   color="214"  ls="1"  lw="2" normf="1" xsection="800000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_DYJets_Run2.root"/>
+     <d name="NP_overlay_sgluon_m800"     title="sgluon m800"    add="1"   color="95"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1133.901" filenames="Craneens_MuEl/Craneens18_3_2015/Craneen_sgluon_ttttNLO_m800_Run2_TopTree_Study_sgluon_ttttNLO_m800.root"/>
 
 
-   <d name="SingleTop_T_tW"     title="SingleTop"    add="1"   color="7"  ls="1"  lw="2" normf="1" xsection="400000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_T_tW_Run2.root"/>
-
-   <d name="SingleTop_Tbar_tW"     title="SingleTop"    add="1"   color="7"  ls="1"  lw="2" normf="1" xsection="400000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_Tbar_tW_Run2.root"/> 
+    <d name="DYJets"     title="DYJets"    add="0"   color="214"  ls="1"  lw="2" normf="1" xsection="800000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_DYJets_Run2.root"/>
 
 
-   <d name="SingleTop_TToLeptons"     title="SingleTop"    add="1"   color="7"  ls="1"  lw="2" normf="1" xsection="400000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_TToLeptons_Run2.root"/>
+   <d name="SingleTop_T_tW"     title="SingleTop"    add="0"   color="7"  ls="1"  lw="2" normf="1" xsection="400000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_T_tW_Run2.root"/>
 
-   <d name="SingleTop_TbarToLeptons"     title="SingleTop"    add="1"   color="7"  ls="1"  lw="2" normf="1" xsection="400000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_TbarToLeptons_Run2.root"/>
+   <d name="SingleTop_Tbar_tW"     title="SingleTop"    add="0"   color="7"  ls="1"  lw="2" normf="1" xsection="400000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_Tbar_tW_Run2.root"/> 
 
 
-     <d name="TTJets"     title="TTJets"    add="1"   color="633"  ls="1"  lw="2" normf="1" xsection="800000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_TTJets_Run2.root"/>
+   <d name="SingleTop_TToLeptons"     title="SingleTop"    add="0"   color="7"  ls="1"  lw="2" normf="1" xsection="400000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_TToLeptons_Run2.root"/>
+
+   <d name="SingleTop_TbarToLeptons"     title="SingleTop"    add="0"   color="7"  ls="1"  lw="2" normf="1" xsection="400000."  EqLumi="1" filenames="Craneens_MuEl/Craneens6_2_2015/merged/Craneen_TbarToLeptons_Run2.root"/>
+
+
+     <d name="TTJets"     title="TTJets"    add="1"   color="633"  ls="1"  lw="2" normf="1" xsection="800000."  EqLumi="29797.3" filenames="Craneens_MuEl/Craneens18_3_2015/Craneen_TTJets_Run2_TopTree_Study_TTJets.root"/>
 
 
 
