@@ -596,10 +596,10 @@ int main (int argc, char *argv[])
             {
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
                 {
-                    HTb += selectedJets[seljet]->Pt();
                     selectedLBJets.push_back(selectedJets[seljet]);
                     if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.679)
                     {
+                        HTb += selectedJets[seljet]->Pt();
                         selectedMBJets.push_back(selectedJets[seljet]);
                         if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.898)
                         {
@@ -630,7 +630,7 @@ int main (int argc, char *argv[])
                 }
             }
 
-            HTRat = HT_leading/HT_lagging;
+            //HTRat = HT_leading/HT_lagging;
 
             //////////////////////
             // Sync'ing cutflow //
@@ -767,7 +767,7 @@ int main (int argc, char *argv[])
             }
             else if (SingleLepton)
             {
-                if (!(nJets>=6 && nLtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu dilepton channel
+                if (!(nJets>=6 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu dilepton channel
                 //if (!(temp_HT >= 400)) continue; //Jet Tag Event Selection Requirements for Mu dilepton channel
             }
 
@@ -1035,11 +1035,11 @@ int main (int argc, char *argv[])
                 jetpt = selectedJets[seljet1]->Pt();
                 HT = HT + jetpt;
                 H = H +  selectedJets[seljet1]->P();
-                if (seljet1 > 2  )  HTHi +=  selectedJets[seljet1]->Pt();
+                if (seljet1 > 4  )  HTHi +=  selectedJets[seljet1]->Pt();
             }
 
-            //HTH = HT/H;
-            HTH = HTHi/HT;
+            HTH = HT/H;
+            HTRat = HTHi/HT;
 
             vector<double> ptList;
             double jetptTemp;
@@ -1061,7 +1061,7 @@ int main (int argc, char *argv[])
 
             MSPlot["HTb_SelectedJets"]->Fill(HTb, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["HTRat"]->Fill(HTRat, datasets[d], true, Luminosity*scaleFactor);
-            MSPlot["NbOfSelectedBJets"]->Fill(selectedLBJets.size(), datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["NbOfSelectedBJets"]->Fill(selectedMBJets.size(), datasets[d], true, Luminosity*scaleFactor);
             MSPlot["MET"]->Fill(mets[0]->Et(), datasets[d], true, Luminosity*scaleFactor);
 
 
@@ -1081,7 +1081,7 @@ int main (int argc, char *argv[])
                 muoneta = selectedElectrons[0]->Eta();
             }
 
-            bjetpt= selectedLBJets[0]->Pt();
+            bjetpt= selectedMBJets[0]->Pt();
 
             Eventcomputer_->FillVar("multitopness", MultiTopness);
             Eventcomputer_->FillVar("muonpt",muonpt);
