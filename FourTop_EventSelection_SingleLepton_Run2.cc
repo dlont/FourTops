@@ -597,6 +597,7 @@ int main (int argc, char *argv[])
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
                 {
                     selectedLBJets.push_back(selectedJets[seljet]);
+                    cout<<"selrctedlb:  "<<selectedLBJets.size()<<"    seljet "<< seljet<<endl;
                     if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.679)
                     {
                         HTb += selectedJets[seljet]->Pt();
@@ -616,6 +617,12 @@ int main (int argc, char *argv[])
             float nLtags = selectedLBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
             float nMtags = selectedMBJets.size(); //Number of CSVM tags in Event
             float nTtags = selectedTBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
+            float nLights=selectedLightJets.size();
+
+            selectedLBJets.clear();
+            selectedMBJets.clear();
+            selectedTBJets.clear();
+            selectedLightJets.clear();
 
             float temp_HT = 0.;
             double HT_leading = 0.;
@@ -748,7 +755,9 @@ int main (int argc, char *argv[])
             }
             else if (SingleLepton && Muon)
             {
-                if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1)) continue; // Muon Channel Selection
+                //if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1)) continue; // Muon Channel Selection
+                if  (  !( nMu >=1) )continue; // Muon Channel Selection
+
             }
             else if(SingleLepton && Electron){
                 if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1)) continue; // Electron Channel Selection
@@ -1024,7 +1033,8 @@ int main (int argc, char *argv[])
 
             HT = 0;
             //double HT1M2L=0, H1M2L=0, HTbjets=0, HT2M=0, H2M=0, HT2L2J=0,nLights;
-            float HT1M2L=0, H1M2L=0, HTbjets=0, HT2M=0, H2M=0, HT2L2J=0, nLights;
+            float HT1M2L=0, H1M2L=0, HTbjets=0, HT2M=0, H2M=0, HT2L2J=0;
+            sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
 
 
             for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
@@ -1037,7 +1047,6 @@ int main (int argc, char *argv[])
                 H = H +  selectedJets[seljet1]->P();
                 if (seljet1 > 4  )  HTHi +=  selectedJets[seljet1]->Pt();
             }
-
             HTH = HT/H;
             HTRat = HTHi/HT;
 
@@ -1052,7 +1061,6 @@ int main (int argc, char *argv[])
             }
 
             sort(selectedJets2.begin(),selectedJets2.end(),HighestPt()); //order Jets wrt Pt for tuple output
-            nLights=selectedLightJets.size();
 
             HT2L2J = HT - selectedJets[0]->Pt() - selectedJets[1]->Pt() - ptList[0] - ptList[1];    
             //cout<<"HT:  "<<HT<<"  "<<selectedJets[0]->Pt()<<"  "<<selectedJets[1]->Pt()<<"  "<<ptList[0]<<"  "<<ptList[1]<<"  HT2l2J"<<HT2L2J<<endl;    
@@ -1070,7 +1078,7 @@ int main (int argc, char *argv[])
             //MSPlot["7thJetPt"]->Fill(selectedJets[6]->Pt(), datasets[d], true, Luminosity*scaleFactor);
 
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity*scaleFactor);
-            sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
+            //sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
 
             if(SingleLepton && Muon){
                 muonpt  = selectedMuons[0]->Pt();
@@ -1111,6 +1119,8 @@ int main (int argc, char *argv[])
             float vals[20] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,bjetpt,HT2M,HTb,HTH,HTRat,MultiTopness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
 
             tup->Fill(vals);
+
+
 
             //tup->Fill(HT,nJets,nLtags,nLights,selectedJets[4]->Pt(),selectedJets[5]->Pt(),HTRat,HTb,HT2L2J,MultiTopness,scaleFactor,datasets[d]->NormFactor(),Luminosity);
 
