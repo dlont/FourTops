@@ -175,8 +175,8 @@ int main (int argc, char *argv[])
     //Setting Lepton Channels (Setting both flags true will select Muon-Electron Channel when dilepton is also true)
     bool dilepton = false;
     bool SingleLepton = true;
-    bool Muon = true;
-    bool Electron = false;
+    bool Muon = false;
+    bool Electron = true;
     bool TrainMVA = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25 = false;
 
@@ -270,7 +270,7 @@ int main (int argc, char *argv[])
     MVAvars.push_back("Jet5Pt");
     MVAvars.push_back("Jet6Pt");
 
-    MVAComputer* Eventcomputer_ = new MVAComputer("BDT","MasterMVA_SingleMuon_23rdMarch.root","MasterMVA_SingleMuon_23rdMarch",MVAvars, "_SingleMuon23rdMarch2015");
+    MVAComputer* Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_SingleMuon_24thMarch.root","MasterMVA_SingleMuon_24thMarch",MVAvars, "_SingleMuon24thMarch2015");
     cout << " Initialized Eventcomputer_ for event_level BDT" << endl;
 
     //////// Top Reco MVA ////////////
@@ -367,7 +367,6 @@ int main (int argc, char *argv[])
     {
         if(Muon && Electron)
         {
-
             CutsselecTable.push_back(string("At least 1 Loose Isolated Muon"));
             CutsselecTable.push_back(string("At least 1 Loose Electron"));
             CutsselecTable.push_back(string("At least 4 Jets"));
@@ -375,17 +374,26 @@ int main (int argc, char *argv[])
     }
     else if(SingleLepton)          // Selection table: SingleLepton + jets //
     {
-        if(Muon)  CutsselecTable.push_back(string("At least 1 Loose Isolated Muon"));
-        else if(Electron)  CutsselecTable.push_back(string("At least 1 Loose Electron"));
+        if(Muon){
+            CutsselecTable.push_back(string("Exactly 1 Tight Isolated Muon"));
+            CutsselecTable.push_back(string("Exactly 1 Loose Isolated Muon"));
+            CutsselecTable.push_back(string("Exactly zero electrons"));
+
+        }
+        else if(Electron){
+            CutsselecTable.push_back(string("Exactly 1 Tight Electron"));
+            CutsselecTable.push_back(string("Exactly 1 Loose Electron"));
+            CutsselecTable.push_back(string("Exactly zero muons"));
+        }
         CutsselecTable.push_back(string("At least 6 Jets"));
     }
 
     CutsselecTable.push_back(string("At least 1 CSVM Jet"));
     CutsselecTable.push_back(string("At least 2 CSVM Jets"));
-    CutsselecTable.push_back(string("HT $\\geq 100 GeV$"));
+    /*CutsselecTable.push_back(string("HT $\\geq 100 GeV$"));
     CutsselecTable.push_back(string("HT $\\geq 200 GeV$"));
     CutsselecTable.push_back(string("HT $\\geq 300 GeV$"));
-    CutsselecTable.push_back(string("HT $\\geq 400 GeV$"));
+    CutsselecTable.push_back(string("HT $\\geq 400 GeV$"));*/
 
     SelectionTable selecTable(CutsselecTable, datasets);
     selecTable.SetLuminosity(Luminosity);
@@ -597,7 +605,6 @@ int main (int argc, char *argv[])
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
                 {
                     selectedLBJets.push_back(selectedJets[seljet]);
-                    cout<<"selrctedlb:  "<<selectedLBJets.size()<<"    seljet "<< seljet<<endl;
                     if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.679)
                     {
                         HTb += selectedJets[seljet]->Pt();
@@ -684,21 +691,25 @@ int main (int argc, char *argv[])
                 if(isGoodPV && trigged)
                 {
                     selecTable.Fill(d,1,scaleFactor);
-                    if (nMu>=1)
+                    if (nMu==1)
                     {
                         selecTable.Fill(d,2,scaleFactor);
-                        if(nEl>=1)
+                        if(nLooseMu==1)
                         {
                             selecTable.Fill(d,3,scaleFactor);
-                            if(nJets>=4)
+                            if(nEl==0)
                             {
                                 selecTable.Fill(d,4,scaleFactor);
-                                if(nLtags>=1)
+                                if(nJets>=6)
                                 {
                                     selecTable.Fill(d,5,scaleFactor);
-                                    if(nLtags>=2)
+                                    if(nMtags>=1)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
+                                        if(nMtags>=2)
+                                        {
+                                            selecTable.Fill(d,7,scaleFactor);
+                                        }
                                     }
                                 }
                             }
@@ -712,29 +723,32 @@ int main (int argc, char *argv[])
                 if(isGoodPV && trigged)
                 {
                     selecTable.Fill(d,1,scaleFactor);
-                    if (nMu>=1)
+                    if (nEl==1)
                     {
                         selecTable.Fill(d,2,scaleFactor);
-                        if(nEl>=1)
+                        if(nLooseEl==1)
                         {
                             selecTable.Fill(d,3,scaleFactor);
-                            if(nJets>=4)
+                            if(nMu==0)
                             {
                                 selecTable.Fill(d,4,scaleFactor);
-                                if(nLtags>=1)
+                                if(nJets>=6)
                                 {
                                     selecTable.Fill(d,5,scaleFactor);
-                                    if(nLtags>=2)
+                                    if(nMtags>=1)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
+                                        if(nMtags>=2)
+                                        {
+                                            selecTable.Fill(d,7,scaleFactor);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            
+            }         
             /////////////////////////////////
             // Applying baseline selection //
             /////////////////////////////////
@@ -755,8 +769,7 @@ int main (int argc, char *argv[])
             }
             else if (SingleLepton && Muon)
             {
-                //if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1)) continue; // Muon Channel Selection
-                if  (  !( nMu >=1) )continue; // Muon Channel Selection
+                if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1)) continue; // Muon Channel Selection
 
             }
             else if(SingleLepton && Electron){
@@ -1152,7 +1165,7 @@ int main (int argc, char *argv[])
     selecTable.TableCalculator(  true, true, true, true, true);
 
     //Options : WithError (false), writeMerged (true), useBookTabs (false), addRawsyNumbers (false), addEfficiencies (false), addTotalEfficiencies (false), writeLandscape (false)
-    selecTable.Write(  "FourTop"+postfix+"_Table"+channelpostfix+".tex",    false,true,true,true,false,false,true);
+    selecTable.Write(  "FourTop"+postfix+dName+"_Table"+channelpostfix+".tex",    false,true,true,true,false,false,true);
 
     fout->cd();
     TFile *foutmva = new TFile ("foutMVA.root","RECREATE");
