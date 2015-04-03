@@ -45,7 +45,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
 
 int main()
 {
-    int NumberOfBins = 20;	//fixed width nBins
+    int NumberOfBins = 30;	//fixed width nBins
 
     //------- Set Channel --------//
     bool DileptonMuEl = false;
@@ -59,7 +59,7 @@ int main()
     string VoI = "BDT"; //variable of interest for plotting
     float lBound = -0.5;   //-1->0.2 topness
     float uBound = 1.0;
-    int lumiScale = 15;  //Amount of luminosity to scale to in fb^-1
+    int lumiScale = 50;  //Amount of luminosity to scale to in fb^-1
 
     /*
     vector<string> vars;
@@ -1190,7 +1190,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
                 {
                     histoName = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__data_obs__nominal";
                     tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
-                    tempEntries = tempHisto->GetEntries();  cout<<"tempEntries: "<<tempEntries<<"  "<<tempHisto->GetTitle()<<endl;
+                    tempEntries = tempHisto->GetSumOfWeights();  cout<<"tempEntries: "<<tempEntries<<"  "<<tempHisto->GetTitle()<<endl;
                     card<<static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str()+"         ";                }
                 else{
                     continue;
