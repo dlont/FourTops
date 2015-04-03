@@ -40,7 +40,8 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
 
 void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom, string CraneenPath);
 void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlSys, string CraneenPath);
-
+ 
+void DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom);
 
 int main()
 {
@@ -58,7 +59,7 @@ int main()
     string VoI = "BDT"; //variable of interest for plotting
     float lBound = -0.5;   //-1->0.2 topness
     float uBound = 1.0;
-    int lumiScale = 30;  //Amount of luminosity to scale to in fb^-1
+    int lumiScale = 15;  //Amount of luminosity to scale to in fb^-1
 
     /*
     vector<string> vars;
@@ -129,7 +130,9 @@ int main()
     else if (jetTagsplit == true)  splitting = "JTS";
     else{splitting = "inc";}
 
-    TFile *shapefile = new TFile(("shapefile"+leptoAbbr+"_"+slumiScale+"_"+VoI+"_"+splitting+".root").c_str(), "RECREATE");
+    string shapefileName = "";
+    shapefileName = "shapefile"+leptoAbbr+"_"+slumiScale+"_"+VoI+"_"+splitting+".root";
+    TFile *shapefile = new TFile((shapefileName).c_str(), "RECREATE");
     TFile *errorfile = new TFile(("ScaleFiles"+leptoAbbr+"_light/Error.root").c_str(),"RECREATE");
 
     if(jetSplit)
@@ -166,6 +169,7 @@ int main()
         DatasetPlotter(NumberOfBins, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath);
     }
 
+    DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, jetTagsplit, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName);
 
     errorfile->Close();
     shapefile->Close();
@@ -267,7 +271,7 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
         {
             writename = channel + "__" + dataSetName +"__nominal";
         }
-        cout<<"writename  :"<<writename<<endl;
+        //cout<<"writename  :"<<writename<<endl;
         histo1D[dataSetName.c_str()]->Write((writename).c_str());
 
         canv->SaveAs((pathPNG+dataSetName+".pdf").c_str());
@@ -363,7 +367,7 @@ void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoA
         histo1D[plotname.c_str()]->Draw();
         string writename = "";
         writename = channel + "__TTJets__" + dataSetName;
-        cout<<"writename  :"<<writename<<endl;
+        //cout<<"writename  :"<<writename<<endl;
 
         histo1D[plotname.c_str()]->Write((writename).c_str());
         canv2->SaveAs(("Sys_"+plotname+".pdf").c_str());
@@ -523,7 +527,7 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
             {
                 writename = channel + numStr + sSplitVar + "__" + dataSetName +"__nominal";
             }
-            cout<<"writename  :"<<writename<<endl;
+            //cout<<"writename  :"<<writename<<endl;
             histo1D[histoName.c_str()]->Write((writename).c_str());
 
             canv->SaveAs((pathPNG+histoName+".pdf").c_str());
@@ -669,7 +673,7 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
             if(dataSetName == "TTScaleDown")
             {
                 writename = channel + numStr + sSplitVar + "__TTJets__scaleDown";
-                cout<<"writename  :"<<writename<<endl;
+                //cout<<"writename  :"<<writename<<endl;
                 histo1D[histoName.c_str()]->Write((writename).c_str());
                 canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
                 errorfile->cd();
@@ -682,7 +686,7 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
             if(dataSetName == "TTScaleUp")
             {
                 writename = channel + numStr + sSplitVar + "__TTJets__scaleUp";
-                cout<<"writename  :"<<writename<<endl;
+                //cout<<"writename  :"<<writename<<endl;
                 histo1D[histoName.c_str()]->Write((writename).c_str());
                 canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
                 errorfile->cd();
@@ -821,7 +825,6 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
 
                     for(int t2 = fbSplit2; t2 <= ftSplit2; t2+=fwSplit2)
                     {
-                        if (t2>2)                        cout<<"t2:  "<<t2<<endl;
                         if(splitVar2>=t2 && splitVar2<(t2+fwSplit2)) //splitVar falls inside one of the bins
                         {
                             numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
@@ -839,10 +842,8 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                     if(splitVar1>=s && splitVar1<(s+fwSplit1)) //splitVar falls inside one of the bins
                     {
                         numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
-                        cout<<ftSplit2<<"  "<<splitVar2<<endl;
                         if(splitVar2 >= ftSplit2){ //Check if this entry belongs in the last bin in var2.
                             plotname = sVarofinterest + numStr1 + sSplitVar1 +stSplit2 + sSplitVar2;
-                            cout<<"PLOTNAME:  "<<plotname<<endl;
                             histoName = dataSetName + numStr1 + sSplitVar1 +stSplit2 + sSplitVar2;
                         }    
                         else //If it doesn't belong in the last bin, find out which it belongs in
@@ -867,7 +868,6 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
 
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
-                cout<<"plotname: "<<plotname<<" "<<numStr1<<"   "<<numStr2<<endl;
                 MSPlot[plotname.c_str()]->Fill(varofInterest, datasets[d], true, NormFactor*ScaleFactor*Luminosity);
                 histo1D[histoName.c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
             }
@@ -904,7 +904,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                 {
                     writename = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + dataSetName +"__nominal";
                 }
-                cout<<"writename  :"<<writename<<endl;
+                //cout<<"writename  :"<<writename<<endl;
                 histo1D[histoName.c_str()]->Write((writename).c_str());
 
                 canv->SaveAs((pathPNG+histoName+".pdf").c_str());
@@ -993,7 +993,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
             for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
                 numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();            
                 histoName = dataSetName + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
-                cout<<"histoName: "<< histoName<<endl;
+                //cout<<"histoName: "<< histoName<<endl;
                 histo1D[histoName.c_str()] = new TH1F(histoName.c_str(),histoName.c_str(), nBins, plotLow, plotHigh);
             }
         }
@@ -1084,7 +1084,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                 if(dataSetName == "TTScaleDown")
                 {
                     writename = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__TTJets__scaleDown";
-                    cout<<"writename  :"<<writename<<endl;
+                    //cout<<"writename  :"<<writename<<endl;
                     histo1D[histoName.c_str()]->Write((writename).c_str());
                     canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
                     errorfile->cd();
@@ -1097,7 +1097,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                 if(dataSetName == "TTScaleUp")
                 {
                     writename = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__TTJets__scaleUp";
-                    cout<<"writename  :"<<writename<<endl;
+                    //cout<<"writename  :"<<writename<<endl;
                     histo1D[histoName.c_str()]->Write((writename).c_str());
                     canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
                     errorfile->cd();
@@ -1135,6 +1135,198 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
         //        }
     }
 };
+
+void DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom){
+    TTreeLoader treeLoader;
+    vector < Dataset* > datasets;                   //cout<<"vector filled"<<endl;
+    const char *xmlfile = xmlNom.c_str();
+    treeLoader.LoadDatasets (datasets, xmlfile);    //cout<<"datasets loaded"<<endl;
+    int nDatasets = datasets.size();
+    TH1F *tempHisto;
+    float tempEntries;
+    int nChannels = 0;
+
+    string numStr1, numStr2, binname, histoName, dataSetName;
+    ofstream card;
+    card.open ("datacard.txt");
+
+    for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
+    {
+        for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
+            //for(int i=0; i<datasets.size()-1; i++){
+                nChannels += 1;
+            //}
+        }  
+    } 
+
+    card << "imax " + static_cast<ostringstream*>( &(ostringstream() << nChannels) )->str() + "\n";
+    card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << nDatasets-2) )->str() + "\n";
+    card << "kmax *\n";
+    card << "---------------\n";
+    card << "shapes * * "+shapefileName+"  $CHANNEL__$PROCESS__nominal  $CHANNEL__$PROCESS__$SYSTEMATIC\n";
+    card << "---------------\n";
+    card << "bin                               ";
+    for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
+    {
+        numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+        for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
+            numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
+            binname = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+            card << binname + " ";
+        }  
+    }    
+    card << "\n";
+    card << "observation                               ";
+    for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
+    {
+        numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+        for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
+            numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
+            binname = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+            tempEntries = 0;
+            for (int j = 0; j<nDatasets; j++){
+                dataSetName=datasets[j]->Name();
+                if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
+                {
+                    histoName = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__data_obs__nominal";
+                    tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
+                    tempEntries = tempHisto->GetEntries();  cout<<"tempEntries: "<<tempEntries<<"  "<<tempHisto->GetTitle()<<endl;
+                    card<<static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str()+"         ";                }
+                else{
+                    continue;
+                }
+            }
+        }  
+    } 
+    card << "\n";
+
+    card << "---------------------------\n";
+    card << "bin                               ";
+    for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
+    {
+        numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+        for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
+            numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
+            binname = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+            for(int i = 0; i<nDatasets-1; i++)    card << binname + " ";
+        }  
+    }
+    card << "\n";
+    card << "process                             ";
+    for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
+    {
+        for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
+            binname = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+            for (int j = 0; j<nDatasets; j++){
+                dataSetName=datasets[j]->Name();
+                if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
+                {
+                    continue;
+                }
+                else{
+                    card<<dataSetName+"           ";
+                }
+            }
+        }  
+    }    
+
+    card << "\n";
+    card << "process                                ";
+    for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
+    {
+        for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
+            for(int i=0; i<datasets.size()-1; i++){
+                card << static_cast<ostringstream*>( &(ostringstream() << i) )->str() + "                    ";
+            }
+        }  
+    }  
+    card << "\n";
+    card << "rate                                ";
+    for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
+    {
+        numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+        for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
+            numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
+            binname = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+            tempEntries = 0;
+            for (int j = 0; j<nDatasets; j++){
+                dataSetName=datasets[j]->Name();
+                if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
+                {
+                    continue;
+                }
+                else{
+                    histoName = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + dataSetName +"__nominal";
+                    tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
+                    tempEntries = tempHisto->GetSumOfWeights();  cout<<"tempEntries: "<<tempEntries<<endl;
+                    card << static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str() + "               ";
+                }
+            }
+        }  
+    }     
+    card << "\n";
+    card << "---------------------------\n";
+    card << "lumi                  lnN           ";
+    for (int i=0; i<nChannels*nDatasets; i++){
+        card << "1.026                ";
+    }
+    card << "\n";
+    for (int d = 0; d<nDatasets; d++){
+        dataSetName = datasets[d]->Name();
+        if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
+        {
+            continue;
+        }
+        else {
+            if(dataSetName.find("tttt")!=string::npos){
+                card << "tttt_norm              lnN          ";
+                cout<<"chan "<<nChannels<<endl;
+                for (int j = 0; j<nChannels; j++){
+                    cout<<"J: "<<j<<endl;
+                    card << "1.1                 -                    -                    -                  -                    ";
+                }
+                card << "\n";
+            }
+            else{
+                card << dataSetName + "_norm      lnN           ";
+                for(int k = 0; k<nChannels; k++){
+                    for (int dash1 = 0; dash1<d-1; dash1++){
+                        card << "-                  ";
+                    }
+                    card << "1.04                  ";                   
+                    for (int dash2 = 5; dash2>d; dash2-- ){
+                        card << "-                  ";
+                    }
+                }
+                card<<"\n";
+            }   
+        }        
+    }
+
+    card << "scale                shape           ";
+    for (int d = 0; d<nDatasets; d++){
+        dataSetName = datasets[d]->Name();
+        if(dataSetName.find("TTJets")!=string::npos)
+        {
+            for(int k = 0; k<nChannels; k++){
+                for (int dash1 = 0; dash1<d-1; dash1++){
+                    card << "-                  ";
+                }
+                card << "1                      ";                   
+                for (int dash2 = 5; dash2>d; dash2-- ){
+                    card << "-                  ";
+                }
+            }
+            card<<"\n";
+        }
+        else {
+            continue;
+        }        
+    }    
+
+    card.close();
+};
+
 
 std::string intToStr (int number){
     std::ostringstream buff;
