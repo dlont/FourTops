@@ -41,7 +41,7 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
 void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom, string CraneenPath);
 void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlSys, string CraneenPath);
  
-void DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom);
+void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom);
 
 int main()
 {
@@ -162,6 +162,8 @@ int main()
         wSplit2 = 2; //width of the bins for tags
         Split2SystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileNameSys, CraneenPath);
         Split2DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1, splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, CraneenPath);        
+        Split2_DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, jetTagsplit, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName);
+
     }
     else
     {
@@ -169,7 +171,6 @@ int main()
         DatasetPlotter(NumberOfBins, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath);
     }
 
-    DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, jetTagsplit, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName);
 
     errorfile->Close();
     shapefile->Close();
@@ -471,13 +472,16 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
                 Luminosity = 1000*lScale;
             }
 
+            
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
                 plotname = sVarofinterest + stSplit + sSplitVar;
                 histoName = dataSetName + stSplit + sSplitVar;
+                //outsiderange = false;
             }
             else //If it doesn't belong in the last bin, find out which it belongs in
             {
+                bool outsiderange = true;
                 for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
                 {
                     if(splitVar>=s && splitVar<(s+fwSplit)) //splitVar falls inside one of the bins
@@ -485,10 +489,15 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
                         numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
                         plotname = sVarofinterest + numStr + sSplitVar;
                         histoName = dataSetName + numStr + sSplitVar;
+                        outsiderange = false;
                         break;
                     }
                 }
+                if (outsiderange == true){
+                    continue;
+                }
             }
+
 
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
@@ -578,7 +587,8 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
     string sbSplit = static_cast<ostringstream*>( &(ostringstream() << fbSplit) )->str();
     string stSplit = static_cast<ostringstream*>( &(ostringstream() << ftSplit) )->str();
     string swSplit = static_cast<ostringstream*>( &(ostringstream() << fwSplit) )->str();
-
+    errorfile->cd();
+    errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
     for (int d = 0; d < datasets.size(); d++)  //Loop through datasets
     {
         dataSetName = datasets[d]->Name();
@@ -622,21 +632,28 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
             {
                 Luminosity = 1000*lScale;
             }
-
+            
+            //bool outsiderange = true;
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
                 histoName = dataSetName + stSplit + sSplitVar;
+                //outsiderange = false;
             }
             else //If it doesn't belong in the last bin, find out which it belongs in
             {
+                bool outsiderange = true;
                 for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
                 {
                     if(splitVar>=s && splitVar<(s+fwSplit)) //splitVar falls inside one of the bins
                     {
                         numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
                         histoName = dataSetName + numStr + sSplitVar;
+                        outsiderange = false;
                         break;
                     }
+                }
+                if (outsiderange == true){
+                    continue;
                 }
             }
 
@@ -677,7 +694,7 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
                 histo1D[histoName.c_str()]->Write((writename).c_str());
                 canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
                 errorfile->cd();
-                errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
+                //errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
                 errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
                 histo1D[histoName.c_str()]->Write("Minus");
                 //errorfile->Write();
@@ -811,14 +828,15 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
             {
                 Luminosity = 1000*lScale;
             }
+            bool outsiderange = true;
             if(splitVar1 >= ftSplit1) //Check if this entry belongs in the last bin in var1.  Done here to optimize number of checks
             {   
 
                 if(splitVar2 >= ftSplit2){ //Check if this entry belongs in the last bin in var2.
                     plotname = sVarofinterest + stSplit1 + sSplitVar1 +stSplit2 + sSplitVar2;
                     histoName = dataSetName + stSplit1 + sSplitVar1 +stSplit2 + sSplitVar2;
+                    outsiderange = false;
                     //                                cout<<"splitvar2: "<<splitVar2<<endl;
-
                 }    
                 else //If it doesn't belong in the last bin in var2, find out which it belongs in
                 {
@@ -830,6 +848,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                             numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
                             plotname = sVarofinterest + stSplit1 + sSplitVar1 + numStr2 + sSplitVar2;
                             histoName = dataSetName + stSplit1 + sSplitVar1 + numStr2 + sSplitVar2;
+                            outsiderange = false;
                             break;
                         }
                     }
@@ -845,6 +864,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                         if(splitVar2 >= ftSplit2){ //Check if this entry belongs in the last bin in var2.
                             plotname = sVarofinterest + numStr1 + sSplitVar1 +stSplit2 + sSplitVar2;
                             histoName = dataSetName + numStr1 + sSplitVar1 +stSplit2 + sSplitVar2;
+                            outsiderange = false;
                         }    
                         else //If it doesn't belong in the last bin, find out which it belongs in
                         {
@@ -855,6 +875,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                                     numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
                                     plotname = sVarofinterest + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
                                     histoName = dataSetName + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+                                    outsiderange = false;
                                     break;
                                 }
                             }
@@ -865,7 +886,9 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                     }
                 }
             }
-
+            if (outsiderange == true){
+                continue;
+            }
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
                 MSPlot[plotname.c_str()]->Fill(varofInterest, datasets[d], true, NormFactor*ScaleFactor*Luminosity);
@@ -960,6 +983,8 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
     string stSplit2 = static_cast<ostringstream*>( &(ostringstream() << ftSplit2) )->str();
     string swSplit2 = static_cast<ostringstream*>( &(ostringstream() << fwSplit2) )->str();
 
+    errorfile->cd();
+    errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
     for (int d = 0; d < datasets.size(); d++)  //Loop through datasets
     {
         dataSetName = datasets[d]->Name();
@@ -985,7 +1010,6 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar1.c_str(), &splitVar1);
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar2.c_str(), &splitVar2);
 
-
         ////****************************************************Define plots***********************************************
         for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
         {
@@ -1005,10 +1029,12 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
             {
                 Luminosity = 1000*lScale;
             }
+            bool outsiderange = true;
             if(splitVar1 >= ftSplit1) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
                 if(splitVar2 >= ftSplit2){ //Check if this entry belongs in the last bin in var2.
                     histoName = dataSetName + stSplit1 + sSplitVar1 + stSplit2 + sSplitVar2;
+                    outsiderange = false;
                 } 
                 else //If it doesn't belong in the last bin, find out which it belongs in
                 {
@@ -1018,6 +1044,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                         {
                             numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
                             histoName = dataSetName + stSplit1+ sSplitVar1 + numStr2 + sSplitVar2;
+                            outsiderange = false;
                             break;
                         }
                     }
@@ -1033,6 +1060,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
 
                         if(splitVar2 >= ftSplit2){ //Check if this entry belongs in the last bin in var2.
                             histoName = dataSetName + numStr1 + sSplitVar1 + stSplit2 + sSplitVar2;
+                            outsiderange = false;
                         }    
                         else //If it doesn't belong in the last bin, find out which it belongs in
                         {
@@ -1042,6 +1070,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                                 {
                                     numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
                                     histoName = dataSetName + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+                                    outsiderange =false;
                                     break;
                                 }
                             }
@@ -1050,12 +1079,13 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                     }
                 }
             }
-
+            if (outsiderange == true){
+                continue;
+            }
             histo1D[histoName.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
         }
 
         ////****************************************************Fill plots***********************************************
-
 
         TCanvas *canv2 = new TCanvas();
 
@@ -1074,13 +1104,6 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                 histo1D[histoName.c_str()]->Draw();
                 string writename = "";
 
-                //            writename = channel + numStr + sSplitVar + "__" + dataSetName +"__nominal";
-                //
-                //            cout<<"writename  :"<<writename<<endl;
-                //            histo1D[histoName.c_str()]->Write((writename).c_str());
-                //
-                //            canv->SaveAs(("Sys_"+histoName+".pdf").c_str());
-
                 if(dataSetName == "TTScaleDown")
                 {
                     writename = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__TTJets__scaleDown";
@@ -1088,7 +1111,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                     histo1D[histoName.c_str()]->Write((writename).c_str());
                     canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
                     errorfile->cd();
-                    errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
+                    //errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
                     errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
                     histo1D[histoName.c_str()]->Write("Minus");
                     //errorfile->Write();
@@ -1107,36 +1130,10 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                 }
             }
         }
-
-
-        //        histo1D[plotname.c_str()]->Draw();
-        //        string writename = "";
-        //        writename = channel + "__TTJets__" + dataSetName;
-        //        cout<<"writename  :"<<writename<<endl;
-        //
-        //        histo1D[plotname.c_str()]->Write((writename).c_str());
-        //        canv2->SaveAs(("Sys_"+plotname+".pdf").c_str());
-        //
-        //        if(dataSetName == "TTScaleDown")
-        //        {
-        //            errorfile->cd();
-        //            errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
-        //            errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
-        //            histo1D[plotname.c_str()]->Write("Minus");
-        //            //errorfile->Write();
-        //        }
-        //
-        //        if(dataSetName == "TTScaleUp")
-        //        {
-        //            errorfile->cd();
-        //            errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
-        //            histo1D[plotname.c_str()]->Write("Plus");
-        //            //errorfile->Write();
-        //        }
     }
 };
 
-void DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom){
+void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom){
     TTreeLoader treeLoader;
     vector < Dataset* > datasets;                   //cout<<"vector filled"<<endl;
     const char *xmlfile = xmlNom.c_str();
