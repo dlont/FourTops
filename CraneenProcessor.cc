@@ -15,6 +15,7 @@
 #include "TopTreeAnalysisBase/Selection/interface/SelectionTable.h"
 #include "TopTreeAnalysisBase/Content/interface/AnalysisEnvironment.h"
 #include "TopTreeAnalysisBase/Tools/interface/TTreeLoader.h"
+#include "TopTreeAnalysisBase/tinyxml/tinyxml.h"
 #include "TopTreeAnalysisBase/Tools/interface/MultiSamplePlot.h"
 //#include "../macros/Style.C"
 
@@ -29,11 +30,13 @@ map<string,TH2F*> histo2D;
 map<string,TFile*> FileObj;
 map<string,TNtuple*> nTuple;
 map<string,MultiSamplePlot*> MSPlot;
+map<std::string,std::string> MessageMap;
 
 std::string intToStr (int number);
+void dump_to_stdout(const char* pFilename);
 
-void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath);
-void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath);
+void SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath);
+void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath);
 
 void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath);
 void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath);
@@ -45,21 +48,20 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
 void Split_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string xmlNom, float lScale);
 void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom, float lScale);
 
+
 int main(int argc, char** argv)
 {
-
-    int NumberOfBins = 30;	//fixed width nBins
+    int NumberOfBins;	//fixed width nBins
     int lumiScale = 50;  //Amount of luminosity to scale to in fb^-1
 
     bool jetSplit = false; 
     bool jetTagsplit = false;
 
-    string VoI = "BDT"; //variable of interest for plotting
-    float lBound = -0.5;   //-1->0.2 topness
-    float uBound = 1.0;
+    string DatacardVar = "BDT"; //variable of interest for plotting
+    //upper and lower bound of variable in plot
+    float lBound, uBound, bSplit, tSplit, wSplit, bSplit1, tSplit1, wSplit1, bSplit2, tSplit2, wSplit2;  // + the bottom, top, and width of the splitting for 1 & 2 variables
 
-    string leptoAbbr, channel, chan, xmlFileName, xmlFileNameSys, CraneenPath;
-    string splitVar, splitVar1, splitVar2;
+    string leptoAbbr, channel, chan, xmlFileName, xmlFileNameSys, CraneenPath, splitVar, splitVar1, splitVar2, VoI;
     string splitting = "inc";
 
     if(argc>0){
@@ -89,112 +91,136 @@ int main(int argc, char** argv)
         }
     }
 
-    float bSplit, tSplit, wSplit, bSplit1, tSplit1, wSplit1, bSplit2, tSplit2, wSplit2;  //the bottom, top, and width of the splitting
 
-
-    if(chan == "mu")
+    string xmlstring = "config/Vars.xml";
+    const char * xmlchar = xmlstring.c_str();
+    TiXmlDocument doc(xmlchar);
+    bool loadOkay = doc.LoadFile();
+    if (loadOkay)
     {
-        leptoAbbr = "Mu";
-        channel = "ttttmu";
-        xmlFileName = "config/Run2SingleLepton_samples.xml";
-        xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";
-        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_Mu/Craneens24_3_2015_merge/Craneen_";
-    }
-    else if(chan == "el")
-    {
-        leptoAbbr = "El";
-        channel = "ttttel";
-        xmlFileName = "config/Run2SingleLepton_samples.xml";
-        xmlFileNameSys = "config/Run2SingleLepton_samples_Sys.xml";
-        CraneenPath = "/user/lbeck/ThirteenTeV/CMSSW_7_2_1_patch1/src/TopBrussels/FourTop/Craneens_El/Craneens25_3_2015_merge/Craneen_";
-    }
-    else if(chan == "muel")
-    {
-        leptoAbbr = "MuEl";
-        channel = "ttttmuel";
-        xmlFileName = "config/Run2DiLepton_Craneens_Nom.xml";
-        xmlFileNameSys = "config/Run2DiLepton_Craneens_Sys.xml";
-        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/Craneen_";
-
-    }
-    else if(chan == "mumu")
-    {
-        leptoAbbr = "MuMu";
-        channel = "ttttmumu";
-        xmlFileName = "config/Run2DiLepton_Craneens_Nom.xml";
-        xmlFileNameSys = "config/Run2DiLepton_Craneens_Sys.xml";
-        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuMu/Craneens17_3_2015/merge/Craneen_";
-
-    }
-    else if(chan == "elel")
-    {
-        leptoAbbr = "ElEl";
-        channel = "ttttelel";
-        xmlFileName = "config/Run2DiLepton_Craneens_Nom.xml";
-        xmlFileNameSys = "config/Run2DiLepton_Craneens_Sys.xml";
-        CraneenPath = "/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_ElEl/Craneens18_3_2015/merge/Craneen_";
-    }
-    else{
-        throw std::invalid_argument("wrong channel name");
-    }
-    std::string slumiScale = intToStr(lumiScale);
-
-    string shapefileName = "";
-    shapefileName = "shapefile"+leptoAbbr+"_"+slumiScale+"_"+VoI+"_"+splitting+".root";
-    TFile *shapefile = new TFile((shapefileName).c_str(), "RECREATE");
-    TFile *errorfile = new TFile(("ScaleFiles"+leptoAbbr+"_light/Error.root").c_str(),"RECREATE");
-
-    if(jetSplit)
-    {
-        //Control variables for splitting in nJets
-        splitVar = "nJets";
-        bSplit = 6; //Lower bound of jetSplit bins
-        tSplit = 10; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar
-        wSplit = 2; //width of the bins
-        SplitSystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
-        SplitDatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
-        Split_DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, splitVar, bSplit, tSplit, wSplit, xmlFileName, lumiScale);
-
-//        for(int k=0; k<vars.size(); k++)
-//        {
-//            string varchannel = channel + vars[k];
-//            SplitSystematicsAnalyser(NumberOfBins, leptoAbbr, false, shapefile, errorfile, varchannel, vars[k], splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
-//            SplitDatasetPlotter(NumberOfBins, leptoAbbr, shapefile, errorfile, varchannel, vars[k], splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
-//        }
-    }
-    else if(jetTagsplit){
-        splitVar1 = "nJets";
-        splitVar2 = "nMtags";
-        bSplit1 = 6; //Lower bound of jetSplit bins for jets
-        tSplit1 = 10; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar for jets
-        wSplit1 = 2; //width of the bins for jets
-        bSplit2 = 2; //Lower bound of jetSplit bins for tags 
-        tSplit2 = 4; //First bin no longer bound by bin width.  This bin contains all information up to infinity in the splitVar for tags
-        wSplit2 = 2; //width of the bins for tags
-        Split2SystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileNameSys, CraneenPath);
-        Split2DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1, splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, CraneenPath);        
-        Split2_DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, jetTagsplit, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, lumiScale);
-
+        printf("\n%s:\n", xmlchar);
     }
     else
     {
-        SystematicsAnalyser(NumberOfBins, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, xmlFileNameSys, CraneenPath);
-        DatasetPlotter(NumberOfBins, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath);
-        DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, xmlFileName, lumiScale);
-
+        printf("Failed to load file \"%s\"\n", xmlchar);
+        return 0;
     }
 
 
-    errorfile->Close();
-    shapefile->Close();
-    delete shapefile;
-    delete errorfile;
+    std::string slumiScale = intToStr(lumiScale);
 
-    cout<<" DONE !!"<<endl;
+    TiXmlHandle hDoc(&doc);
+    TiXmlElement* pElem;
+    TiXmlElement* qElem;
+    TiXmlNode *node = 0;
+    node = hDoc.Node ();
+    TiXmlHandle hRoot(0);
+    cout<<"defined"<<endl;
+
+
+    {
+        pElem=hDoc.FirstChildElement().Element();
+        hRoot=TiXmlHandle(pElem);
+        //TiXmlElement* child = hRoot.FirstChild("analyses").FirstChild().Element();
+        TiXmlElement* child = hDoc.FirstChild("analyses").FirstChild("channel").Element();  //get name of channel and check it matches input before continuing
+        for (child; child; child=child->NextSiblingElement()){
+            string pName = child->Attribute("name");
+            if (pName == chan){
+                cout<<pName<<endl;
+                break;
+            }
+        }
+        //set paths
+        leptoAbbr = child->FirstChild( "leptoAbbr")->ToElement()->GetText();
+        channel = child->FirstChild( "chan")->ToElement()->GetText();
+        xmlFileName = child->FirstChild( "fileName")->ToElement()->GetText();
+        xmlFileNameSys = child->FirstChild( "fileNameSys")->ToElement()->GetText();
+        CraneenPath = child->FirstChild( "craneenPath")->ToElement()->GetText();
+        cout<<"leptoAbbr: "<<leptoAbbr<<"  channel: "<<channel<<"  xmlFileName: "<<xmlFileName<<"  xmlFileNameSys: "<<xmlFileNameSys<<"  CraneenPath: "<<CraneenPath<<endl;
+
+        //Get splittings from xml depending on JS or JTS
+        TiXmlElement* child3 = child->FirstChild( "splitting" )->ToElement();
+        if (jetSplit || jetTagsplit){
+            for (child3; child3; child3=child3->NextSiblingElement()){
+                const char *p3Key=child3->Value();
+                const char *p3Text=child3->GetText();
+                if (p3Key && p3Text && p3Text==splitting) 
+                {
+                    cout<<"splitting: "<<splitting<<endl;
+                    break;
+                }
+            }
+        }
+        if(jetSplit){
+            splitVar = child3->Attribute("splitVar");
+            child3->QueryFloatAttribute("bSplit", &bSplit);
+            child3->QueryFloatAttribute("tSplit", &tSplit);
+            child3->QueryFloatAttribute("wSplit", &wSplit);     cout<<"splitVar: "<<splitVar<<"  b: "<<bSplit<<"  t: "<<tSplit<<"  w: "<<wSplit<<endl;
+        }
+        else if(jetTagsplit){
+            splitVar1 = child3->Attribute("splitVar1");
+            splitVar2 = child3->Attribute("splitVar2");
+            child3->QueryFloatAttribute("bSplit1", &bSplit1);
+            child3->QueryFloatAttribute("tSplit1", &tSplit1);
+            child3->QueryFloatAttribute("wSplit1", &wSplit1);
+            child3->QueryFloatAttribute("bSplit2", &bSplit2);
+            child3->QueryFloatAttribute("tSplit2", &tSplit2);
+            child3->QueryFloatAttribute("wSplit2", &wSplit2);   cout<<"splitVar1: "<<splitVar1<<"splitVar2: "<<splitVar2<<"  b1: "<<bSplit1<<"  t1: "<<tSplit1<<"  w1: "<<wSplit1<<"  b2: "<<bSplit2<<"  t2: "<<tSplit2<<"  w2: "<<wSplit2<<endl;                 
+        }
+
+        TiXmlElement* child2 = child->FirstChild( "var" )->ToElement();
+        for (child2; child2; child2=child2->NextSiblingElement()){
+            const char *ppKey=child2->Value();
+            const char *ppText=child2->GetText();
+            if (ppKey && ppText) 
+            {
+                VoI = ppText;
+                string shapefileName = "";
+                shapefileName = "shapefile"+leptoAbbr+"_"+slumiScale+"_"+VoI+"_"+splitting+".root";
+                cout<<shapefileName<<endl;
+                TFile *shapefile = new TFile((shapefileName).c_str(), "RECREATE");
+                TFile *errorfile = new TFile(("ScaleFiles"+leptoAbbr+"_light/Error"+VoI+".root").c_str(),"RECREATE");
+
+                child2->QueryFloatAttribute("lBound", &lBound);
+                child2->QueryFloatAttribute("uBound", &uBound);
+                child2->QueryIntAttribute("nBins", &NumberOfBins);   cout<<"Variable : "<<ppText<<"  lBound : "<<lBound<<"   uBound : "<<uBound<<"  nBins: "<<NumberOfBins<<endl;
+                if(jetSplit)
+                {
+                    SplitSystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
+                    SplitDatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
+                    if(ppText == DatacardVar){
+                        Split_DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, splitVar, bSplit, tSplit, wSplit, xmlFileName, lumiScale);
+                    }
+                }
+                else if(jetTagsplit){
+
+                    Split2SystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileNameSys, CraneenPath);
+                    Split2DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1, splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, CraneenPath);
+                    if(ppText == DatacardVar){     
+                        Split2_DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, jetTagsplit, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, lumiScale);
+                    }
+                }
+                else
+                {
+                    SystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, xmlFileNameSys, CraneenPath);
+                    DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath);
+                    if(ppText == DatacardVar){
+                        DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, xmlFileName, lumiScale);
+                    }
+                }
+                errorfile->Close();
+                shapefile->Close();
+                delete shapefile;
+                delete errorfile;
+                cout<<""<<endl;                cout<<"end var"<<endl;
+            }
+        }
+    } 
+    cout<<" DONE !! "<<endl;
 }
 
 
-void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath)
+void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING NOMINAL DATASETS"<<endl;
@@ -217,7 +243,7 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
 
     //***************************************************CREATING PLOTS****************************************************
     string plotname = sVarofinterest;   ///// Non Jet Split plot
-    MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
+    MSPlot[plotname] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
 
     //***********************************************OPEN FILES & GET NTUPLES**********************************************
     string dataSetName, filepath;
@@ -252,17 +278,20 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             //artificial Lumi
-            Luminosity = 15000;
-
+            if(lScale > 0 )
+            {
+                Luminosity = 1000*lScale;
+            }
+            
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
-                MSPlot[plotname.c_str()]->Fill(varofInterest, datasets[d], true, NormFactor*ScaleFactor*Luminosity);
+                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*ScaleFactor*Luminosity);
                 histo1D[dataSetName.c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
             }
             else
             {
-                MSPlot[plotname.c_str()]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
-                histo1D[dataSetName.c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
+                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
+                histo1D[dataSetName]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
             }
 
         }
@@ -298,20 +327,21 @@ void DatasetPlotter(int nBins, float plotLow, float plotHigh, string leptoAbbr, 
 
     string scaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
     mkdir(scaleFileDir.c_str(),0777);
-    string scaleFileName = scaleFileDir + "/Error.root";
-    MSPlot[plotname.c_str()]->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
+    string scaleFileName = scaleFileDir + "/Error"+sVarofinterest+".root";
+    MSPlot[plotname]->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
 
     for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++)
     {
-        string name = it->first;
+        string name = it->first;  
         MultiSamplePlot *temp = it->second;
         temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 100);
         temp->Write(shapefile, name, true, pathPNG, "pdf");
     }
+    MSPlot.erase(plotname);
 };
 
 
-void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
+void SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING SYS"<<endl;
@@ -351,7 +381,6 @@ void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoA
         nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();
         cout<<"                 nEntries: "<<nEntries<<endl;
 
-        //sVarofinterest = "HT";
         nTuple[dataSetName.c_str()]->SetBranchAddress(sVarofinterest.c_str(),&varofInterest);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor",&ScaleFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
@@ -367,7 +396,10 @@ void SystematicsAnalyser(int nBins, float plotLow, float plotHigh, string leptoA
         {
             nTuple[dataSetName.c_str()]->GetEntry(i);
             //artificial Lumi
-            Luminosity = 15000;
+            if(lScale > 0 )
+            {
+                Luminosity = 1000*lScale;
+            }
             histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
         }
 
@@ -563,17 +595,25 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
 
     string scaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
     mkdir(scaleFileDir.c_str(),0777);
-    string scaleFileName = scaleFileDir + "/Error.root";
+    string scaleFileName = scaleFileDir + "/Error"+sVarofinterest+".root";
     //MSPlot[plotname.c_str()]->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
 
     for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++)
     {
-        string name = it->first;
+        string name = it->first;  cout<<name<< " ** "<<sVarofinterest<<endl;
         MultiSamplePlot *temp = it->second;
         temp->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 100);
         temp->Write(shapefile, name, true, pathPNG, "pdf");
     }
+
+    for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
+    {
+        numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+        plotname = sVarofinterest + numStr + sSplitVar;
+        MSPlot.erase(plotname);
+    }
+
 };
 
 
@@ -695,13 +735,6 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
             histo1D[histoName.c_str()]->Draw();
             string writename = "";
 
-//            writename = channel + numStr + sSplitVar + "__" + dataSetName +"__nominal";
-//
-//            cout<<"writename  :"<<writename<<endl;
-//            histo1D[histoName.c_str()]->Write((writename).c_str());
-//
-//            canv->SaveAs(("Sys_"+histoName+".pdf").c_str());
-
             if(dataSetName == "TTScaleDown")
             {
                 writename = channel + numStr + sSplitVar + "__TTJets__scaleDown";
@@ -727,32 +760,6 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
                 //errorfile->Write();
             }
         }
-
-
-//        histo1D[plotname.c_str()]->Draw();
-//        string writename = "";
-//        writename = channel + "__TTJets__" + dataSetName;
-//        cout<<"writename  :"<<writename<<endl;
-//
-//        histo1D[plotname.c_str()]->Write((writename).c_str());
-//        canv2->SaveAs(("Sys_"+plotname+".pdf").c_str());
-//
-//        if(dataSetName == "TTScaleDown")
-//        {
-//            errorfile->cd();
-//            errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
-//            errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
-//            histo1D[plotname.c_str()]->Write("Minus");
-//            //errorfile->Write();
-//        }
-//
-//        if(dataSetName == "TTScaleUp")
-//        {
-//            errorfile->cd();
-//            errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
-//            histo1D[plotname.c_str()]->Write("Plus");
-//            //errorfile->Write();
-//        }
     }
 };
 
@@ -895,9 +902,6 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                                 }
                             }
                         } 
-                        //plotname = sVarofinterest + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
-                        //histoName = dataSetName + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;;
-                        //break;
                     }
                 }
             }
@@ -955,7 +959,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
 
     string scaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
     mkdir(scaleFileDir.c_str(),0777);
-    string scaleFileName = scaleFileDir + "/Error.root";
+    string scaleFileName = scaleFileDir + "/Error"+sVarofinterest+".root";
     //MSPlot[plotname.c_str()]->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
 
     for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++)
@@ -966,6 +970,16 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
         temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 1);
         temp->Write(shapefile, name, true, pathPNG, "pdf");
     }
+    for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
+    {
+        numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+        for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
+            numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
+            plotname = sVarofinterest + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+            MSPlot.erase(plotname);
+        }  
+    }
+
 };
 
 
@@ -1672,6 +1686,8 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
 
     card.close();
 };
+
+
 
 
 std::string intToStr (int number){
