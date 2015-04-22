@@ -227,7 +227,7 @@ int main (int argc, char *argv[])
 
     //Setting Lepton Channels (Setting both flags true will select Muon-Electron Channel when dilepton is also true)
     bool dilepton = true;
-    bool Muon = false;
+    bool Muon = true;
     bool Electron = true;
 
     if(Muon && Electron && dilepton)
@@ -271,6 +271,7 @@ int main (int argc, char *argv[])
 //    AnalysisEnvironmentLoader anaLoad(anaEnv,xmlfile);
     anaEnv.PrimaryVertexCollection = "PrimaryVertex";
     anaEnv.JetCollection = "PFJets_slimmedJets";
+    anaEnv.FatJetCollection = "FatJets_slimmedJetsAK8";
     anaEnv.METCollection = "PFMET_slimmedMETs";
     anaEnv.MuonCollection = "Muons_slimmedMuons";
     anaEnv.ElectronCollection = "Electrons_slimmedElectrons";
@@ -279,6 +280,7 @@ int main (int argc, char *argv[])
     anaEnv.GenEventCollection = "GenEvent";
     anaEnv.NPGenEventCollection = "NPGenEvent";
     anaEnv.MCParticlesCollection = "MCParticles";
+    anaEnv.loadFatJetCollection = true;
     anaEnv.loadGenJetCollection = false;
     anaEnv.loadGenEventCollection = false;
     anaEnv.loadNPGenEventCollection = false;
@@ -362,6 +364,7 @@ int main (int argc, char *argv[])
     vector < TRootMuon* >     init_muons;
     vector < TRootElectron* > init_electrons;
     vector < TRootJet* >      init_jets;
+    vector < TRootJet* >      init_fatjets;
     vector < TRootMET* >      mets;
 
     //Global variable
@@ -554,10 +557,9 @@ int main (int argc, char *argv[])
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
 
-
         // TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+            TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
 
         //////////////////////////////////////////////////
@@ -621,6 +623,7 @@ int main (int argc, char *argv[])
         //define object containers
         vector<TRootElectron*> selectedElectrons;
         vector<TRootPFJet*>    selectedJets;
+        vector<TRootSubstructureJet*>    selectedFatJets;
         vector<TRootPFJet*>    MVASelJets1;
         vector<TRootMuon*>     selectedMuons;
         vector<TRootElectron*> selectedExtraElectrons;
@@ -647,7 +650,7 @@ int main (int argc, char *argv[])
             }
 
             float scaleFactor = 1.;  // scale factor for the event
-            event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, mets, debug);  //load event
+            event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, init_fatjets,  mets, debug);  //load event
             if (debug)cout <<"Number of Electrons Loaded: " << init_electrons.size() <<endl;
             float weight_0 = event->weight0();
             if (debug)cout <<"Weight0: " << weight_0 <<endl;
@@ -712,12 +715,15 @@ int main (int argc, char *argv[])
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
             if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
             // Declare selection instance
-            Run2Selection selection(init_jets, init_muons, init_electrons, mets);
+            Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets);
+
             // Define object selection cuts
             if (Muon && Electron && dilepton)
             {
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
+                selectedFatJets                                        = selection.GetSelectedFatJets(); // Relying solely on cuts defined in setPFJetCuts()
+	       
                 if (debug)cout<<"Getting Tight Muons"<<endl;
                 selectedMuons                                       = selection.GetSelectedMuons();
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
@@ -843,11 +849,11 @@ int main (int argc, char *argv[])
                 }
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
                 {
+
                     selectedLBJets.push_back(selectedJets[seljet]);
                     if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.679)
                     {
                         selectedMBJets.push_back(selectedJets[seljet]);
-
 
                         if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.898)
                         {
@@ -866,6 +872,45 @@ int main (int argc, char *argv[])
             float nMtags = selectedMBJets.size(); //Number of CSVM tags in Event
             float nLtags = selectedLBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
             float nTtags = selectedTBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
+	    float nFatJets = selectedFatJets.size();
+
+	    //            cout <<" med tags ...   "<< nMtags   <<endl;
+
+	    float nTopTags = 0;
+	    float nWTags = 0;
+	    ////
+	    //// W/Top tagging
+	    ////
+
+	    for (int fatjet = 0; fatjet < nFatJets; fatjet++){
+
+	      float tau1 = selectedFatJets[fatjet]->Tau1();
+	      float tau2 = selectedFatJets[fatjet]->Tau2();
+              float prunedmass = selectedFatJets[fatjet]->PrunedMass();
+              float nsubjets =  selectedFatJets[fatjet]->CmsTopTagNsubjets();
+              float minmass =  selectedFatJets[fatjet]->CmsTopTagMinMass();
+              float topmass =  selectedFatJets[fatjet]->CmsTopTagMass();
+
+	      // cout <<"llop in fat jet "<< " tau1 "   <<  tau1  << " tau2 "<< tau2  << " prunedmass " << prunedmass  << " nsubjets " << nsubjets  << " minmass "  <<minmass<< " topmass "  << topmass <<endl;
+
+
+
+	      //W-tagging
+	      if(  (tau2/tau1)  > 0.6 && prunedmass > 50.0 ) {
+
+		nWTags++;
+		//cout <<"W-TAG!"<<endl;
+	      }
+
+	      //Top-tagging
+	      if(  nsubjets  > 2 && minmass > 50.0 &&  topmass > 150.0 ) {
+		//cout <<"TOP-TAG!"<<endl;
+		nTopTags++;
+
+	}
+
+
+}
 
 
             //////////////////////
@@ -1021,7 +1066,7 @@ int main (int argc, char *argv[])
             if (!isGoodPV) continue; // Check that there is a good Primary Vertex
 ////            if (!(selectedJets.size() >= 6)) continue; //Selection of a minimum of 6 Jets in Event
 //
-            if (debug) cout <<"Number of Muons, Electrons, Jets, BJets, JetCut, MuonChannel, ElectronChannel ===>  "<< nMu <<"  "  <<nEl<<" "<< selectedJets.size()   <<"  " <<  nMtags   <<"  "<<JetCut  <<"  "<<Muon<<" "<<Electron<<endl;
+//          cout <<"Number of Muons, Electrons, Jets, BJets, JetCut, MuonChannel, ElectronChannel ===>  "<< nMu <<"  "  <<nEl<<" "<< selectedJets.size()   <<"  " <<  nLtags   <<"  "<<JetCut  <<"  "<<Muon<<" "<<Electron<<endl;
 
 
             if (debug)	cout <<" applying baseline event selection..."<<endl;
@@ -1068,7 +1113,6 @@ int main (int argc, char *argv[])
                 cin.get();
             }
             passed++;
-
 
             vector<TLorentzVector*> selectedMuonTLV_JC;
             selectedMuonTLV_JC.push_back(selectedMuons[0]);
@@ -1299,7 +1343,11 @@ int main (int argc, char *argv[])
 
             //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
 
-            float vals[20] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2L,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
+
+
+	    //                "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+
+            float vals[23] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2L,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
 
             tup->Fill(vals);
 
