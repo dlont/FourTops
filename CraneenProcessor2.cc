@@ -35,22 +35,10 @@ map<std::string,std::string> MessageMap;
 std::string intToStr (int number);
 int howManyElements(TiXmlElement* child, string variableName);
 
-// void SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath);
-// void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath);
-
-// void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath);
-// void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlSys, string CraneenPath);
-
 void SplitPlusDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, string sSplitVar2, float ltSplit, float gtSplit, string xmlNom, string CraneenPath, vector<float> splits);
 void SplitPlusSystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, string sSplitVar2, float ltSplit, float gtSplit, string xmlSys, string CraneenPath, vector<float> splits);
-
-// void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom, string CraneenPath);
-// void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlSys, string CraneenPath);
-
-// void DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, string xmlNom, float lScale);
-// void Split_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string xmlNom, float lScale);
 void SplitPlus_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, string sSplitVar1, string sSplitVar2, float ltSplit, float gtSplit, string xmlNom, float lScale, vector<float> splits);
-// void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom, float lScale);
+
 
 
 int main(int argc, char** argv)
@@ -165,8 +153,6 @@ int main(int argc, char** argv)
             splitVar1 = child2->Attribute("splitVar1");
             splitVar2 = child2->Attribute("splitVar2");
             cout<<"splitVar1: "<<splitVar1<<"   splitVar2: "<<splitVar2<<endl;
-            // child2->QueryFloatAttribute("ltSplit", &ltSplit);
-            // child2->QueryFloatAttribute("gtSplit", &gtSplit);
         }
 
         vector<float> splits;
@@ -233,9 +219,6 @@ void SplitPlusDatasetPlotter(int nBins, float lScale, float plotLow, float plotH
     //***************************************************CREATING PLOTS****************************************************
     string plotname, plotname1, plotname0, numStr, dataSetName, filepath, histoName, histoName1;   ///// Jet Split plot
 
-    // plotname0 = "channel0";
-    // MSPlot[plotname0.c_str()] = new MultiSamplePlot(datasets, plotname0.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
-
     for ( int s = 0; s<splits.size(); s++){
         plotname1 = ("channel"+intToStr(ceil(splits[s])));
         MSPlot[plotname1] = new MultiSamplePlot(datasets, plotname1.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
@@ -282,10 +265,7 @@ void SplitPlusDatasetPlotter(int nBins, float lScale, float plotLow, float plotH
 
             int splitTotal = splitVar1+splitVar2;
             //cout<<"splitTotal:  "<<splitTotal<<endl;
-            // if(splitTotal<splits[0]){
-            //     plotname=plotname0;
-            //     histoName = histoName0;
-            // }
+
             if (splitTotal>splits[ splits.size()-1 ]){
                 plotname = "channel"+intToStr(ceil(splits[ splits.size()-1 ]));
                 histoName = channel+intToStr(ceil(splits[ splits.size()-1 ]));
@@ -421,8 +401,6 @@ void SplitPlusSystematicsAnalyser(int nBins, float lScale, float plotLow, float 
 
 
         ////****************************************************Define plots***********************************************
-        // string histoName0 = leptoAbbr+"channel0";
-        // histo1D[histoName0.c_str()] = new TH1F(histoName1.c_str(),histoName0.c_str(), nBins, plotLow, plotHigh);
 
         for ( int s = 0; s<splits.size(); s++){
             histoName1 = (channel+intToStr(ceil(splits[s])));
@@ -441,9 +419,7 @@ void SplitPlusSystematicsAnalyser(int nBins, float lScale, float plotLow, float 
             }
 
             int splitTotal = splitVar1+splitVar2;           
-            // if(splitTotal<splits[0]){
-            //     histoName = histoName0;
-            // }
+
             if (splitTotal>splits[ splits.size()-1 ]){
                 histoName = channel+intToStr(ceil(splits[ splits.size()-1 ]));
             }
@@ -536,25 +512,11 @@ void SplitPlus_DataCardProducer(TFile *shapefile, string shapefileName, string c
     card << "observation                               ";
 
     tempEntries = 0;
-    /*    for (int j = 0; j<nDatasets; j++){
-        dataSetName=datasets[j]->Name();
-        if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
-        {
-            histoName = "Muchannel0" + "__data_obs__nominal";
-            tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
-            tempEntries = tempHisto->GetSumOfWeights();  
-            card<<static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str()+"         ";                
-        }
-        else{
-            continue;
-        }
-    }*/
 
     for(int s = 0; s < splits.size(); s++)
     {
         int floor_s = ceil(splits[s]);
         numStr1 = static_cast<ostringstream*>( &(ostringstream() << floor_s) )->str();
-        //binname = channel + numStr1 + sSplitVar1;
         tempEntries = 0;
         for (int j = 0; j<nDatasets; j++){
             dataSetName=datasets[j]->Name();
@@ -574,7 +536,6 @@ void SplitPlus_DataCardProducer(TFile *shapefile, string shapefileName, string c
 
     card << "---------------------------\n";
     card << "bin                               ";
-    // for(int i = 0; i<nDatasets-1; i++)    card << "Muchannel0" + " ";
 
     for(int s = 0; s < splits.size(); s++)
     {
@@ -613,7 +574,6 @@ void SplitPlus_DataCardProducer(TFile *shapefile, string shapefileName, string c
     {
         numStr1 = static_cast<ostringstream*>( &(ostringstream() << ceil(splits[s])) )->str();
 
-        // binname = channel + numStr1;
         tempEntries = 0;
         for (int j = 0; j<nDatasets; j++){
             dataSetName=datasets[j]->Name();
