@@ -3,7 +3,7 @@ import subprocess
 import time
 import os
 
-tree = ET.ElementTree(file='config/Run2sgluon_Samples.xml')
+tree = ET.ElementTree(file='config/Run2DiLepton_TOPTREES.xml')
 
 root = tree.getroot()
 datasets = root.find('datasets')
@@ -66,28 +66,28 @@ for row in args:
 for i, row in enumerate(execCommands):
     outfile = open(fileNames[i], 'w')
     print "file name  = " + str(fileNames[i]) 
-#    print 'File {} opened'.format(fileNames[i])
+    print 'File {} opened'.format(fileNames[i])
     outfiles.append(outfile)
     row.insert(0, "nohup")
     popen = subprocess.Popen(row, stdout=outfiles[i])
-#    print 'Job {} begun'.format(row[2])
+    print 'Job {} begun'.format(row[2])
     processes.append(popen)
     procsStarted += 1
-#    print 'Jobs {} of {} started.  Timestamp: {}'.format(procsStarted, len(execCommands), time.ctime())
+    print 'Jobs {} of {} started.  Timestamp: {}'.format(procsStarted, len(execCommands), time.ctime())
     while (procsStarted-procsDone) >= (numCores/2):
         time.sleep(60)
         procsDone = 0
         for proc in processes:
             if proc.poll() != None:
                 procsDone+= 1
-#        print '{} jobs of {} Finished.  Timestamp: {}'.format(procsDone, len(execCommands), time.ctime())
+        print '{} jobs of {} Finished.  Timestamp: {}'.format(procsDone, len(execCommands), time.ctime())
 while (procsDone != len(execCommands)):  #This loop controls the status output for the last 4 jobs that are still running when the above for loop terminates
         time.sleep(60)
         procsDone = 0
         for proc in processes:
             if proc.poll() != None:
                 procsDone+= 1
- #       print '{} jobs of {} Finished.  Timestamp: {}'.format(procsDone, len(execCommands), time.ctime())
+        print '{} jobs of {} Finished.  Timestamp: {}'.format(procsDone, len(execCommands), time.ctime())
 
 
 
