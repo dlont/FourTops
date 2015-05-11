@@ -17,6 +17,9 @@
 #include "TPaveText.h"
 #include "TTree.h"
 #include "TNtuple.h"
+#include <TMatrixDSym.h>
+#include <TMatrixDSymEigen.h>
+#include <TVectorD.h>
 #include <ctime>
 
 #include <cmath>
@@ -113,6 +116,8 @@ bool match;
 
 //To cout the Px, Py, Pz, E and Pt of objects
 int Factorial(int N);
+float Sphericity(vector<TLorentzVector> parts );
+float Centrality(vector<TLorentzVector> parts);
 
 int main (int argc, char *argv[])
 {
@@ -388,10 +393,17 @@ int main (int argc, char *argv[])
     MSPlot["JetEta"]                                        = new MultiSamplePlot(datasets, "JetEta", 40,-4, 4, "Jet #eta");
     MSPlot["HT_SelectedJets"]                               = new MultiSamplePlot(datasets, "HT_SelectedJets", 30, 0, 1500, "HT");
     MSPlot["HTExcess2M"]                                    = new MultiSamplePlot(datasets, "HTExcess2M", 30, 0, 1500, "HT_{Excess 2 M b-tags}");
+    MSPlot["HTH"]                                           = new MultiSamplePlot(datasets, "HTH", 20, 0, 1, "HTH");
     //MET
     MSPlot["MET"]                                           = new MultiSamplePlot(datasets, "MET", 70, 0, 700, "MET");
     MSPlot["METCutEff"]                                     = new MultiSamplePlot(datasets, "METCutEff", 30, 0, 150, "MET cut pre-jet selection");
-
+    //Topology Plots
+    MSPlot["TotalSphericity"]                               = new MultiSamplePlot(datasets, "TotalSphericity", 20, 0, 1, "Sphericity_{all}");
+    MSPlot["TotalCentrality"]                               = new MultiSamplePlot(datasets, "TotalCentrality", 20, 0, 1, "Centrality_{all}");
+    MSPlot["DiLepSphericity"]                               = new MultiSamplePlot(datasets, "DiLepSphericity", 20, 0, 1, "Sphericity_{ll}");
+    MSPlot["DiLepCentrality"]                               = new MultiSamplePlot(datasets, "DiLepCentrality", 20, 0, 1, "Centrality_{ll}");
+    MSPlot["TopDiLepSphericity"]                            = new MultiSamplePlot(datasets, "TopDiLepSphericity", 20, 0, 1, "Sphericity_{tll}");
+    MSPlot["TopDiLepCentrality"]                            = new MultiSamplePlot(datasets, "TopDiLepCentrality", 20, 0, 1, "Centrality_{tll}");
     //MVA Top Roconstruction Plots
     MSPlot["MVA1TriJet"]                                    = new MultiSamplePlot(datasets, "MVA1TriJet", 30, -1.0, 0.2, "MVA1TriJet");
     MSPlot["MVA1TriJetMass"]                                = new MultiSamplePlot(datasets, "MVA1TriJetMass", 75, 0, 500, "m_{bjj}");
@@ -633,6 +645,7 @@ int main (int argc, char *argv[])
         else
             end_d = endEvent;
 
+        end_d = 10000; //artifical ending for debug
         int nEvents = end_d - event_start;
         cout <<"Will run over "<<  (end_d - event_start) << " events..."<<endl;
         cout <<"Starting event = = = = "<< event_start  << endl;
@@ -851,6 +864,7 @@ int main (int argc, char *argv[])
             double event_weight = 1.;
             for (Int_t seljet =0; seljet < selectedJets.size(); seljet++ )
             {
+                selectedJetsTLV.push_back(*selectedJets[seljet]);
                 jet_flavor = selectedJets[seljet]->partonFlavour();
                 JetPt = selectedJets[seljet]->Pt() ;
                 JetEta = selectedJets[seljet]->Eta() ;
@@ -1169,7 +1183,7 @@ int main (int argc, char *argv[])
                 vector<TRootMCParticle*> mcTops;
                 mcParticlesMatching_.clear();
                 mcParticlesTLV.clear();
-                selectedJetsTLV.clear();
+                //selectedJetsTLV.clear();
                 mcParticles.clear();
                 mcTops.clear();
 
@@ -1188,6 +1202,10 @@ int main (int argc, char *argv[])
             jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedMuonTLV_JC[0], genEvt, scaleFactor);
             double TriJetMass, DiJetMass;
             vector<TRootPFJet*> MVASelJets1;
+            TLorentzVector Wh, Bh, Th;
+            int wj1;
+                int wj2;
+                int bj1;
 
             if(!TrainMVA)
             {
@@ -1206,9 +1224,7 @@ int main (int argc, char *argv[])
                 //check data-mc agreement of kin. reco. variables.
                 float mindeltaR =100.;
                 float mindeltaR_temp =100.;
-                int wj1;
-                int wj2;
-                int bj1;
+
 
                 //define the jets from W as the jet pair with smallest deltaR
                 for (int m=0; m<MVASelJets1.size(); m++)
@@ -1236,9 +1252,9 @@ int main (int argc, char *argv[])
                 if (debug) cout <<"Processing event with jetcombiner : 3 "<< endl;
 
                 //now that putative b and W jets are chosen, calculate the six kin. variables.
-                TLorentzVector Wh = *MVASelJets1[wj1]+*MVASelJets1[wj2];
-                TLorentzVector Bh = *MVASelJets1[bj1];
-                TLorentzVector Th = Wh+Bh;
+                Wh = *MVASelJets1[wj1]+*MVASelJets1[wj2];
+                Bh = *MVASelJets1[bj1];
+                Th = Wh+Bh;
 
                 TriJetMass = Th.M();
 
@@ -1331,6 +1347,7 @@ int main (int argc, char *argv[])
             HTH = HT/H;
 
             MSPlot["HTExcess2M"]->Fill(HT2M, datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["HTH"]->Fill(HTH, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity*scaleFactor);
             histo2D["HTLepSep"]->Fill(HT, lep1.DeltaR(lep2));
             sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
@@ -1387,6 +1404,35 @@ int main (int argc, char *argv[])
             ///////////////////
 
             MSPlot["MET"]->Fill(mets[0]->Et(), datasets[d], true, Luminosity*scaleFactor);
+
+            //////////////////
+            //Topology Plots//
+            /////////////////
+
+            vector<TLorentzVector> selectedParticlesTLV, diLepSystemTLV, topDiLepSystemTLV;
+            //collection Total Event TLVs
+            selectedParticlesTLV.insert(selectedParticlesTLV.end(), selectedElectronsTLV_JC.begin(), selectedElectronsTLV_JC.end());
+            selectedParticlesTLV.insert(selectedParticlesTLV.end(), selectedMuonsTLV_JC.begin(), selectedMuonsTLV_JC.end());
+            selectedParticlesTLV.insert(selectedParticlesTLV.end(), selectedJetsTLV.begin(), selectedJetsTLV.end());
+            selectedParticlesTLV.push_back(*mets[0]);
+            //collecting diLep TLVs
+            diLepSystemTLV.push_back(lep1);
+            diLepSystemTLV.push_back(lep2);
+            diLepSystemTLV.push_back(*mets[0]);
+            //collecting topDiLep TLVs
+            topDiLepSystemTLV.insert(topDiLepSystemTLV.end(), diLepSystemTLV.begin(), diLepSystemTLV.end());
+            topDiLepSystemTLV.push_back(*MVASelJets1[wj1]);
+            topDiLepSystemTLV.push_back(*MVASelJets1[wj2]);
+            topDiLepSystemTLV.push_back(*MVASelJets1[bj1]);
+
+            MSPlot["TotalSphericity"]->Fill(Sphericity(selectedParticlesTLV), datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["TotalCentrality"]->Fill(Centrality(selectedParticlesTLV), datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["DiLepSphericity"]->Fill(Sphericity(diLepSystemTLV), datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["DiLepCentrality"]->Fill(Centrality(diLepSystemTLV), datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["TopDiLepSphericity"]->Fill(Sphericity(topDiLepSystemTLV), datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["TopDiLepCentrality"]->Fill(Centrality(topDiLepSystemTLV), datasets[d], true, Luminosity*scaleFactor);
+
+
 
             //////////////////
             //Filling nTuple//
@@ -1481,29 +1527,67 @@ int Factorial(int N = 1)
     return fact;
 }
 
+float Sphericity(vector<TLorentzVector> parts )
+{
+    if(parts.size()>0)
+    {
+        double spTensor[3*3] = {0.,0.,0.,0.,0.,0.,0.,0.,0.};
+        int counter = 0;
+        float tensorNorm = 0, y1 = 0, y2 = 0, y3 = 0;
 
+        for(int tenx = 0; tenx < 3; tenx++)
+        {
+            for(int teny = 0; teny < 3; teny++)
+            {
+                for(int selpart = 0; selpart < parts.size(); selpart++)
+                {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    spTensor[counter] += ((parts[selpart][tenx])*(parts[selpart][teny]));
+//                    if((tenx == 0 && teny == 2) || (tenx == 2 && teny == 1))
+//                    {
+//                    cout << "nan debug term " << counter+1 << ": " << (parts[selpart][tenx])*(parts[selpart][teny]) << endl;
+//                    cout << "Tensor Building Term " << counter+1 << ": " << spTensor[counter] << endl;
+//                    }
+                    if(tenx ==0 && teny == 0)
+                    {
+                        tensorNorm += parts[selpart].Vect().Mag2();
+                    }
+                }
+                if((tenx == 0 && teny == 2) || (tenx == 2 && teny == 1))
+                {
+//                    cout << "Tensor term pre-norm " << counter+1 << ": " << spTensor[counter] << endl;
+                }
+                spTensor[counter] /= tensorNorm;
+//                cout << "Tensor Term " << counter+1 << ": " << spTensor[counter] << endl;
+                counter++;
+            }
+        }
+        TMatrixDSym m(3, spTensor);
+        m.Print();
+        TMatrixDSymEigen me(m);
+        TVectorD eigenval = me.GetEigenValues();
+        vector<float> eigenVals;
+        eigenVals.push_back(eigenval[0]);
+        eigenVals.push_back(eigenval[1]);
+        eigenVals.push_back(eigenval[2]);
+        sort(eigenVals.begin(), eigenVals.end());
+        cout << "EigenVals: "<< eigenVals[0] << ", " << eigenVals[1] << ", " << eigenVals[2] << ", " << endl;
+        float sp = 3.0*(eigenVals[0] + eigenVals[1])/2.0;
+        cout << "Sphericity: " << sp << endl;
+        return sp;
+    }
+    else
+    {
+        return 0;
+    }
+}
+float Centrality(vector<TLorentzVector> parts)
+{
+    float E = 0, ET = 0;
+    for(int selpart = 0; selpart < parts.size(); selpart++)
+    {
+        E += parts[selpart].E();
+        ET += parts[selpart].Et();
+    }
+    return ET/E;
+}
