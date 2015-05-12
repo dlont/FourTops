@@ -2,8 +2,10 @@ import xml.etree.cElementTree as ET
 import subprocess
 import time
 import os
+import glob
 
 tree = ET.ElementTree(file='config/Run2DiLepton_TOPTREES.xml')
+#tree = ET.ElementTree(file='config/Testing.xml')
 
 root = tree.getroot()
 datasets = root.find('datasets')
@@ -15,11 +17,16 @@ procsStarted = 0
 numCores = 8
 args = []
 execCommands = []
+topTrees = []
 jobSize = 1000000
 for d in datasets:
     if d.attrib['add'] == '1':
         print "found dataset to be added..." + str(d.attrib['name'])
-        args.append(["./MACRO", d.attrib['name'], d.attrib['title'], d.attrib['add'], d.attrib['color'], d.attrib['ls'], d.attrib['lw'], d.attrib['normf'], d.attrib['EqLumi'], d.attrib['xsection'], d.attrib['PreselEff'], d.attrib['filenames']])
+        files = ["./MACRO", d.attrib['name'], d.attrib['title'], d.attrib['add'], d.attrib['color'], d.attrib['ls'], d.attrib['lw'], d.attrib['normf'], d.attrib['EqLumi'], d.attrib['xsection'], d.attrib['PreselEff']]
+        topTrees = glob.glob(d.attrib['filenames'])
+        for f in glob.glob(d.attrib['filenames']):
+            files.append("dcap://maite.iihe.ac.be"+f)
+        args.append(files)
 outfiles = []
 fileNames = []
 processes = []
@@ -42,8 +49,8 @@ for row in args:
                 endStr = str((endEvent+1)*jobSize)
                 tempList = list(row)
                 tempList.extend(["", ""])
-                tempList[12] = startStr
-                tempList[13] = endStr
+                tempList[len(tempList)-2] = startStr
+                tempList[len(tempList)-1] = endStr
                 tempList[1] = title+"_"+str(endEvent+1)
                 fileNames.append("Terminal_Output/"+tempList[1]+".out")
                 execCommands.append(tempList)
@@ -54,8 +61,8 @@ for row in args:
         else:
             tempList = list(row)
             tempList.extend(["", ""])
-            tempList[12] = "0"
-            tempList[13] = str(jobSize)
+            tempList[len(tempList)-2] = "0"
+            tempList[len(tempList)-1] = str(jobSize)
             fileNames.append("Terminal_Output/"+tempList[1]+".out")
             execCommands.append(tempList)
             #popen = subprocess.Popen(execCommands, stdout=outfile)
@@ -65,7 +72,7 @@ for row in args:
 #            print i
 for i, row in enumerate(execCommands):
     outfile = open(fileNames[i], 'w')
-    print "file name  = " + str(fileNames[i]) 
+    print "file name  = " + str(fileNames[i])
     print 'File {} opened'.format(fileNames[i])
     outfiles.append(outfile)
     row.insert(0, "nohup")

@@ -123,9 +123,9 @@ int main (int argc, char *argv[])
 {
 
     //Checking Passed Arguments to ensure proper execution of MACRO
-    if(argc != 14)
+    if(argc < 14)
     {
-        std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
+        std::cerr << "TOO FEW INPUTs FROM XMLFILE.  CHECK XML INPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
         return 1;
     }
 
@@ -141,10 +141,14 @@ int main (int argc, char *argv[])
     const float xSect               = strtod(argv[9], NULL);
     const float PreselEff           = strtod(argv[10], NULL);
     string fileName                 = argv[11];
-    const int startEvent            = strtol(argv[12], NULL, 10);
-    const int endEvent              = strtol(argv[13], NULL, 10);
+    const int startEvent            = strtol(argv[argc-2], NULL, 10);
+    const int endEvent              = strtol(argv[argc-1], NULL, 10);
     vector<string> vecfileNames;
-    vecfileNames.push_back(fileName);
+    for(int args = 11; args < argc-2; args++)
+    {
+        vecfileNames.push_back(argv[args]);
+    }
+
 
 
 
@@ -645,7 +649,7 @@ int main (int argc, char *argv[])
         else
             end_d = endEvent;
 
-        end_d = 10000; //artifical ending for debug
+        //end_d = 10000; //artifical ending for debug
         int nEvents = end_d - event_start;
         cout <<"Will run over "<<  (end_d - event_start) << " events..."<<endl;
         cout <<"Starting event = = = = "<< event_start  << endl;
@@ -1563,7 +1567,7 @@ float Sphericity(vector<TLorentzVector> parts )
             }
         }
         TMatrixDSym m(3, spTensor);
-        m.Print();
+        //m.Print();
         TMatrixDSymEigen me(m);
         TVectorD eigenval = me.GetEigenValues();
         vector<float> eigenVals;
@@ -1571,9 +1575,9 @@ float Sphericity(vector<TLorentzVector> parts )
         eigenVals.push_back(eigenval[1]);
         eigenVals.push_back(eigenval[2]);
         sort(eigenVals.begin(), eigenVals.end());
-        cout << "EigenVals: "<< eigenVals[0] << ", " << eigenVals[1] << ", " << eigenVals[2] << ", " << endl;
+        //cout << "EigenVals: "<< eigenVals[0] << ", " << eigenVals[1] << ", " << eigenVals[2] << ", " << endl;
         float sp = 3.0*(eigenVals[0] + eigenVals[1])/2.0;
-        cout << "Sphericity: " << sp << endl;
+        //cout << "Sphericity: " << sp << endl;
         return sp;
     }
     else
