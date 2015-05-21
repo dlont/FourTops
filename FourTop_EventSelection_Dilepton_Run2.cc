@@ -395,12 +395,17 @@ int main (int argc, char *argv[])
     MSPlot["BdiscBJetCand_CSV"]                             = new MultiSamplePlot(datasets, "BdiscBJetCand_CSV", 20, 0, 1, "CSV b-disc.");
     //Jets
     MSPlot["JetEta"]                                        = new MultiSamplePlot(datasets, "JetEta", 40,-4, 4, "Jet #eta");
+    MSPlot["3rdJetPt"]                                      = new MultiSamplePlot(datasets, "3rdJetPt", 30, 0, 300, "PT_{jet3}");
+    MSPlot["4thJetPt"]                                      = new MultiSamplePlot(datasets, "4thJetPt", 30, 0, 300, "PT_{jet4}");
+    MSPlot["5thJetPt"]                                      = new MultiSamplePlot(datasets, "5thJetPt", 30, 0, 300, "PT_{jet5}");
+    MSPlot["6thJetPt"]                                      = new MultiSamplePlot(datasets, "6thJetPt", 30, 0, 300, "PT_{jet6}");
     MSPlot["HT_SelectedJets"]                               = new MultiSamplePlot(datasets, "HT_SelectedJets", 30, 0, 1500, "HT");
     MSPlot["HTExcess2M"]                                    = new MultiSamplePlot(datasets, "HTExcess2M", 30, 0, 1500, "HT_{Excess 2 M b-tags}");
     MSPlot["HTH"]                                           = new MultiSamplePlot(datasets, "HTH", 20, 0, 1, "HTH");
     //MET
     MSPlot["MET"]                                           = new MultiSamplePlot(datasets, "MET", 70, 0, 700, "MET");
-    MSPlot["METCutEff"]                                     = new MultiSamplePlot(datasets, "METCutEff", 30, 0, 150, "MET cut pre-jet selection");
+    MSPlot["METCutAcc"]                                     = new MultiSamplePlot(datasets, "METCutAcc", 30, 0, 150, "MET cut pre-jet selection");
+    MSPlot["METCutRej"]                                     = new MultiSamplePlot(datasets, "METCutRej", 30, 0, 150, "MET cut pre-jet selection");
     //Topology Plots
     MSPlot["TotalSphericity"]                               = new MultiSamplePlot(datasets, "TotalSphericity", 20, 0, 1, "Sphericity_{all}");
     MSPlot["TotalCentrality"]                               = new MultiSamplePlot(datasets, "TotalCentrality", 20, 0, 1, "Centrality_{all}");
@@ -420,7 +425,8 @@ int main (int argc, char *argv[])
     MSPlot["MVA1dRThDiLep"]                                 = new MultiSamplePlot(datasets, "MVA1dRThDiLep", 35, 0, 3.14, "dRThDiLep");
 
     //ZMass window plots
-    MSPlot["ZMassWindowWidthEff"]                           = new MultiSamplePlot(datasets, "ZMassWindowWidthEff", 20, 0, 100, "Z mass window width");
+    MSPlot["ZMassWindowWidthAcc"]                           = new MultiSamplePlot(datasets, "ZMassWindowWidthAcc", 20, 0, 100, "Z mass window width");
+    MSPlot["ZMassWindowWidthRej"]                           = new MultiSamplePlot(datasets, "ZMassWindowWidthRej", 20, 0, 100, "Z mass window width");
     MSPlot["DiLepMass"]                                     = new MultiSamplePlot(datasets, "DiLepMass", 30, 0, 150, "m_{ll}");
 
 
@@ -590,7 +596,7 @@ int main (int argc, char *argv[])
 
         // TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
 
         //////////////////////////////////////////////////
@@ -843,7 +849,8 @@ int main (int argc, char *argv[])
             for(int mass = 0; mass < 20; mass++)
             {
                 float windowRes = 2.5;
-                if((diLepMass < (ZMass-(mass*windowRes))) || (diLepMass > (ZMass+(mass*windowRes)))) MSPlot["ZMassWindowWidthEff"]->Fill((2*mass*windowRes), datasets[d], true, Luminosity*scaleFactor );
+                if(((diLepMass < (ZMass-(mass*windowRes))) || (diLepMass > (ZMass+(mass*windowRes)))) && diLepMass > 20) MSPlot["ZMassWindowWidthAcc"]->Fill((2*mass*windowRes), datasets[d], true, Luminosity*scaleFactor );
+                else MSPlot["ZMassWindowWidthRej"]->Fill((2*mass*windowRes), datasets[d], true, Luminosity*scaleFactor );
             }
 
             ///////////////////////////////////////////////////////////////////////////////////
@@ -1145,7 +1152,8 @@ int main (int argc, char *argv[])
             //Scan for best MET Cut before Jet requirements
             for(int metCut = 0; metCut < 100; metCut = metCut + 5)
             {
-                if(mets[0]->Et() > metCut) MSPlot["METCutEff"]->Fill(metCut, datasets[d], true, Luminosity*scaleFactor );
+                if(mets[0]->Et() > metCut) MSPlot["METCutAcc"]->Fill(metCut, datasets[d], true, Luminosity*scaleFactor );
+                else MSPlot["METCutRej"]->Fill(metCut, datasets[d], true, Luminosity*scaleFactor );
             }
 
 
@@ -1356,6 +1364,11 @@ int main (int argc, char *argv[])
             histo2D["HTLepSep"]->Fill(HT, lep1.DeltaR(lep2));
             sort(selectedJets.begin(),selectedJets.end(),HighestPt()); //order Jets wrt Pt for tuple output
 
+            MSPlot["3rdJetPt"]->Fill(selectedJets[2]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["4thJetPt"]->Fill(selectedJets[3]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+            if(selectedJets.size() >= 5) MSPlot["5thJetPt"]->Fill(selectedJets[4]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+            if(selectedJets.size() >= 6) MSPlot["6thJetPt"]->Fill(selectedJets[5]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+
             if(dilepton && Muon && Electron)
             {
                 muonpt = selectedMuons[0]->Pt();
@@ -1429,12 +1442,16 @@ int main (int argc, char *argv[])
             topDiLepSystemTLV.push_back(*MVASelJets1[wj2]);
             topDiLepSystemTLV.push_back(*MVASelJets1[bj1]);
 
-            MSPlot["TotalSphericity"]->Fill(Sphericity(selectedParticlesTLV), datasets[d], true, Luminosity*scaleFactor);
-            MSPlot["TotalCentrality"]->Fill(Centrality(selectedParticlesTLV), datasets[d], true, Luminosity*scaleFactor);
-            MSPlot["DiLepSphericity"]->Fill(Sphericity(diLepSystemTLV), datasets[d], true, Luminosity*scaleFactor);
-            MSPlot["DiLepCentrality"]->Fill(Centrality(diLepSystemTLV), datasets[d], true, Luminosity*scaleFactor);
-            MSPlot["TopDiLepSphericity"]->Fill(Sphericity(topDiLepSystemTLV), datasets[d], true, Luminosity*scaleFactor);
-            MSPlot["TopDiLepCentrality"]->Fill(Centrality(topDiLepSystemTLV), datasets[d], true, Luminosity*scaleFactor);
+            float tSph = Sphericity(selectedParticlesTLV), tCen = Centrality(selectedParticlesTLV);
+            float dSph = Sphericity(diLepSystemTLV), dCen = Centrality(diLepSystemTLV);
+            float tdSph = Sphericity(topDiLepSystemTLV), tdCen = Centrality(topDiLepSystemTLV);
+
+            MSPlot["TotalSphericity"]->Fill(tSph, datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["TotalCentrality"]->Fill(tCen, datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["DiLepSphericity"]->Fill(dSph, datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["DiLepCentrality"]->Fill(dCen, datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["TopDiLepSphericity"]->Fill(tdSph, datasets[d], true, Luminosity*scaleFactor);
+            MSPlot["TopDiLepCentrality"]->Fill(tdCen, datasets[d], true, Luminosity*scaleFactor);
 
 
 
@@ -1448,7 +1465,7 @@ int main (int argc, char *argv[])
 
             //                "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
-            float vals[23] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
+            float vals[29] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
 
             tup->Fill(vals);
 
