@@ -1,7 +1,7 @@
 from ROOT import TChain
 from glob import glob
 
-path = '/pnfs/iihe/cms/store/user/heilman/FOURTOP_NLO_13TeV_aMCatNLO_LHE_pythia8/crab_TOPTREE_742_FOURTOP_1M_v3/150605_093838/0000/*.root'
+path = '/pnfs/iihe/cms/store/user/fblekman/TopTree/TopTree74v1/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_TOPTREE-WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1-MINIAODSIM--TopTree74v1--MCRUN2_74_V9-All/150610_100409/0000/*.root'
 files = glob(path)
 root_files = []
 for f in files:
