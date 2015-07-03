@@ -72,6 +72,9 @@ class CutsTable()
 		CutsTable(bool isMuon, bool isElectron);
 		~CutsTable();
 		void AddSelections();
+		void CreateTable(vector < Dataset* > datasets);
+		void FillTable();
+		void Calc_Write();
 
 
 	private:
