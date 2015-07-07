@@ -215,9 +215,9 @@ int main (int argc, char *argv[])
     }
 
 
-    /////////////////////////////
-    //  Set up AnalysisEnvironment
-    /////////////////////////////
+    /////////////////////////////////
+    //  Set up AnalysisEnvironment //
+    /////////////////////////////////
 
     AnalysisEnvironment anaEnv;
     cout<<" - Creating environment ..."<<endl;
