@@ -240,7 +240,7 @@ int main (int argc, char *argv[])
     //Setting Lepton Channels (Setting both flags true will select Muon-Electron Channel when dilepton is also true)
     bool dilepton = true;
     bool Muon = true;
-    bool Electron = true;
+    bool Electron = false;
 
     if(Muon && Electron && dilepton)
     {
@@ -1227,7 +1227,7 @@ int main (int argc, char *argv[])
             // N-1 Plot //
             //////////////
 
-            MSPlot["NMinusOne"]->Fill(0, datasets[d], true, Luminosity*scaleFactor );
+//            MSPlot["NMinusOne"]->Fill(0, datasets[d], true, Luminosity*scaleFactor );
             if(Muon && Electron && dilepton){
                 if(             nMu==1 &&   nEl==1 &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(1, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&              nEl==1 &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(2, datasets[d], true, Luminosity*scaleFactor );

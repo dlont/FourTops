@@ -61,7 +61,7 @@
 		<chan>ttttmuel</chan>
 		<fileName>config/Run2DiLepton_Craneens_Nom.xml</fileName>
 		<fileNameSys>config/Run2DiLepton_Craneens_Sys.xml</fileNameSys>
-		<craneenPath>/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/Craneen_</craneenPath>
+		<craneenPath>/user/heilman/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_MuEl/currentMerge/</craneenPath>
 
 		<splitting splitVar="nJets" bSplit=6 tSplit=10 wSplit=2 >JS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
@@ -69,6 +69,13 @@
 
 		<var lBound= -0.5 uBound=1.0 nBins=30 >BDT</var>
 		<var lBound= 0 uBound=2000 nBins=50>HT</var>
+		<var lBound= 0 uBound=12 nBins=12>nJets</var>
+		<var lBound= 0 uBound=1 nBins=20>EventSph</var>
+		<var lBound= 0 uBound=1 nBins=20>EventCen</var>
+		<var lBound= 0 uBound=1 nBins=20>DiLepSph</var>
+		<var lBound= 0 uBound=1 nBins=20>DiLepCen</var>
+		<var lBound= 0 uBound=1 nBins=20>TopDiLepSph</var>
+		<var lBound= 0 uBound=1 nBins=20>TopDiLepCen</var>
 
 	</channel>
 
@@ -78,14 +85,21 @@
 		<chan>ttttmumu</chan>
 		<fileName>config/Run2DiLepton_Craneens_Nom.xml</fileName>
 		<fileNameSys>config/Run2DiLepton_Craneens_Sys.xml</fileNameSys>
-		<craneenPath>//user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuMu/Craneens17_3_2015/merge/Craneen_</craneenPath>
+		<craneenPath>/user/heilman/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_MuMu/currentMerge/</craneenPath>
 
-		<splitting splitVar="nJets" bSplit=6 tSplit=10 wSplit=2 >JS</splitting>
+		<splitting splitVar="nJets" bSplit=4 tSplit=10 wSplit=2 >JS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nMtags" ltSplit=14 gtSplit=15 >JPTS</splitting>
 
 		<var lBound= -0.5 uBound=1.0 nBins=30 >BDT</var>
 		<var lBound= 0 uBound=2000 nBins=50>HT</var>
+		<var lBound= 0 uBound=12 nBins=12>nJets</var>
+		<var lBound= 0 uBound=1 nBins=50>EventSph</var>
+		<var lBound= 0 uBound=1 nBins=50>EventCen</var>
+		<var lBound= 0 uBound=1 nBins=50>DiLepSph</var>
+		<var lBound= 0 uBound=1 nBins=50>DiLepCen</var>
+		<var lBound= 0 uBound=1 nBins=50>TopDiLepSph</var>
+		<var lBound= 0 uBound=1 nBins=50>TopDiLepCen</var>
 
 	</channel>
 
@@ -95,13 +109,20 @@
 		<chan>ttttelel</chan>
 		<fileName>config/Run2DiLepton_Craneens_Nom.xml</fileName>
 		<fileNameSys>config/Run2DiLepton_Craneens_Sys.xml</fileNameSys>
-		<craneenPath>//user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_ElEl/Craneens18_3_2015/merge/Craneen_</craneenPath>
+		<craneenPath>/user/heilman/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_ElEl/currentMerge/</craneenPath>
 
 		<splitting splitVar="nJets" bSplit=6 tSplit=10 wSplit=2 >JS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 
 		<var lBound= -0.5 uBound=1.0 nBins=30 >BDT</var>
 		<var lBound= 0 uBound=2000 nBins=50>HT</var>
+		<var lBound= 0 uBound=12 nBins=12>nJets</var>
+		<var lBound= 0 uBound=1 nBins=50>EventSph</var>
+		<var lBound= 0 uBound=1 nBins=50>EventCen</var>
+		<var lBound= 0 uBound=1 nBins=50>DiLepSph</var>
+		<var lBound= 0 uBound=1 nBins=50>DiLepCen</var>
+		<var lBound= 0 uBound=1 nBins=50>TopDiLepSph</var>
+		<var lBound= 0 uBound=1 nBins=50>TopDiLepCen</var>
 
 	</channel>
-</analyses> 
+</analyses>

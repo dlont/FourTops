@@ -1,21 +1,25 @@
 <?xml version="1.0"?>
 <datasets>
 
-<d name="NP_overlay_PseudoData"  title="Fake Data"   add="1"   color="1"  ls="1"  lw="2" normf="1"  EqLumi="1" xsection="1"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_NP_overlay_PseudoData_Run2_TopTree_Study.root"/>
+<d name="NP_overlay_PseudoData"  title="Fake Data"   add="0"   color="1"  ls="1"  lw="2" normf="1"  EqLumi="1" xsection="1"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_NP_overlay_PseudoData_Run2_TopTree_Study.root"/>
 
-<d name="ttttNLO" title="NLO SM tttt"  add="1"   color="1" ls="1"  lw="2" normf="1"  EqLumi="4925535.53" xsection=".008823" PreselEff="0.0" filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_ttttNLO_Run2_TopTree_Study.root"/>
+<d name="ttttNLO_742_74v0" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.563529176"  EqLumi="11304544.939363028" xsection=".008823" PreselEff="0.0" filenames="/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/"/>
 
 <d name="ttttLO" title="LO SM tttt"  add="0"   color="50" ls="0"  lw="2" normf="1"  EqLumi="11117287.3" xsection=".008995" PreselEff="0.0" filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/TopTrees/72x/FOURTOP_LO_TOPTREE.root"/>
 
-<d name="tW"  title="Combined tW"  add="1"   color="616"  ls="0"  lw="2" normf="1"  EqLumi="27699.43" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_tW_Run2_TopTree_Study.root"/>
+<d name="tW"  title="Combined tW"  add="0"   color="616"  ls="0"  lw="2" normf="1"  EqLumi="27699.43" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_tW_Run2_TopTree_Study.root"/>
 
-<d name="T_tW"  title="t-tW"  add="0"   color="616"  ls="0"  lw="2" normf="1"  EqLumi="27699.43" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_tW_Run2_TopTree_Study.root"/>
+<d name="T_tW_74v0"  title="t tW"  add="0"   color="432"  ls="0"  lw="2" normf="1"  EqLumi="14044.943820225" xsection="35.6"   PreselEff="0.0"   filenames="/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/"/>
 
-<d name="Tbar_tW"  title="tbar-tW"  add="0"   color="616"  ls="0"  lw="2" normf="1"  EqLumi="27297.75" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_tW_Run2_TopTree_Study.root"/>
+<d name="Tbar_tW_74v0"  title="tbar tW"  add="0"   color="432"  ls="1"  lw="2" normf="1"  EqLumi="14044.943820225" xsection="35.6"   PreselEff="0.0"   filenames="/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/"/>
 
-<d name="DYJets"  title="DY+jets"   add="1"   color="858"  ls="1"  lw="2" normf="1"  EqLumi="1408.6656" xsection="2008.4"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_DYJets_Run2_TopTree_Study.root"/>
+<d name="DYJets_74v0"  title="DY+jets"   add="0"   color="416"  ls="1"  lw="2" normf="1"  EqLumi="149.008663613" xsection="2008.4"   PreselEff="0.0"   filenames="/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/"/>
 
-<d name="TTJets"  title="ttbar+jets MadGraph PHYS14"   add="1"   color="635"  ls="1"  lw="2" normf="1"  EqLumi="30594.15" xsection="831.76"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens5_3_2015/merge/Craneen_TTJets_Run2_TopTree_Study.root"/>
+<d name="TTJets50_74v0"  title="TT+jets MadGraph 50ns"   add="0"   color="632"  ls="1"  lw="2" normf="1"  EqLumi="6002.008992979" xsection="831.76"   PreselEff="0.0"   filenames="/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/"/>
+
+<d name="TTJets25_74v0"  title="TT+jets MadGraph 25ns"   add="1"   color="634"  ls="1"  lw="2" normf="1"  EqLumi="13632.81716" xsection="831.76"   PreselEff="0.0"   filenames="/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/"/>
+
+<d name="TT_Powheg_74v0"  title="TT Powheg"   add="0"   color="625"  ls="0"  lw="2" normf="1"  EqLumi="6006.533134558" xsection="831.76"   PreselEff="0.0"   filenames="/user/heilman/CMSSW_7_2_1_patch1/src/TopBrussels/FourTopsLight/Craneens_MuEl/Craneens18_3_2015/merge/"/>
 
 </datasets>
 
