@@ -75,7 +75,7 @@ using namespace TopTree;
 using namespace reweight;
 
 bool split_ttbar = false;
-bool debug = false;
+bool debug = true;
 float topness;
 
 pair<float, vector<unsigned int> > MVAvals1;
@@ -118,6 +118,7 @@ bool match;
 int Factorial(int N);
 float Sphericity(vector<TLorentzVector> parts );
 float Centrality(vector<TLorentzVector> parts);
+float ElectronRelIso(TRootElectron* el, float rho);
 
 int main (int argc, char *argv[])
 {
@@ -329,8 +330,28 @@ int main (int argc, char *argv[])
     MVAvars.push_back("nJets");
     MVAvars.push_back("Jet3Pt");
     MVAvars.push_back("Jet4Pt");
+    MVAvars.push_back("HT2M");
+    MVAvars.push_back("EventSph");
+    MVAvars.push_back("EventCen");
+    MVAvars.push_back("DiLepSph");
+    MVAvars.push_back("DiLepCen");
+    MVAvars.push_back("TopDiLepSph");
+    MVAvars.push_back("TopDiLepCen");
 
-    MVAComputer* Eventcomputer_ = new MVAComputer("BDT","MasterMVA_Mu_10thMarch.root","MasterMVA_Mu_10March",MVAvars, "_10thMarch2015");
+    MVAComputer* Eventcomputer_;
+
+    if(dilepton && Muon && Electron)
+    {
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_9thJuly.root","MasterMVA_MuEl_9thJuly",MVAvars, "_MuElJuly9th2015");
+    }
+    else if(dilepton && Muon && !Electron)
+    {
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuMu_9thJuly.root","MasterMVA_MuMu_9thJuly",MVAvars, "_MuMuJuly9th2015");
+    }
+    else if(dilepton && !Muon && Electron)
+    {
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_ElEl_9thJuly.root","MasterMVA_ElEl_9thJuly",MVAvars, "_ElElJuly9th2015");
+    }
 
     cout << " Initialized Eventcomputer_" << endl;
 
@@ -389,10 +410,12 @@ int main (int argc, char *argv[])
     MSPlot["NbOfVertices"]                                  = new MultiSamplePlot(datasets, "NbOfVertices", 60, 0, 60, "Nb. of vertices");
     //Muons
     MSPlot["MuonPt"]                                        = new MultiSamplePlot(datasets, "MuonPt", 30, 0, 300, "PT_{#mu}");
+    MSPlot["MuonEta"]                                       = new MultiSamplePlot(datasets, "MuonEta", 40,-4, 4, "Muon #eta");
     MSPlot["MuonRelIsolation"]                              = new MultiSamplePlot(datasets, "MuonRelIsolation", 10, 0, .25, "RelIso");
     //Electrons
     MSPlot["ElectronRelIsolation"]                          = new MultiSamplePlot(datasets, "ElectronRelIsolation", 10, 0, .25, "RelIso");
     MSPlot["ElectronPt"]                                    = new MultiSamplePlot(datasets, "ElectronPt", 30, 0, 300, "PT_{e}");
+    MSPlot["ElectronEta"]                                   = new MultiSamplePlot(datasets, "ElectronEta", 40,-4, 4, "Jet #eta");
     MSPlot["NbOfElectronsPreSel"]                           = new MultiSamplePlot(datasets, "NbOfElectronsPreSel", 10, 0, 10, "Nb. of electrons");
     //Init Electron Plots
     MSPlot["InitElectronPt"]                                = new MultiSamplePlot(datasets, "InitElectronPt", 30, 0, 300, "PT_{e}");
@@ -409,6 +432,11 @@ int main (int argc, char *argv[])
     MSPlot["InitElectronConversion"]                        = new MultiSamplePlot(datasets, "InitElectronConversion", 2, 0, 2, "Conversion Pass");
     MSPlot["InitElectronMissingHits"]                       = new MultiSamplePlot(datasets, "InitElectronMissingHits", 10, 0, 10, "MissingHits");
     MSPlot["InitElectronCutFlow"]                           = new MultiSamplePlot(datasets, "InitElectronCutFlow", 12, 0, 12, "CutNumber");
+    MSPlot["InitElectronDiagRelIso"]                        = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagChIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagNIso"]                          = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagPhIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagPUChIso"]                       = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
 
     //B-tagging discriminators
     MSPlot["BdiscBJetCand_CSV"]                             = new MultiSamplePlot(datasets, "BdiscBJetCand_CSV", 20, 0, 1, "CSV b-disc.");
@@ -617,7 +645,7 @@ int main (int argc, char *argv[])
 
         // TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:3rdJetPt:4thJetPt:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
 
         //////////////////////////////////////////////////
@@ -712,11 +740,15 @@ int main (int argc, char *argv[])
 
             float scaleFactor = 1.;  // scale factor for the event
             event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, init_fatjets,  mets, debug);  //load event
+
+            float rho = event->fixedGridRhoFastjetAll();
+            if (debug)cout <<"Rho: " << rho <<endl;
+
             if (debug)cout <<"Number of Electrons Loaded: " << init_electrons.size() <<endl;
             MSPlot["NbOfElectronsInit"]->Fill(init_electrons.size(), datasets[d], true, Luminosity*scaleFactor );
             for (Int_t initel =0; initel < init_electrons.size(); initel++ )
             {
-                float initreliso = init_electrons[initel]->relPfIso(3, 0.5);
+                float initreliso = ElectronRelIso(init_electrons[initel], rho);
                 MSPlot["InitElectronPt"]->Fill(init_electrons[initel]->Pt(), datasets[d], true, Luminosity*scaleFactor);
                 MSPlot["InitElectronEta"]->Fill(init_electrons[initel]->Eta(), datasets[d], true, Luminosity*scaleFactor);
                 MSPlot["InitElectronRelIsolation"]->Fill(initreliso, datasets[d], true, Luminosity*scaleFactor);
@@ -754,7 +786,12 @@ int main (int argc, char *argv[])
                                             if(fabs((1/init_electrons[initel]->E()) - (1/init_electrons[initel]->P())) < 0.189968)
                                             {
                                                 MSPlot["InitElectronCutFlow"]->Fill(8, datasets[d], true, Luminosity*scaleFactor);
-                                                if(fabs(init_electrons[initel]->relPfIso(3, 0.5)) < 0.130136)
+                                                MSPlot["InitElectronDiagRelIso"]->Fill(init_electrons[initel]->relPfIso(3, 0.5), datasets[d], true, Luminosity*scaleFactor);
+                                                MSPlot["InitElectronDiagChIso"]->Fill(init_electrons[initel]->chargedHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                                                MSPlot["InitElectronDiagNIso"]->Fill(init_electrons[initel]->neutralHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                                                MSPlot["InitElectronDiagPhIso"]->Fill(init_electrons[initel]->photonIso(3), datasets[d], true, Luminosity*scaleFactor);
+                                                MSPlot["InitElectronDiagPUChIso"]->Fill(init_electrons[initel]->puChargedHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                                                if(ElectronRelIso(init_electrons[initel], rho) < 0.130136)
                                                 {
                                                     MSPlot["InitElectronCutFlow"]->Fill(9, datasets[d], true, Luminosity*scaleFactor);
                                                     if(init_electrons[initel]->passConversion())
@@ -776,6 +813,7 @@ int main (int argc, char *argv[])
                     }
                 }
 
+
             }
             float weight_0 = event->weight0();
             if (debug)cout <<"Weight0: " << weight_0 <<endl;
@@ -788,8 +826,7 @@ int main (int argc, char *argv[])
                 }
             }
 
-            float rho = event->fixedGridRhoFastjetAll();
-            if (debug)cout <<"Rho: " << rho <<endl;
+
             string graphName;
 
             //////////////////
@@ -802,6 +839,68 @@ int main (int argc, char *argv[])
                 // loading GenJets as I need them for JER
                 genjets = treeLoader.LoadGenJet(ievt);
             }
+
+            ///////////////////////////////////////////
+            //  Trigger
+            ///////////////////////////////////////////
+            bool trigged = false;
+            std::string filterName = "";
+            int currentRun = event->runId();
+            if(previousRun != currentRun)
+            {
+                // cout <<"What run? "<< currentRun<<endl;
+                previousRun = currentRun;
+
+                cout <<"Number of HLT Paths: " << event->nHLTPaths() <<endl;
+                int nTrigs = 0, firstTrig = 0;
+                bool fTrig = false;
+                for(int trigs = 0; trigs < event->nHLTPaths(); trigs++)
+                {
+                    if(event->trigHLT(trigs)) nTrigs++;
+                    if(event->trigHLT(trigs) && !fTrig)
+                    {
+                        fTrig = true;
+                        firstTrig = trigs;
+                    }
+                }
+                cout <<"Triggers Passed: " << nTrigs << ".  e.g. " << firstTrig <<endl;
+
+                if(dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA")
+                {
+                    if (debug)cout <<"event loop 6a"<<endl;
+
+                    // cout << " RUN " << event->runId() << endl;
+
+                    if( event->runId() <= 190738 )
+                        itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v8"), currentRun, iFile);
+                    else if( event->runId() >= 190782 && event->runId() <= 191411 )
+                        itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v9"), currentRun, iFile);
+                    else if( event->runId() >= 191695 && event->runId() <= 196531)
+                        itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v10"), currentRun, iFile);
+                    else if( event->runId() >= 198049 && event->runId() <= 208686)
+                        itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v11"), currentRun, iFile);
+                    // else if( event->runId() > 208686)
+                    //     itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v11"), currentRun, iFile);
+
+                    if(itrigger == 9999)
+                    {
+                        cout << "NO VALID TRIGGER FOUND FOR THIS EVENT (DATA) IN RUN " << event->runId() << endl;
+                        //   exit(1);
+                    }
+                }
+                else
+                {
+                    itrigger = treeLoader.iTrigger (string ("HLT_Mu27_v1"), currentRun, iFile);
+                    cout << "iTrigger: " << itrigger << endl;
+
+                    if(itrigger == 9999)
+                    {
+                        cerr << "NO VALID TRIGGER FOUND FOR THIS EVENT (" << dataSetName << ") IN RUN " << event->runId() << endl;
+                        //exit(1);
+                    }
+                }
+
+            } //end previousRun != currentRun
 
             ///////////////////////
             // JER smearing
@@ -835,8 +934,8 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////
 
             // Apply trigger selection
-//            trigged = treeLoader.EventTrigged (itrigger);
-            bool trigged = true;  // Disabling the HLT requirement
+            trigged = treeLoader.EventTrigged (itrigger);
+            trigged = true;  // Disabling the HLT requirement
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
             if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
             // Declare selection instance
@@ -1087,7 +1186,6 @@ int main (int argc, char *argv[])
             // Apply primary vertex selection
             bool isGoodPV = selection.isPVSelected(vertex, 4, 24., 2);
             if (debug)	cout <<"PrimaryVertexBit: " << isGoodPV << " TriggerBit: " << trigged <<endl;
-            if (debug) cin.get();
             selecTable.Fill(d,0,scaleFactor);
             weightCount += scaleFactor;
             eventCount++;
@@ -1228,7 +1326,8 @@ int main (int argc, char *argv[])
             //////////////
 
 //            MSPlot["NMinusOne"]->Fill(0, datasets[d], true, Luminosity*scaleFactor );
-            if(Muon && Electron && dilepton){
+            if(Muon && Electron && dilepton)
+            {
                 if(             nMu==1 &&   nEl==1 &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(1, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&              nEl==1 &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(2, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&  nMu==1 &&               nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(3, datasets[d], true, Luminosity*scaleFactor );
@@ -1237,7 +1336,8 @@ int main (int argc, char *argv[])
                 if(isGoodPV &&  nMu==1 &&   nEl==1 &&   nJets>=4 && nMtags>=2 )                     MSPlot["NMinusOne"]->Fill(6, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&  nMu==1 &&   nEl==1 &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(7, datasets[d], true, Luminosity*scaleFactor );
             }
-            if(Muon && !Electron && dilepton){
+            if(Muon && !Electron && dilepton)
+            {
                 if(             nMu==2 &&   !ZVeto &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(1, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&              !ZVeto &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(2, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&  nMu==2 &&               nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(3, datasets[d], true, Luminosity*scaleFactor );
@@ -1246,7 +1346,8 @@ int main (int argc, char *argv[])
                 if(isGoodPV &&  nMu==2 &&   !ZVeto &&   nJets>=4 && nMtags>=2                    )  MSPlot["NMinusOne"]->Fill(6, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&  nMu==2 &&   !ZVeto &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(7, datasets[d], true, Luminosity*scaleFactor );
             }
-            if(!Muon && Electron && dilepton){
+            if(!Muon && Electron && dilepton)
+            {
                 if(             nEl==2 &&   !ZVeto &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(1, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&              !ZVeto &&   nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(2, datasets[d], true, Luminosity*scaleFactor );
                 if(isGoodPV &&  nEl==2 &&               nJets>=4 && nMtags>=2 &&    temp_HT>=500 )  MSPlot["NMinusOne"]->Fill(3, datasets[d], true, Luminosity*scaleFactor );
@@ -1317,7 +1418,6 @@ int main (int argc, char *argv[])
             if(debug)
             {
                 cout<<"Selection Passed."<<endl;
-                cin.get();
             }
             passed++;
 
@@ -1465,7 +1565,7 @@ int main (int argc, char *argv[])
 
             for (Int_t selel =0; selel < selectedElectrons.size(); selel++ )
             {
-                float reliso = selectedElectrons[selel]->relPfIso(3, 0.5);
+                float reliso = ElectronRelIso(selectedElectrons[selel], rho);
                 MSPlot["ElectronRelIsolation"]->Fill(reliso, datasets[d], true, Luminosity*scaleFactor);
                 MSPlot["ElectronPt"]->Fill(selectedElectrons[selel]->Pt(), datasets[d], true, Luminosity*scaleFactor);
             }
@@ -1533,28 +1633,7 @@ int main (int argc, char *argv[])
 
             bjetpt= selectedLBJets[0]->Pt();
 
-            Eventcomputer_->FillVar("topness",topness);
-            Eventcomputer_->FillVar("muonpt",muonpt);
-            Eventcomputer_->FillVar("muoneta",muoneta);
-            Eventcomputer_->FillVar("HTH", HTH);
-            Eventcomputer_->FillVar("HTRat",HTRat);
-            Eventcomputer_->FillVar("HTb", HTb);
-            Eventcomputer_->FillVar("nLtags",nLtags );
-            Eventcomputer_->FillVar("nMtags",nMtags );
-            Eventcomputer_->FillVar("nTtags",nTtags );
-            Eventcomputer_->FillVar("nJets", selectedJets.size() );
-            Eventcomputer_->FillVar("Jet3Pt", selectedJets[2]->Pt() );
-            Eventcomputer_->FillVar("Jet4Pt", selectedJets[3]->Pt() );
 
-            std::map<std::string,Float_t> MVAVals = Eventcomputer_->GetMVAValues();
-
-            for (std::map<std::string,Float_t>::const_iterator it = MVAVals.begin(); it != MVAVals.end(); ++it)
-            {
-
-                //  cout <<"MVA Method : "<< it->first    <<" Score : "<< it->second <<endl;
-                BDTScore = it->second;
-
-            }
 
 
             float nvertices = vertex.size();
@@ -1597,7 +1676,39 @@ int main (int argc, char *argv[])
             MSPlot["TopDiLepSphericity"]->Fill(tdSph, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["TopDiLepCentrality"]->Fill(tdCen, datasets[d], true, Luminosity*scaleFactor);
 
+            /////////////////////
+            // Calculating BDT //
+            /////////////////////
 
+            Eventcomputer_->FillVar("topness",topness);
+            Eventcomputer_->FillVar("muonpt",muonpt);
+            Eventcomputer_->FillVar("muoneta",muoneta);
+            Eventcomputer_->FillVar("HTH", HTH);
+            Eventcomputer_->FillVar("HTRat",HTRat);
+            Eventcomputer_->FillVar("HTb", HTb);
+            Eventcomputer_->FillVar("nLtags",nLtags );
+            Eventcomputer_->FillVar("nMtags",nMtags );
+            Eventcomputer_->FillVar("nTtags",nTtags );
+            Eventcomputer_->FillVar("nJets", selectedJets.size() );
+            Eventcomputer_->FillVar("Jet3Pt", selectedJets[2]->Pt() );
+            Eventcomputer_->FillVar("Jet4Pt", selectedJets[3]->Pt() );
+            Eventcomputer_->FillVar("HT2M",HT2M);
+            Eventcomputer_->FillVar("EventSph",tSph);
+            Eventcomputer_->FillVar("EventCen",tCen);
+            Eventcomputer_->FillVar("DiLepSph",dSph);
+            Eventcomputer_->FillVar("DiLepCen",dCen);
+            Eventcomputer_->FillVar("TopDiLepSph",tdSph);
+            Eventcomputer_->FillVar("TopDiLepCen",tdCen);
+
+            std::map<std::string,Float_t> MVAVals = Eventcomputer_->GetMVAValues();
+
+            for (std::map<std::string,Float_t>::const_iterator it = MVAVals.begin(); it != MVAVals.end(); ++it)
+            {
+
+                //  cout <<"MVA Method : "<< it->first    <<" Score : "<< it->second <<endl;
+                BDTScore = it->second;
+
+            }
 
             //////////////////
             //Filling nTuple//
@@ -1609,7 +1720,7 @@ int main (int argc, char *argv[])
 
             //                "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
-            float vals[29] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
+            float vals[31] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,selectedJets[2]->Pt(),selectedJets[3]->Pt(),HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
 
             tup->Fill(vals);
 
@@ -1755,4 +1866,22 @@ float Centrality(vector<TLorentzVector> parts)
         ET += parts[selpart].Et();
     }
     return ET/E;
+}
+
+float ElectronRelIso(TRootElectron* el, float rho)
+{
+    double EffectiveArea = 0.;
+    // Updated to 2015 EA from https://indico.cern.ch/event/370494/contribution/2/attachments/736984/1011061/Rami_update_on_CB_ELE_ID_PHYS14PU20bx25.pdf
+    if (fabs(el->superClusterEta()) >= 0.0   && fabs(el->superClusterEta()) < 0.8   ) EffectiveArea = 0.1013;
+    if (fabs(el->superClusterEta()) >= 0.8   && fabs(el->superClusterEta()) < 1.3 ) EffectiveArea = 0.0988;
+    if (fabs(el->superClusterEta()) >= 1.3 && fabs(el->superClusterEta()) < 2.0   ) EffectiveArea = 0.0572;
+    if (fabs(el->superClusterEta()) >= 2.0   && fabs(el->superClusterEta()) < 2.2   ) EffectiveArea = 0.0842;
+    if (fabs(el->superClusterEta()) >= 2.2   && fabs(el->superClusterEta()) < 2.5   ) EffectiveArea = 0.1530;
+    if (fabs(el->superClusterEta()) >= 2.5) EffectiveArea = -9999;
+
+    double isoCorr = 0;
+    isoCorr = el->neutralHadronIso(3) + el->photonIso(3) - rho*EffectiveArea;
+    float isolation = (el->chargedHadronIso(3) + (isoCorr > 0.0 ? isoCorr : 0.0))/(el->Pt());
+
+    return isolation;
 }

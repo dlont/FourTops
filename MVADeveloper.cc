@@ -123,7 +123,7 @@ int main ()
     bool debug = false;
     bool singlelep = false;
     bool dilep = true;
-    bool Muon = false;
+    bool Muon = true;
     bool Electron = true;
     int nPassed = 0;
 
@@ -143,7 +143,7 @@ int main ()
 
     if (dilep)
     {
-        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_ElEl_25June", "MVA/MasterMVA_ElEl_25thJune.root");
+        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuEl_13thJuly", "MVA/MasterMVA_MuEl_13thJuly.root");
     }
     else if (singlelep)
     {
@@ -183,11 +183,11 @@ int main ()
         Eventtrainer_->bookInputVar("Jet4Pt");
         Eventtrainer_->bookInputVar("HT2M");
         Eventtrainer_->bookInputVar("EventSph");
-        Eventtrainer_->bookInputVar("EventCen");
+//        Eventtrainer_->bookInputVar("EventCen");
         Eventtrainer_->bookInputVar("DiLepSph");
-        Eventtrainer_->bookInputVar("DiLepCen");
-        Eventtrainer_->bookInputVar("TopDiLepSph");
-        Eventtrainer_->bookInputVar("TopDiLepCen");
+//        Eventtrainer_->bookInputVar("DiLepCen");
+//        Eventtrainer_->bookInputVar("TopDiLepSph");
+//        Eventtrainer_->bookInputVar("TopDiLepCen");
     }
     else if (singlelep)
     {
@@ -234,7 +234,7 @@ int main ()
             {
                 std::cout<<"Processing the "<<ievt<<"th event, time = "<< ((double)clock() - start) / CLOCKS_PER_SEC << " ("<<100*(ievt-start)/(100000-event_start)<<"%)"<<flush<<"\r"<<endl;
             }
-            if(nPassed >= 5000) continue;
+            if(nPassed >= 7000) continue;
 
             mcParticlesMatching_.clear();
             genEvt = treeLoader.LoadGenEvent(ievt,false);
@@ -348,13 +348,16 @@ int main ()
             if (dilep && Muon && Electron)
             {
                 if  (  !( nMu == 1 && nEl == 1 )) continue; // Muon-Electron Channel Selection
+                if  (  !( selectedMuons[0]->Pt() <= 1000 && selectedElectrons[0]->Pt() <= 1000 )) continue; // Muon-Electron Channel Selection
                 if  (  !( nJets >= 4 )) continue; // Muon-Electron Channel Selection
                 if  (  !( nMtags >= 2 )) continue; // Muon-Electron Channel Selection
                 if  (  !( HT >= 500 )) continue; // Muon-Electron Channel Selection
+                if  (  !( mets[0]->Et() <= 1000 )) continue; // Muon-Electron Channel Selection
             }
             else if (dilep && Muon && !Electron)
             {
                 if  (  !( nMu == 2 && nEl == 0 )) continue; // Muon-Electron Channel Selection
+                if  (  !( selectedMuons[0]->Pt() <= 1000 && selectedMuons[1]->Pt() <= 1000 )) continue; // Muon-Electron Channel Selection
                 TLorentzVector diMu = (TLorentzVector)(*selectedMuons[0]) + (TLorentzVector)(*selectedMuons[1]);
                 float diMuMass = diMu.M();
                 if(diMuMass < 20 || (diMuMass > 76 && diMuMass < 106)) ZVeto = true;
@@ -362,10 +365,12 @@ int main ()
                 if  (  !( nJets >= 4 )) continue; // Muon-Electron Channel Selection
                 if  (  !( nMtags >= 2 )) continue; // Muon-Electron Channel Selection
                 if  (  !( HT >= 500 )) continue; // Muon-Electron Channel Selection
+                if  (  !( mets[0]->Et() <= 1000 )) continue; // Muon-Electron Channel Selection
             }
             else if (dilep && !Muon && Electron)
             {
                 if  (  !( nMu == 0 && nEl == 2 )) continue; // Muon-Electron Channel Selection
+                if  (  !( selectedElectrons[0]->Pt() <= 1000 && selectedElectrons[1]->Pt() <= 1000 )) continue; // Muon-Electron Channel Selection
                 TLorentzVector diEl = (TLorentzVector)(*selectedElectrons[0]) + (TLorentzVector)(*selectedElectrons[1]);
                 float diElMass = diEl.M();
                 if(diElMass < 20 || (diElMass > 76 && diElMass < 106)) ZVeto = true;
@@ -373,6 +378,7 @@ int main ()
                 if  (  !( nJets >= 4 )) continue; // Muon-Electron Channel Selection
                 if  (  !( nMtags >= 2 )) continue; // Muon-Electron Channel Selection
                 if  (  !( HT >= 500 )) continue; // Muon-Electron Channel Selection
+                if  (  !( mets[0]->Et() <= 1000 )) continue; // Muon-Electron Channel Selection
             }
             else if (singlelep)
             {
@@ -477,11 +483,11 @@ int main ()
                     Eventtrainer_->Fill("S","Jet4Pt",selectedJets[3]->Pt());
                     Eventtrainer_->Fill("S","HT2M",HT2M  );
                     Eventtrainer_->Fill("S","EventSph",tSph  );
-                    Eventtrainer_->Fill("S","EventCen",tCen  );
+//                    Eventtrainer_->Fill("S","EventCen",tCen  );
                     Eventtrainer_->Fill("S","DiLepSph",dSph  );
-                    Eventtrainer_->Fill("S","DiLepCen",dCen  );
-                    Eventtrainer_->Fill("S","TopDiLepSph",tdSph  );
-                    Eventtrainer_->Fill("S","TopDiLepCen",tdCen  );
+//                    Eventtrainer_->Fill("S","DiLepCen",dCen  );
+//                    Eventtrainer_->Fill("S","TopDiLepSph",tdSph  );
+//                    Eventtrainer_->Fill("S","TopDiLepCen",tdCen  );
                 }
 
                 if(datasets[d]->Name()!="ttttNLO_742")
@@ -501,11 +507,11 @@ int main ()
                     Eventtrainer_->Fill("B","Jet4Pt", selectedJets[3]->Pt() );
                     Eventtrainer_->Fill("B","HT2M",HT2M  );
                     Eventtrainer_->Fill("B","EventSph",tSph  );
-                    Eventtrainer_->Fill("B","EventCen",tCen  );
+//                    Eventtrainer_->Fill("B","EventCen",tCen  );
                     Eventtrainer_->Fill("B","DiLepSph",dSph  );
-                    Eventtrainer_->Fill("B","DiLepCen",dCen  );
-                    Eventtrainer_->Fill("B","TopDiLepSph",tdSph  );
-                    Eventtrainer_->Fill("B","TopDiLepCen",tdCen  );
+//                    Eventtrainer_->Fill("B","DiLepCen",dCen  );
+//                    Eventtrainer_->Fill("B","TopDiLepSph",tdSph  );
+//                    Eventtrainer_->Fill("B","TopDiLepCen",tdCen  );
                 }
 
             }
@@ -555,7 +561,7 @@ int main ()
         }
 
     }
-    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_ElElJune25th2015");
+    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElJuly13th2015");
 
 
 }
