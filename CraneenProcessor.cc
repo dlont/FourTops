@@ -52,12 +52,12 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
 int main(int argc, char** argv)
 {
     int NumberOfBins;	//fixed width nBins
-    int lumiScale = 50;  //Amount of luminosity to scale to in fb^-1
+    int lumiScale = 11.802281;  //Amount of luminosity to scale to in fb^-1
 
-    bool jetSplit = false; 
+    bool jetSplit = false;
     bool jetTagsplit = false;
 
-    string DatacardVar = "BDT"; //variable of interest for plotting
+    string DatacardVar = "PU"; //variable of interest for plotting
     //upper and lower bound of variable in plot
     float lBound, uBound, bSplit, tSplit, wSplit, bSplit1, tSplit1, wSplit1, bSplit2, tSplit2, wSplit2;  // + the bottom, top, and width of the splitting for 1 & 2 variables
 
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     }
 
 
-    string xmlstring = "config/Vars.xml";
+    string xmlstring = "config/VarsStart.xml";
     const char * xmlchar = xmlstring.c_str();
     TiXmlDocument doc(xmlchar);
     bool loadOkay = doc.LoadFile();
@@ -144,7 +144,7 @@ int main(int argc, char** argv)
             for (child3; child3; child3=child3->NextSiblingElement()){
                 const char *p3Key=child3->Value();
                 const char *p3Text=child3->GetText();
-                if (p3Key && p3Text && p3Text==splitting) 
+                if (p3Key && p3Text && p3Text==splitting)
                 {
                     cout<<"splitting: "<<splitting<<endl;
                     break;
@@ -165,14 +165,14 @@ int main(int argc, char** argv)
             child3->QueryFloatAttribute("wSplit1", &wSplit1);
             child3->QueryFloatAttribute("bSplit2", &bSplit2);
             child3->QueryFloatAttribute("tSplit2", &tSplit2);
-            child3->QueryFloatAttribute("wSplit2", &wSplit2);   cout<<"splitVar1: "<<splitVar1<<"splitVar2: "<<splitVar2<<"  b1: "<<bSplit1<<"  t1: "<<tSplit1<<"  w1: "<<wSplit1<<"  b2: "<<bSplit2<<"  t2: "<<tSplit2<<"  w2: "<<wSplit2<<endl;                 
+            child3->QueryFloatAttribute("wSplit2", &wSplit2);   cout<<"splitVar1: "<<splitVar1<<"splitVar2: "<<splitVar2<<"  b1: "<<bSplit1<<"  t1: "<<tSplit1<<"  w1: "<<wSplit1<<"  b2: "<<bSplit2<<"  t2: "<<tSplit2<<"  w2: "<<wSplit2<<endl;
         }
 
         TiXmlElement* child2 = child->FirstChild( "var" )->ToElement();
         for (child2; child2; child2=child2->NextSiblingElement()){
             const char *ppKey=child2->Value();
             const char *ppText=child2->GetText();
-            if (ppKey && ppText) 
+            if (ppKey && ppText)
             {
                 VoI = ppText;
                 string shapefileName = "";
@@ -196,7 +196,7 @@ int main(int argc, char** argv)
 
                     Split2SystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileNameSys, CraneenPath);
                     Split2DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1, splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, CraneenPath);
-                    if(ppText == DatacardVar){     
+                    if(ppText == DatacardVar){
                         Split2_DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, jetTagsplit, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, lumiScale);
                     }
                 }
@@ -215,7 +215,7 @@ int main(int argc, char** argv)
                 cout<<""<<endl;                cout<<"end var"<<endl;
             }
         }
-    } 
+    }
     cout<<" DONE !! "<<endl;
 }
 
@@ -248,7 +248,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
     //***********************************************OPEN FILES & GET NTUPLES**********************************************
     string dataSetName, filepath;
     int nEntries;
-    float ScaleFactor, NormFactor, Luminosity, varofInterest;
+    float ScaleFactor, NormFactor, Luminosity, varofInterest, BDT;
 
     for (int d = 0; d < datasets.size(); d++)  //Loop through datasets
     {
@@ -268,6 +268,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor",&ScaleFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("BDT",&BDT);
 
 
 
@@ -277,12 +278,13 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         for (int j = 0; j<nEntries; j++)
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
+//            if(!(BDT > -0.005)) continue; //This line controls the plots being for BTD analysis or not.  Cut value is determined by TMVA.
             //artificial Lumi
             if(lScale > 0 )
             {
-                Luminosity = 1000*lScale;
+                Luminosity = lScale;
             }
-            
+
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
                 MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*ScaleFactor*Luminosity);
@@ -290,8 +292,17 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
             }
             else
             {
-                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
-                histo1D[dataSetName]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
+                if(sVarofinterest.find("BDT")!=string::npos)
+                {
+                    MSPlot[plotname]->Fill(BDT, datasets[d], true, ScaleFactor*Luminosity);
+                    histo1D[dataSetName]->Fill(BDT,NormFactor*ScaleFactor*Luminosity);
+                }
+                else
+                {
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
+                    histo1D[dataSetName]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
+                }
+
             }
 
         }
@@ -332,9 +343,9 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
 
     for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++)
     {
-        string name = it->first;  
+        string name = it->first;
         MultiSamplePlot *temp = it->second;
-        temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 100);
+        temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 1);
         temp->Write(shapefile, name, true, pathPNG, "pdf");
     }
     MSPlot.erase(plotname);
@@ -398,7 +409,7 @@ void SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh,
             //artificial Lumi
             if(lScale > 0 )
             {
-                Luminosity = 1000*lScale;
+                Luminosity = lScale;
             }
             histo1D[plotname.c_str()]->Fill(varofInterest,ScaleFactor*NormFactor*Luminosity);
         }
@@ -516,10 +527,10 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
 
             if(lScale > 0 )
             {
-                Luminosity = 1000*lScale;
+                Luminosity = lScale;
             }
 
-            
+
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
                 plotname = sVarofinterest + stSplit + sSplitVar;
@@ -603,7 +614,7 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
         string name = it->first;  cout<<name<< " ** "<<sVarofinterest<<endl;
         MultiSamplePlot *temp = it->second;
         temp->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
-        temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 100);
+        temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 1);
         temp->Write(shapefile, name, true, pathPNG, "pdf");
     }
 
@@ -687,7 +698,7 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
             {
                 Luminosity = 1000*lScale;
             }
-            
+
             //bool outsiderange = true;
             if(splitVar >= ftSplit) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
@@ -801,7 +812,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
             numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
             plotname = sVarofinterest + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
             MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
-        }  
+        }
     }
     plotname = "";
 
@@ -836,7 +847,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
         {
             numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
             for(int t2 = fbSplit2; t2 <= ftSplit2; t2+=fwSplit2){
-                numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();   
+                numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
                 histoName = dataSetName + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
                 histo1D[histoName.c_str()] = new TH1F(histoName.c_str(),histoName.c_str(), nBins, plotLow, plotHigh);
             }
@@ -848,18 +859,18 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
             //artificial Lumi
             if(lScale > 0 )
             {
-                Luminosity = 1000*lScale;
+                Luminosity = lScale;
             }
             bool outsiderange = true;
             if(splitVar1 >= ftSplit1) //Check if this entry belongs in the last bin in var1.  Done here to optimize number of checks
-            {   
+            {
 
                 if(splitVar2 >= ftSplit2){ //Check if this entry belongs in the last bin in var2.
                     plotname = sVarofinterest + stSplit1 + sSplitVar1 +stSplit2 + sSplitVar2;
                     histoName = dataSetName + stSplit1 + sSplitVar1 +stSplit2 + sSplitVar2;
                     outsiderange = false;
                     //                                cout<<"splitvar2: "<<splitVar2<<endl;
-                }    
+                }
                 else //If it doesn't belong in the last bin in var2, find out which it belongs in
                 {
 
@@ -874,7 +885,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                             break;
                         }
                     }
-                }            
+                }
             }
             else //If it doesn't belong in the last bin, find out which it belongs in
             {
@@ -887,7 +898,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                             plotname = sVarofinterest + numStr1 + sSplitVar1 +stSplit2 + sSplitVar2;
                             histoName = dataSetName + numStr1 + sSplitVar1 +stSplit2 + sSplitVar2;
                             outsiderange = false;
-                        }    
+                        }
                         else //If it doesn't belong in the last bin, find out which it belongs in
                         {
                             for(int t2 = fbSplit2; t2 <= ftSplit2; t2+=fwSplit2)
@@ -901,7 +912,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                                     break;
                                 }
                             }
-                        } 
+                        }
                     }
                 }
             }
@@ -977,7 +988,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
             numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
             plotname = sVarofinterest + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
             MSPlot.erase(plotname);
-        }  
+        }
     }
 
 };
@@ -1044,7 +1055,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
         {
             numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
             for(int t2 = fbSplit2; t2<= ftSplit2; t2+=fwSplit2){
-                numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();            
+                numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
                 histoName = dataSetName + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
                 //cout<<"histoName: "<< histoName<<endl;
                 histo1D[histoName.c_str()] = new TH1F(histoName.c_str(),histoName.c_str(), nBins, plotLow, plotHigh);
@@ -1056,7 +1067,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
             //artificial Lumi
             if(lScale > 0 )
             {
-                Luminosity = 1000*lScale;
+                Luminosity = lScale;
             }
             bool outsiderange = true;
             if(splitVar1 >= ftSplit1) //Check if this entry belongs in the last bin.  Done here to optimize number of checks
@@ -1064,7 +1075,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                 if(splitVar2 >= ftSplit2){ //Check if this entry belongs in the last bin in var2.
                     histoName = dataSetName + stSplit1 + sSplitVar1 + stSplit2 + sSplitVar2;
                     outsiderange = false;
-                } 
+                }
                 else //If it doesn't belong in the last bin, find out which it belongs in
                 {
                     for(int t2 = fbSplit2; t2 <= ftSplit2; t2+=fwSplit2)
@@ -1077,7 +1088,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                             break;
                         }
                     }
-                } 
+                }
             }
             else //If it doesn't belong in the last bin for var1, find out which it belongs in
             {
@@ -1090,7 +1101,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                         if(splitVar2 >= ftSplit2){ //Check if this entry belongs in the last bin in var2.
                             histoName = dataSetName + numStr1 + sSplitVar1 + stSplit2 + sSplitVar2;
                             outsiderange = false;
-                        }    
+                        }
                         else //If it doesn't belong in the last bin, find out which it belongs in
                         {
                             for(int t2 = fbSplit2; t2 <= ftSplit2; t2+=fwSplit2)
@@ -1103,7 +1114,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                                     break;
                                 }
                             }
-                        } 
+                        }
                         //break;
                     }
                 }
@@ -1191,7 +1202,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
 
     binname = channel;
     card << binname + " ";
-  
+
     card << "\n";
     card << "observation                               ";
 
@@ -1202,7 +1213,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         {
             histoName = channel + "__data_obs__nominal";
             tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
-            tempEntries = tempHisto->GetSumOfWeights();  
+            tempEntries = tempHisto->GetSumOfWeights();
             card<<static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str()+"         ";
         }
         else{
@@ -1230,7 +1241,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
             card<<dataSetName+"           ";
         }
     }
- 
+
 
     card << "\n";
     card << "process                                ";
@@ -1238,7 +1249,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     for(int i=0; i<datasets.size()-1; i++){
         card << static_cast<ostringstream*>( &(ostringstream() << i) )->str() + "                    ";
     }
-  
+
     card << "\n";
     card << "rate                                ";
 
@@ -1252,11 +1263,11 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         else{
             histoName = channel + "__" + dataSetName +"__nominal";
             tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
-            tempEntries = tempHisto->GetSumOfWeights();  
+            tempEntries = tempHisto->GetSumOfWeights();
             card << static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str() + "               ";
         }
     }
-   
+
     card << "\n";
     card << "---------------------------\n";
     card << "lumi                  lnN           ";
@@ -1284,14 +1295,14 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
                     for (int dash1 = 0; dash1<d-1; dash1++){
                         card << "-                  ";
                     }
-                    card << "1.04                  ";                   
+                    card << "1.04                  ";
                     for (int dash2 = 5; dash2>d; dash2-- ){
                         card << "-                  ";
                     }
                 }
                 card<<"\n";
-            }   
-        }        
+            }
+        }
     }
 
     card << "scale                shape           ";
@@ -1303,7 +1314,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
                 for (int dash1 = 0; dash1<d-1; dash1++){
                     card << "-                  ";
                 }
-                card << "1                      ";                   
+                card << "1                      ";
                 for (int dash2 = 5; dash2>d; dash2-- ){
                     card << "-                  ";
                 }
@@ -1312,8 +1323,8 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         }
         else {
             continue;
-        }        
-    }    
+        }
+    }
 
     card.close();
 };
@@ -1341,8 +1352,8 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
     for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
     {
         nChannels += 1;
-    } 
-    card << "imax " + static_cast<ostringstream*>( &(ostringstream() << nChannels) )->str() + "\n"; 
+    }
+    card << "imax " + static_cast<ostringstream*>( &(ostringstream() << nChannels) )->str() + "\n";
     card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << nDatasets-2) )->str() + "\n";  //number of background (so minus data and signal)
     card << "kmax *\n";
     card << "---------------\n";
@@ -1354,7 +1365,7 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
         numStr1 = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
         binname = channel + numStr1 + sSplitVar1;
         card << binname + " ";
-    }    
+    }
     card << "\n";
     card << "observation                               ";
     for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
@@ -1368,14 +1379,14 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
             {
                 histoName = channel + numStr1 + sSplitVar1 + "__data_obs__nominal";
                 tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
-                tempEntries = tempHisto->GetSumOfWeights();  
-                card<<static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str()+"         ";                
+                tempEntries = tempHisto->GetSumOfWeights();
+                card<<static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str()+"         ";
             }
             else{
                 continue;
             }
         }
-    } 
+    }
     card << "\n";
 
     card << "---------------------------\n";
@@ -1401,7 +1412,7 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
                 card<<dataSetName+"           ";
             }
         }
-    }    
+    }
 
     card << "\n";
     card << "process                                ";
@@ -1410,7 +1421,7 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
         for(int i=0; i<datasets.size()-1; i++){
             card << static_cast<ostringstream*>( &(ostringstream() << i) )->str() + "                    ";
         }
-    }  
+    }
     card << "\n";
     card << "rate                                ";
     for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
@@ -1428,11 +1439,11 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
             else{
                 histoName = channel + numStr1 + sSplitVar1 + "__" + dataSetName +"__nominal";
                 tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
-                tempEntries = tempHisto->GetSumOfWeights();  
+                tempEntries = tempHisto->GetSumOfWeights();
                 card << static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str() + "               ";
             }
         }
-    }     
+    }
     card << "\n";
     card << "---------------------------\n";
     card << "lumi                  lnN           ";
@@ -1460,14 +1471,14 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
                     for (int dash1 = 0; dash1<d-1; dash1++){
                         card << "-                  ";
                     }
-                    card << "1.04                  ";                   
+                    card << "1.04                  ";
                     for (int dash2 = 5; dash2>d; dash2-- ){
                         card << "-                  ";
                     }
                 }
                 card<<"\n";
-            }   
-        }        
+            }
+        }
     }
 
     card << "scale                shape           ";
@@ -1479,7 +1490,7 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
                 for (int dash1 = 0; dash1<d-1; dash1++){
                     card << "-                  ";
                 }
-                card << "1                      ";                   
+                card << "1                      ";
                 for (int dash2 = 5; dash2>d; dash2-- ){
                     card << "-                  ";
                 }
@@ -1488,8 +1499,8 @@ void Split_DataCardProducer(TFile *shapefile, string shapefileName, string chann
         }
         else {
             continue;
-        }        
-    }    
+        }
+    }
 
     card.close();
 };
@@ -1518,8 +1529,8 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
             //for(int i=0; i<datasets.size()-1; i++){
                 nChannels += 1;
             //}
-        }  
-    } 
+        }
+    }
 
     card << "imax " + static_cast<ostringstream*>( &(ostringstream() << nChannels) )->str() + "\n";
     card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << nDatasets-2) )->str() + "\n";
@@ -1535,8 +1546,8 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
             numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
             binname = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
             card << binname + " ";
-        }  
-    }    
+        }
+    }
     card << "\n";
     card << "observation                               ";
     for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
@@ -1552,14 +1563,14 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
                 {
                     histoName = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__data_obs__nominal";
                     tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
-                    tempEntries = tempHisto->GetSumOfWeights();  
+                    tempEntries = tempHisto->GetSumOfWeights();
                     card<<static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str()+"         ";                }
                 else{
                     continue;
                 }
             }
-        }  
-    } 
+        }
+    }
     card << "\n";
 
     card << "---------------------------\n";
@@ -1571,7 +1582,7 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
             numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
             binname = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
             for(int i = 0; i<nDatasets-1; i++)    card << binname + " ";
-        }  
+        }
     }
     card << "\n";
     card << "process                             ";
@@ -1589,8 +1600,8 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
                     card<<dataSetName+"           ";
                 }
             }
-        }  
-    }    
+        }
+    }
 
     card << "\n";
     card << "process                                ";
@@ -1600,8 +1611,8 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
             for(int i=0; i<datasets.size()-1; i++){
                 card << static_cast<ostringstream*>( &(ostringstream() << i) )->str() + "                    ";
             }
-        }  
-    }  
+        }
+    }
     card << "\n";
     card << "rate                                ";
     for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
@@ -1620,12 +1631,12 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
                 else{
                     histoName = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + dataSetName +"__nominal";
                     tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
-                    tempEntries = tempHisto->GetSumOfWeights();  
+                    tempEntries = tempHisto->GetSumOfWeights();
                     card << static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str() + "               ";
                 }
             }
-        }  
-    }     
+        }
+    }
     card << "\n";
     card << "---------------------------\n";
     card << "lumi                  lnN           ";
@@ -1653,14 +1664,14 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
                     for (int dash1 = 0; dash1<d-1; dash1++){
                         card << "-                  ";
                     }
-                    card << "1.04                  ";                   
+                    card << "1.04                  ";
                     for (int dash2 = 5; dash2>d; dash2-- ){
                         card << "-                  ";
                     }
                 }
                 card<<"\n";
-            }   
-        }        
+            }
+        }
     }
 
     card << "scale                shape           ";
@@ -1672,7 +1683,7 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
                 for (int dash1 = 0; dash1<d-1; dash1++){
                     card << "-                  ";
                 }
-                card << "1                      ";                   
+                card << "1                      ";
                 for (int dash2 = 5; dash2>d; dash2-- ){
                     card << "-                  ";
                 }
@@ -1681,8 +1692,8 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
         }
         else {
             continue;
-        }        
-    }    
+        }
+    }
 
     card.close();
 };
