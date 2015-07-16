@@ -65,8 +65,9 @@
 #include "TopTreeAnalysisBase/Tools/interface/MVAComputer.h"
 #include "TopTreeAnalysisBase/Tools/interface/JetTools.h"
 
-#include "TopTreeAnalysisBase/Tools/interface/CutsTable.h"
-#include "TopTreeAnalysisBase/Tools/interface/HadronicTopReco.h"
+#include "TopTreeAnalysisBase/Analysis/interface/CutsTable.h"
+#include "TopTreeAnalysisBase/Analysis/interface/HadronicTopReco.h"
+#include "TopTreeAnalysisBase/Analysis/interface/EventBDT.h"
 
 using namespace std;
 using namespace TopTree;
@@ -98,6 +99,7 @@ struct HighestCVSBtag
 
 int main (int argc, char *argv[])
 {
+
     //Checking Passed Arguments to ensure proper execution of MACRO
     if(argc < 14)
     {
@@ -141,14 +143,14 @@ int main (int argc, char *argv[])
     cout << "----------------------------------------" << endl;
 
     ofstream eventlist;
-    eventlist.open ("interesting_events_mu.txt");
+    eventlist.open ("interesting_events_mu2.txt");
 
     int passed = 0;
     int ndefs =0;
     int negWeights = 0;
     float weightCount = 0.0;
     int eventCount = 0;
-    float scalefactorbtageff, mistagfactor, workingpointvalue;
+    float scalefactorbtageff, mistagfactor;
     string dataSetName;
     string channelpostfix = "";
     string postfix = "_Run2_TopTree_Study"; // to relabel the names of the output file
@@ -168,6 +170,8 @@ int main (int argc, char *argv[])
     bool SingleLepton = true;
     bool Muon = true;
     bool Electron = false;
+    bool HadTopOn = false;
+    bool EventBDTOn = true;
     bool TrainMVA = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25 = false;
 
@@ -222,24 +226,14 @@ int main (int argc, char *argv[])
     Dataset* theDataset = new Dataset(dName, dTitle, true, color, ls, lw, normf, xSect, vecfileNames);
     theDataset->SetEquivalentLuminosity(EqLumi);
     datasets.push_back(theDataset);
-    float Luminosity = 5000.0; //pb^-1??
-    vector<string> MVAvars;
+    float Luminosity = 11.802281; //pb^-1??
+    EventBDT* eventBDT;
+    if (EventBDTOn){
+        HadTopOn = true;
+        eventBDT = new EventBDT();
+        eventBDT->initaliseEventComp();
+    }
 
-    ////////BDT stuff/////////
-    MVAvars.push_back("multitopness");
-    MVAvars.push_back("muonpt");
-    MVAvars.push_back("muoneta");
-    MVAvars.push_back("HTH");
-    MVAvars.push_back("HTRat");
-    MVAvars.push_back("HTb");
-    MVAvars.push_back("nLtags");
-    MVAvars.push_back("nMtags");
-    MVAvars.push_back("nTtags");
-    MVAvars.push_back("nJets");
-    MVAvars.push_back("Jet5Pt");
-    MVAvars.push_back("Jet6Pt");
-
-    MVAComputer* Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_SingleMuon_24thMarch.root","MasterMVA_SingleMuon_24thMarch",MVAvars, "_SingleMuon24thMarch2015");
     cout << " Initialized Eventcomputer_ for event_level BDT" << endl;
 
 
@@ -261,8 +255,11 @@ int main (int argc, char *argv[])
     TFile *fout = new TFile (rootFileName.c_str(), "RECREATE");
 
     //////// Top Reco MVA ////////////
-    //*************CONSTRUCTOR***********//
-    HadronicTopReco *hadronicTopReco = new HadronicTopReco(fout, Muon, Electron, TrainMVA, datasets, MVAmethod, debug, Luminosity);
+    HadronicTopReco *hadronicTopReco;
+    if(HadTopOn){
+        hadronicTopReco = new HadronicTopReco(fout, Muon, Electron, TrainMVA, datasets, MVAmethod, debug, Luminosity);
+
+    }
 
     //vector of objects
     cout << " - Variable declaration ..." << endl;
@@ -282,6 +279,7 @@ int main (int argc, char *argv[])
     MSPlot["NbOfVertices"]          = new MultiSamplePlot(datasets, "NbOfVertices", 60, 0, 60, "Nb. of vertices");
     //Muons
     MSPlot["MuonPt"]                = new MultiSamplePlot(datasets, "MuonPt", 30, 0, 300, "PT_{#mu}");
+    MSPlot["leptonIso"]             = new MultiSamplePlot(datasets, "LeptonIso", 10, 0, 0.25, "RelIso");    
     //Electrons
     MSPlot["ElectronRelIsolation"]  = new MultiSamplePlot(datasets, "ElectronRelIsolation", 10, 0, .25, "RelIso");
     //B-tagging discriminators
@@ -290,6 +288,7 @@ int main (int argc, char *argv[])
     MSPlot["HTb_SelectedJets"]      = new MultiSamplePlot(datasets, "HTb_SelectedJets", 50, 0, 1500, "HTb");    
     //Jets
     MSPlot["JetEta"]                = new MultiSamplePlot(datasets, "JetEta", 40,-4, 4, "Jet #eta");
+    MSPlot["JetpT"]                 = new MultiSamplePlot(datasets, "JetpT", 100, 0, 400, "Jet p_{T}");
     MSPlot["HT_SelectedJets"]       = new MultiSamplePlot(datasets, "HT_SelectedJets", 30, 0, 1500, "HT");
     MSPlot["HTRat"]                 = new MultiSamplePlot(datasets, "HTRat", 50, 0, 20, "HTRat");
     MSPlot["5thJetPt"]              = new MultiSamplePlot(datasets, "5thJetPt", 60, 0, 400, "PT_{jet}");
@@ -351,7 +350,11 @@ int main (int argc, char *argv[])
 
         string Ntuptitle = "Craneen_" + channelpostfix;
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "BDT:nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:multitopness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:met:angletop1top2:angletoplep");
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "BDT:nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:multitopness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso");
+
+        string Ntupjetname = "Craneens" +channelpostfix+ "/Craneens" + date_str + "/CraneenJets_" + dataSetName + postfix + ".root";
+        TFile * tupjetfile = new TFile(Ntupjetname.c_str(),"RECREATE");
+        TNtuple * tupjet = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "jetpT:csvDisc:jeteta:jetphi");
       
         //////////////////////////////////////////////////
         // Loop on events
@@ -367,7 +370,7 @@ int main (int argc, char *argv[])
         if (debug) cout << " - Loop over events " << endl;
 
 
-        float BDTScore, MHT, MHTSig, STJet,muoneta, muonpt, electronpt, electroneta, bjetpt, EventMass, EventMassX, SumJetMass, SumJetMassX, H, HX;
+        float BDTScore, MHT, MHTSig, STJet,muoneta, muonpt, leptonphi, electronpt, electroneta, bjetpt, EventMass, EventMassX, SumJetMass, SumJetMassX, H, HX;
         float HTHi, HTRat, HT, HTX, HTH, HTXHX, sumpx_X, sumpy_X, sumpz_X, sume_X, sumpx, sumpy, sumpz, sume, jetpt, PTBalTopEventX, PTBalTopSumJetX, PTBalTopMuMet;
 
         double end_d = ending;
@@ -587,20 +590,29 @@ int main (int argc, char *argv[])
             }
             passed++;
 
+
+
+            TRootGenEvent* genEvt = 0;
+
             sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
 
-            hadronicTopReco->SetCollections(selectedJets, selectedMuons, selectedElectrons, scaleFactor);
+            if (HadTopOn){
+                hadronicTopReco->SetCollections(selectedJets, selectedMuons, selectedElectrons, scaleFactor);
+            }
 
             /////////////////////////////////
             /// TMVA for mass Reconstruction
             ////////////////////////////////
-            float MultiTopness;
-            if(!TrainMVA){ //if not training, but computing 
-                hadronicTopReco->Compute1st(d, selectedJets, datasets);
-                hadronicTopReco->Compute2nd(d, selectedJets, datasets);
-                MultiTopness = hadronicTopReco->ReturnDiTopness();
+            float diTopness = 0;
+            if(HadTopOn){
+                if(!TrainMVA){ //if not training, but computing 
+                    hadronicTopReco->Compute1st(d, selectedJets, datasets);
+                    hadronicTopReco->Compute2nd(d, selectedJets, datasets);
+                    diTopness = hadronicTopReco->ReturnDiTopness();
+                }
+                hadronicTopReco->FillDiagnosticPlots(fout, d, selectedJets, datasets);
             }
-            hadronicTopReco->FillDiagnosticPlots(fout, d, selectedJets, datasets);
+
 
             ///////////////////////////////////
             // Filling histograms / plotting //
@@ -609,10 +621,23 @@ int main (int argc, char *argv[])
             //////////////////////
             // Muon Based Plots //
             //////////////////////
-
+            float leptonIso=0;
+            float chargedHIso = 0;
+            float neutralHIso = 0;
+            float photonIso = 0;
+            float PUIso = 0;
             for (Int_t selmu =0; selmu < selectedMuons.size(); selmu++ )
             {
+                float relisomu = (selectedMuons[0]->chargedHadronIso() + max( 0.0, selectedMuons[0]->neutralHadronIso() + selectedMuons[0]->photonIso() - 0.) ) / selectedMuons[0]->Pt();
+                chargedHIso = selectedMuons[0]->chargedHadronIso();
+                neutralHIso = selectedMuons[0]->neutralHadronIso();
+                photonIso = selectedMuons[0]->photonIso();
+                PUIso = selectedMuons[0]->puChargedHadronIso();
+
+                
+                MSPlot["leptonIso"]->Fill(relisomu, datasets[d], true, Luminosity*scaleFactor);
                 MSPlot["MuonPt"]->Fill(selectedMuons[selmu]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+                leptonIso = relisomu;
             }
 
             //////////////////////////
@@ -623,6 +648,7 @@ int main (int argc, char *argv[])
             {
                 float reliso = selectedElectrons[selel]->relPfIso(3, 0.5);
                 MSPlot["ElectronRelIsolation"]->Fill(reliso, datasets[d], true, Luminosity*scaleFactor);
+                leptonIso = reliso;
             }
 
             //////////////////////
@@ -647,22 +673,18 @@ int main (int argc, char *argv[])
             HTH = HT/H;
             HTRat = HTHi/HT;
 
-            vector<double> ptList;
-            double jetptTemp;
-            for(Int_t csvJets = 2; csvJets<selectedJets.size(); csvJets++){
-                jetptTemp = (double)selectedJets[csvJets]->Pt();
-                ptList.push_back(jetptTemp);
-                //cout<<csvJets<<"   ptlist "<<ptList[csvJets-2]<<endl;
-                //selectedJets2.push_back(selectedJets[csvJets]);  //created array of selected jets without 2 highest CSVL btags
-                //cout<<csvJets<<" jet pt "<<selectedJets2[csvJets-2]->Pt()<<"   "<<selectedJets[csvJets]->Pt()<<endl;
+
+       
+            if((nJets > 7)){
+                cout<<event->runId()  << " " << event->lumiBlockId() <<" " <<event->eventId() << "  jets "  << nJets <<"  nmtags "<<nMtags<<" muon pt "<<selectedMuons[0]->Pt()<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
+
+                eventlist <<event->runId()  << " " << event->lumiBlockId() <<" " <<event->eventId() << "  jets "  << nJets <<" nmtags "<<nMtags<<" muon pt "<<selectedMuons[0]->Pt()<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
+                for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
+                {
+                    eventlist<<"  jet pt  "<<selectedJets[seljet1]->Pt()<<"   btag csv "<<selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags()<<endl;
+                }
             }
 
-            sort(selectedJets2.begin(),selectedJets2.end(),HighestPt()); //order Jets wrt Pt for tuple output
-
-            HT2L2J = HT - selectedJets[0]->Pt() - selectedJets[1]->Pt() - ptList[0] - ptList[1];    
-            //cout<<"HT:  "<<HT<<"  "<<selectedJets[0]->Pt()<<"  "<<selectedJets[1]->Pt()<<"  "<<ptList[0]<<"  "<<ptList[1]<<"  HT2l2J"<<HT2L2J<<endl;    
-
-            //HT - (2 highest CSVL btags) and (2 highest pt jets from remaining jets)
 
             MSPlot["HTb_SelectedJets"]->Fill(HTb, datasets[d], true, Luminosity*scaleFactor);
             MSPlot["HTRat"]->Fill(HTRat, datasets[d], true, Luminosity*scaleFactor);
@@ -670,53 +692,75 @@ int main (int argc, char *argv[])
             float met = mets[0]->Et();
             MSPlot["MET"]->Fill(mets[0]->Et(), datasets[d], true, Luminosity*scaleFactor);
 
-            MSPlot["5thJetPt"]->Fill(selectedJets[4]->Pt(), datasets[d], true, Luminosity*scaleFactor);
-            MSPlot["6thJetPt"]->Fill(selectedJets[5]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+            if(nJets>5){
+                MSPlot["5thJetPt"]->Fill(selectedJets[4]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+                MSPlot["6thJetPt"]->Fill(selectedJets[5]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+            }
 
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity*scaleFactor);
+
+            tupjetfile->cd();
+            for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
+            {
+                float jeteta = selectedJets[seljet1]->Eta();
+                float jetphi = selectedJets[seljet1]->Phi();
+                float csvDisc = selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                float jetpT = selectedJets[seljet1]->Pt();
+                float jetvals[4] = {jetpT,csvDisc,jeteta,jetphi};
+
+                tupjet->Fill(jetvals);
+            }
 
             if(Muon){
                 muonpt  = selectedMuons[0]->Pt();
                 muoneta = selectedMuons[0]->Eta();
+                leptonphi = selectedMuons[0]->Phi();
             }
             else if(Electron){
                 muonpt  = selectedElectrons[0]->Pt();
                 muoneta = selectedElectrons[0]->Eta();
+                leptonphi = selectedElectrons[0]->Phi();
+
             }
 
             bjetpt = selectedMBJets[0]->Pt();
 
-            Eventcomputer_->FillVar("multitopness", MultiTopness);
-            Eventcomputer_->FillVar("muonpt",muonpt);
-            Eventcomputer_->FillVar("muoneta",muoneta);
-            Eventcomputer_->FillVar("HTH", HTH);
-            Eventcomputer_->FillVar("HTRat",HTRat);
-            Eventcomputer_->FillVar("HTb", HTb);   
-            Eventcomputer_->FillVar("nLtags",nLtags );     
-            Eventcomputer_->FillVar("nMtags",nMtags );     
-            Eventcomputer_->FillVar("nTtags",nTtags );     
-            Eventcomputer_->FillVar("nJets", selectedJets.size() );
-            Eventcomputer_->FillVar("Jet5Pt", selectedJets[4]->Pt() );
-            Eventcomputer_->FillVar("Jet6Pt", selectedJets[5]->Pt() );
 
-            std::map<std::string,Float_t> MVAVals = Eventcomputer_->GetMVAValues();
+            if (EventBDTOn){
+                float jet5Pt =  selectedJets[4]->Pt();
+                float jet6Pt = selectedJets[5]->Pt();
+                eventBDT->fillVariables(diTopness, muonpt, muoneta, HTH, HTRat, HTb, nLtags, nMtags, nTtags, nJets, jet5Pt, jet6Pt);
+            }
+
+            float firstjetpt = selectedJets[0]->Pt();
+            float secondjetpt = selectedJets[1]->Pt();
             
-            for (std::map<std::string,Float_t>::const_iterator it = MVAVals.begin(); it != MVAVals.end(); ++it){
-                //  cout <<"MVA Method : "<< it->first    <<" Score : "<< it->second <<endl;
-                BDTScore = it->second;
+            BDTScore = 0 ;
+            if(EventBDTOn){
+                eventBDT->computeBDTScore();
+                BDTScore = eventBDT->returnBDTScore();
             }
 
             float nvertices = vertex.size();
             float normfactor = datasets[d]->NormFactor();
-            float angletop1top2 = hadronicTopReco->ReturnAnglet1t2();
-            float angletoplep = hadronicTopReco->ReturnAngletoplep();
-            float vals[21] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,bjetpt,HT2M,HTb,HTH,HTRat,MultiTopness,scaleFactor,nvertices,normfactor,Luminosity,weight_0,met,angletop1top2,angletoplep};
+            float angletoplep = 0;
+            float angletop1top2 = 0;
+            if(HadTopOn){
+                angletop1top2 = hadronicTopReco->ReturnAnglet1t2();
+                angletoplep = hadronicTopReco->ReturnAngletoplep();                
+            }
+
+            float vals[30] = {BDTScore,nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,bjetpt,HT2M,HTb,HTH,HTRat,diTopness,scaleFactor,nvertices,normfactor,Luminosity,weight_0,met,angletop1top2,angletoplep, firstjetpt,secondjetpt, leptonIso, leptonphi, chargedHIso,neutralHIso,photonIso,PUIso};
             tupfile->cd();
             tup->Fill(vals);
         } //End Loop on Events
 
         tup->Write();
         tupfile->Close();
+        tupjetfile->cd();
+
+        tupjet->Write();
+        tupjetfile->Close();
         cout <<"n events passed  =  "<<passed <<endl;
         cout <<"n events with negative weights = "<<negWeights << endl;
         cout << "Event Count: " << eventCount << endl;
@@ -746,10 +790,16 @@ int main (int argc, char *argv[])
 
     string pathPNGJetCombi = pathPNG + "JetCombination/";
     mkdir(pathPNGJetCombi.c_str(),0777);
-    //if(TrainMVA)jetCombiner->Write(foutmva, true, pathPNGJetCombi.c_str());
+    if (HadTopOn){
+        //if(TrainMVA)jetCombiner->Write(foutmva, true, pathPNGJetCombi.c_str());
 
-    hadronicTopReco->WriteDiagnosticPlots(fout, pathPNG);
-    delete hadronicTopReco;
+        hadronicTopReco->WriteDiagnosticPlots(fout, pathPNG);
+        delete hadronicTopReco;        
+    }
+    if(EventBDTOn){
+        delete eventBDT;
+    }
+
     //Output ROOT file
     for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++)
     {
