@@ -68,22 +68,11 @@
 #include "TopTreeAnalysisBase/Analysis/interface/CutsTable.h"
 #include "TopTreeAnalysisBase/Analysis/interface/HadronicTopReco.h"
 #include "TopTreeAnalysisBase/Analysis/interface/EventBDT.h"
+#include "TopTreeAnalysisBase/Analysis/interface/Zpeak.h"
 
 using namespace std;
 using namespace TopTree;
 using namespace reweight;
-
-bool split_ttbar = false;
-bool debug = false;
-int nMVASuccesses =0;
-
-//bool match;
-
-pair<float, vector<unsigned int> > MVAvals1;
-pair<float, vector<unsigned int> > MVAvals2;
-pair<float, vector<unsigned int> > MVAvals2ndPass;
-pair<float, vector<unsigned int> > MVAvals3rdPass;
-
 
 /// MultiSamplePlot
 map<string,MultiSamplePlot*> MSPlot;
@@ -151,7 +140,7 @@ int main (int argc, char *argv[])
     float weightCount = 0.0;
     int eventCount = 0;
     float scalefactorbtageff, mistagfactor;
-    string dataSetName;
+    string dataSetName = "";
     string channelpostfix = "";
     string postfix = "_Run2_TopTree_Study"; // to relabel the names of the output file
 
@@ -168,14 +157,16 @@ int main (int argc, char *argv[])
 
     //Setting Lepton Channels 
     bool SingleLepton = true;
-    bool Muon = true;
-    bool Electron = false;
+    bool Muon = false;
+    bool Electron = true;
     bool HadTopOn = false;
-    bool EventBDTOn = true;
+    bool EventBDTOn = false;
     bool TrainMVA = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25 = false;
-
+    bool split_ttbar = false;
+    bool debug = false;
     string MVAmethod = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
+    float Luminosity = 7.342; //pb^-1
 
     if(Muon && SingleLepton){
         cout<<" ***** USING SINGLE MUON CHANNEL  ******"<<endl;
@@ -226,7 +217,8 @@ int main (int argc, char *argv[])
     Dataset* theDataset = new Dataset(dName, dTitle, true, color, ls, lw, normf, xSect, vecfileNames);
     theDataset->SetEquivalentLuminosity(EqLumi);
     datasets.push_back(theDataset);
-    float Luminosity = 11.802281; //pb^-1??
+
+    ////Event BDT/////////
     EventBDT* eventBDT;
     if (EventBDTOn){
         HadTopOn = true;
@@ -251,8 +243,10 @@ int main (int argc, char *argv[])
     cout << "Rescaling to an integrated luminosity of "<< Luminosity <<" pb^-1" << endl;
 
     //Output ROOT file
-    string rootFileName ("FourTop"+postfix+"_"+dName+channelpostfix+".root");
+    string rootFileName ("FourTop"+postfix+"_"+dName+channelpostfix+".root"); //eg. FourTop_Run2_TopTree_Study_Data_Mu.root
     TFile *fout = new TFile (rootFileName.c_str(), "RECREATE");
+
+    Zpeak *zPeakMaker;
 
     //////// Top Reco MVA ////////////
     HadronicTopReco *hadronicTopReco;
@@ -310,6 +304,7 @@ int main (int argc, char *argv[])
     CutsTable *cutsTable = new CutsTable(Muon, Electron);
     cutsTable->AddSelections();
     cutsTable->CreateTable(datasets, Luminosity);
+    zPeakMaker = new Zpeak(datasets);
 
     /////////////////////////////////
     //       Loop on datasets      //
@@ -341,20 +336,24 @@ int main (int argc, char *argv[])
         SourceDate *strdate = new SourceDate();
         string date_str = strdate->ReturnDateStr();
 
-        //string dataSetName = datasets[d]->Name();
         string channel_dir = "Craneens"+channelpostfix;
         string date_dir = channel_dir+"/Craneens" + date_str +"/";
         int mkdirstatus = mkdir(channel_dir.c_str(),0777);
         mkdirstatus = mkdir(date_dir.c_str(),0777);
-        string Ntupname = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";
 
-        string Ntuptitle = "Craneen_" + channelpostfix;
-        TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "BDT:nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:multitopness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso");
-
-        string Ntupjetname = "Craneens" +channelpostfix+ "/Craneens" + date_str + "/CraneenJets_" + dataSetName + postfix + ".root";
+        string Ntuptitle   = "Craneen_" + channelpostfix;
+        
+        string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
+        TFile * tupfile    = new TFile(Ntupname.c_str(),"RECREATE");
+        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:multitopness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso");
+        
+        string Ntupjetname = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenJets_" + dataSetName + postfix + ".root";
         TFile * tupjetfile = new TFile(Ntupjetname.c_str(),"RECREATE");
-        TNtuple * tupjet = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "jetpT:csvDisc:jeteta:jetphi");
+        TNtuple * tupjet   = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "jetpT:csvDisc:jeteta:jetphi:ScaleFactor:NormFactor:Luminosity");
+        
+        string NtupZname   = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenZ_" + dataSetName + postfix + ".root";
+        TFile * tupZfile   = new TFile(NtupZname.c_str(),"RECREATE");
+        TNtuple * tupZ     = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "invMassll:ScaleFactor:NormFactor:Luminosity");
       
         //////////////////////////////////////////////////
         // Loop on events
@@ -369,12 +368,10 @@ int main (int argc, char *argv[])
         if (dataSetName == "Data") TrainMVA=false;
         if (debug) cout << " - Loop over events " << endl;
 
-
         float BDTScore, MHT, MHTSig, STJet,muoneta, muonpt, leptonphi, electronpt, electroneta, bjetpt, EventMass, EventMassX, SumJetMass, SumJetMassX, H, HX;
         float HTHi, HTRat, HT, HTX, HTH, HTXHX, sumpx_X, sumpy_X, sumpz_X, sume_X, sumpx, sumpy, sumpz, sume, jetpt, PTBalTopEventX, PTBalTopSumJetX, PTBalTopMuMet;
 
         double end_d = ending;
-
         if(endEvent > ending)
             end_d = ending;
         else
@@ -399,6 +396,7 @@ int main (int argc, char *argv[])
         vector<TRootJet*>      selectedTBJets; //CSVT btags
         vector<TRootJet*>      selectedLightJets;
 
+
         //////////////////////////////////////
         // Begin Event Loop
         //////////////////////////////////////
@@ -422,10 +420,6 @@ int main (int argc, char *argv[])
             event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, mets, debug);  //load event
             float weight_0 = event->weight0();
 
-            if (debug){
-                cout <<"Number of Electrons Loaded: " << init_electrons.size() <<endl;   cout <<"Weight0: " << weight_0 <<endl;
-            }
-
             if(nlo)
             {
                 if(weight_0 < 0.0)
@@ -445,6 +439,68 @@ int main (int argc, char *argv[])
             // Apply trigger selection
             // trigged = treeLoader.EventTrigged (itrigger);
             bool trigged = true;  // Disabling the HLT requirement
+
+            ///////////////////////////////////////////
+            //  Trigger
+            ///////////////////////////////////////////
+
+            // bool trigged = false;
+            // std::string filterName = "";
+            // int currentRun = event->runId();
+            // if(previousRun != currentRun)
+            // {
+            //     // cout <<"What run? "<< currentRun<<endl;
+            //     previousRun = currentRun;
+            //     //cout <<"Number of HLT Paths: " << event->nHLTPaths() <<endl;
+            //     int nTrigs = 0, firstTrig = 0;
+            //     bool fTrig = false;
+            //     for(int trigs = 0; trigs < event->nHLTPaths(); trigs++)
+            //     {
+            //         if(event->trigHLT(trigs)) nTrigs++;
+            //         if(event->trigHLT(trigs) && !fTrig)
+            //         {
+            //             fTrig = true;
+            //             firstTrig = trigs;
+            //         }
+            //     }
+            //    // cout <<"Triggers Passed: " << nTrigs << ".  e.g. " << firstTrig <<endl;
+
+            //     if(dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA")
+            //     {
+            //         if (debug)cout <<"event loop 6a"<<endl;
+
+            //         if (Electron){
+            //             itrigger = treeLoader.iTrigger ( string ("HLT_Ele27_eta2p1_WPLoose_Gsf_v1"), currentRun, iFile);
+            //         }
+            //         else if(Muon){
+            //             itrigger = treeLoader.iTrigger ( string ("HLT_IsoMu20_eta2p1_v2 "), currentRun, iFile);
+            //         }
+
+            //         if(itrigger == 9999)
+            //         {
+            //             cout << "NO VALID TRIGGER FOUND FOR THIS EVENT (DATA) IN RUN " << event->runId() << endl;
+            //             //   exit(1);
+            //         }
+            //     }
+            //     else
+            //     {
+            //         if (Electron){
+            //             itrigger = treeLoader.iTrigger ( string ("HLT_Ele27_eta2p1_WP75_Gsf_v1"), currentRun, iFile);
+            //         }
+            //         else if(Muon){
+            //             itrigger = treeLoader.iTrigger ( string ("HLT_IsoMu20_eta2p1_v2"), currentRun, iFile);
+            //         }
+
+            //         if(itrigger == 9999)
+            //         {
+            //             cerr << "NO VALID TRIGGER FOUND FOR THIS EVENT (" << dataSetName << ") IN RUN " << event->runId() << endl;
+            //             //exit(1);
+            //         }
+            //     }
+
+            // } //end previousRun != currentRun
+
+
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
             if (!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
 
@@ -567,8 +623,20 @@ int main (int argc, char *argv[])
             if (debug) cout <<"Number of Muons = "<< nMu <<"    Electrons =  "  <<nEl<<"     Jets = "<< selectedJets.size()   <<" loose BJets = "<<  nLtags   <<
                 "  MuonChannel = "<<Muon<<" Electron Channel"<<Electron<<endl;
 
-            //Apply the lepton, jet, btag and HT & MET selections
+            //Form z peak
+            zPeakMaker->invariantMass(r2selection);
+            zPeakMaker->fillPlot(datasets, d, Luminosity, scaleFactor);
+            float invMassll = zPeakMaker->returnInvMass();
+            float normfactor = datasets[d]->NormFactor();
+            float vals2[4] = {invMassll,scaleFactor,normfactor,Luminosity};
+            bool isTwoLeptons=zPeakMaker->requireTwoLeptons();
+            //cout<<"isTwoLeptons  "<<isTwoLeptons<<endl;
+            if (isTwoLeptons){
+                tupZfile->cd();        
+                tupZ->Fill(vals2);
+            }
 
+            //Apply the lepton, jet, btag and HT & MET selections
             if (Muon)
             {
                 if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6 && nMtags >=2)) continue; // Muon Channel Selection
@@ -589,8 +657,6 @@ int main (int argc, char *argv[])
                 cin.get();
             }
             passed++;
-
-
 
             TRootGenEvent* genEvt = 0;
 
@@ -673,12 +739,19 @@ int main (int argc, char *argv[])
             HTH = HT/H;
             HTRat = HTHi/HT;
 
+            float selectedLeptonPt = 0 ;
+            if(Muon){
+                selectedLeptonPt = selectedMuons[0]->Pt();
+            }
+            else if(Electron){
+                selectedLeptonPt = selectedElectrons[0]->Pt();
+            }
 
        
-            if((nJets > 7)){
-                cout<<event->runId()  << " " << event->lumiBlockId() <<" " <<event->eventId() << "  jets "  << nJets <<"  nmtags "<<nMtags<<" muon pt "<<selectedMuons[0]->Pt()<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
+            if((nJets > 7 && dataSetName == "Data")){
+                //cout<<event->runId()  << " " << event->lumiBlockId() <<" " <<event->eventId() << "  jets "  << nJets <<"  nmtags "<<nMtags<<" muon pt "<<selectedMuons[0]->Pt()<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
 
-                eventlist <<event->runId()  << " " << event->lumiBlockId() <<" " <<event->eventId() << "  jets "  << nJets <<" nmtags "<<nMtags<<" muon pt "<<selectedMuons[0]->Pt()<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
+                eventlist <<event->runId()  << " " << event->lumiBlockId() <<" " <<event->eventId() << "  jets "  << nJets <<" nmtags "<<nMtags<<" muon pt "<<selectedLeptonPt<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
                 for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
                 {
                     eventlist<<"  jet pt  "<<selectedJets[seljet1]->Pt()<<"   btag csv "<<selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags()<<endl;
@@ -706,7 +779,7 @@ int main (int argc, char *argv[])
                 float jetphi = selectedJets[seljet1]->Phi();
                 float csvDisc = selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
                 float jetpT = selectedJets[seljet1]->Pt();
-                float jetvals[4] = {jetpT,csvDisc,jeteta,jetphi};
+                float jetvals[7] = {jetpT,csvDisc,jeteta,jetphi,scaleFactor,normfactor,Luminosity};
 
                 tupjet->Fill(jetvals);
             }
@@ -725,7 +798,6 @@ int main (int argc, char *argv[])
 
             bjetpt = selectedMBJets[0]->Pt();
 
-
             if (EventBDTOn){
                 float jet5Pt =  selectedJets[4]->Pt();
                 float jet6Pt = selectedJets[5]->Pt();
@@ -742,7 +814,6 @@ int main (int argc, char *argv[])
             }
 
             float nvertices = vertex.size();
-            float normfactor = datasets[d]->NormFactor();
             float angletoplep = 0;
             float angletop1top2 = 0;
             if(HadTopOn){
@@ -755,12 +826,17 @@ int main (int argc, char *argv[])
             tup->Fill(vals);
         } //End Loop on Events
 
+        tupfile->cd();
         tup->Write();
         tupfile->Close();
+        
         tupjetfile->cd();
-
         tupjet->Write();
         tupjetfile->Close();
+
+        tupZfile->cd();
+        tupZ->Write();
+        tupZfile->Close();
         cout <<"n events passed  =  "<<passed <<endl;
         cout <<"n events with negative weights = "<<negWeights << endl;
         cout << "Event Count: " << eventCount << endl;
@@ -781,6 +857,9 @@ int main (int argc, char *argv[])
     // Selection tables //
     //////////////////////
 
+    zPeakMaker->writeErase(fout, pathPNG);
+    delete zPeakMaker;
+
     cutsTable->Calc_Write(postfix, dName, channelpostfix);
     delete cutsTable;
 
@@ -792,7 +871,6 @@ int main (int argc, char *argv[])
     mkdir(pathPNGJetCombi.c_str(),0777);
     if (HadTopOn){
         //if(TrainMVA)jetCombiner->Write(foutmva, true, pathPNGJetCombi.c_str());
-
         hadronicTopReco->WriteDiagnosticPlots(fout, pathPNG);
         delete hadronicTopReco;        
     }
@@ -818,4 +896,22 @@ int main (int argc, char *argv[])
 }
 
 
+            // sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
+
+            // vector<double> ptList;
+            // double jetptTemp;
+            // for(Int_t csvJets = 2; csvJets<selectedJets.size(); csvJets++){
+            //     jetptTemp = (double)selectedJets[csvJets]->Pt();
+            //     ptList.push_back(jetptTemp);
+            //     //cout<<csvJets<<"   ptlist "<<ptList[csvJets-2]<<endl;
+            //     //selectedJets2.push_back(selectedJets[csvJets]);  //created array of selected jets without 2 highest CSVL btags
+            //     //cout<<csvJets<<" jet pt "<<selectedJets2[csvJets-2]->Pt()<<"   "<<selectedJets[csvJets]->Pt()<<endl;
+            // }
+
+            // sort(selectedJets2.begin(),selectedJets2.end(),HighestPt()); //order Jets wrt Pt for tuple output
+
+            // HT2L2J = HT - selectedJets[0]->Pt() - selectedJets[1]->Pt() - ptList[0] - ptList[1];    
+            //cout<<"HT:  "<<HT<<"  "<<selectedJets[0]->Pt()<<"  "<<selectedJets[1]->Pt()<<"  "<<ptList[0]<<"  "<<ptList[1]<<"  HT2l2J"<<HT2L2J<<endl;    
+
+            //HT - (2 highest CSVL btags) and (2 highest pt jets from remaining jets)
 
