@@ -69,6 +69,7 @@
 #include "TopTreeAnalysisBase/Analysis/interface/HadronicTopReco.h"
 #include "TopTreeAnalysisBase/Analysis/interface/EventBDT.h"
 #include "TopTreeAnalysisBase/Analysis/interface/Zpeak.h"
+#include "TopTreeAnalysisBase/Analysis/interface/Trigger.h"
 
 using namespace std;
 using namespace TopTree;
@@ -157,14 +158,14 @@ int main (int argc, char *argv[])
 
     //Setting Lepton Channels 
     bool SingleLepton = true;
-    bool Muon = false;
-    bool Electron = true;
+    bool Muon = true;
+    bool Electron = false;
     bool HadTopOn = false;
     bool EventBDTOn = false;
     bool TrainMVA = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25 = false;
     bool split_ttbar = false;
-    bool debug = false;
+    bool debug = true;
     string MVAmethod = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
     float Luminosity = 7.342; //pb^-1
 
@@ -227,6 +228,9 @@ int main (int argc, char *argv[])
     }
 
     cout << " Initialized Eventcomputer_ for event_level BDT" << endl;
+
+    Trigger* trigger = new Trigger(Muon, Electron);
+    trigger->bookTriggers();
 
 
     /////////////////////////////////
@@ -417,7 +421,10 @@ int main (int argc, char *argv[])
             }
 
             float scaleFactor = 1.;  // scale factor for the event
+            if(debug)cout<<"before tree load"<<endl;
             event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, mets, debug);  //load event
+            if(debug)cout<<"after tree load"<<endl;
+
             float weight_0 = event->weight0();
 
             if(nlo)
@@ -438,68 +445,16 @@ int main (int argc, char *argv[])
 
             // Apply trigger selection
             // trigged = treeLoader.EventTrigged (itrigger);
-            bool trigged = true;  // Disabling the HLT requirement
+            bool trigged = false;  // Disabling the HLT requirement
 
             ///////////////////////////////////////////
             //  Trigger
             ///////////////////////////////////////////
 
-            // bool trigged = false;
-            // std::string filterName = "";
-            // int currentRun = event->runId();
-            // if(previousRun != currentRun)
-            // {
-            //     // cout <<"What run? "<< currentRun<<endl;
-            //     previousRun = currentRun;
-            //     //cout <<"Number of HLT Paths: " << event->nHLTPaths() <<endl;
-            //     int nTrigs = 0, firstTrig = 0;
-            //     bool fTrig = false;
-            //     for(int trigs = 0; trigs < event->nHLTPaths(); trigs++)
-            //     {
-            //         if(event->trigHLT(trigs)) nTrigs++;
-            //         if(event->trigHLT(trigs) && !fTrig)
-            //         {
-            //             fTrig = true;
-            //             firstTrig = trigs;
-            //         }
-            //     }
-            //    // cout <<"Triggers Passed: " << nTrigs << ".  e.g. " << firstTrig <<endl;
 
-            //     if(dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA")
-            //     {
-            //         if (debug)cout <<"event loop 6a"<<endl;
-
-            //         if (Electron){
-            //             itrigger = treeLoader.iTrigger ( string ("HLT_Ele27_eta2p1_WPLoose_Gsf_v1"), currentRun, iFile);
-            //         }
-            //         else if(Muon){
-            //             itrigger = treeLoader.iTrigger ( string ("HLT_IsoMu20_eta2p1_v2 "), currentRun, iFile);
-            //         }
-
-            //         if(itrigger == 9999)
-            //         {
-            //             cout << "NO VALID TRIGGER FOUND FOR THIS EVENT (DATA) IN RUN " << event->runId() << endl;
-            //             //   exit(1);
-            //         }
-            //     }
-            //     else
-            //     {
-            //         if (Electron){
-            //             itrigger = treeLoader.iTrigger ( string ("HLT_Ele27_eta2p1_WP75_Gsf_v1"), currentRun, iFile);
-            //         }
-            //         else if(Muon){
-            //             itrigger = treeLoader.iTrigger ( string ("HLT_IsoMu20_eta2p1_v2"), currentRun, iFile);
-            //         }
-
-            //         if(itrigger == 9999)
-            //         {
-            //             cerr << "NO VALID TRIGGER FOUND FOR THIS EVENT (" << dataSetName << ") IN RUN " << event->runId() << endl;
-            //             //exit(1);
-            //         }
-            //     }
-
-            // } //end previousRun != currentRun
-
+            int currentRun = event->runId();
+            trigger->checkAvail(currentRun, datasets, d, treeLoader, event);
+            //trigged = trigger->checkIfFired();
 
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
             if (!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
@@ -639,11 +594,11 @@ int main (int argc, char *argv[])
             //Apply the lepton, jet, btag and HT & MET selections
             if (Muon)
             {
-                if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6 && nMtags >=2)) continue; // Muon Channel Selection
+                if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=4 && nMtags >=2)) continue; // Muon Channel Selection
 
             }
             else if(Electron){
-                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=6 && nMtags >=2)) continue; // Electron Channel Selection
+                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=4 && nMtags >=2)) continue; // Electron Channel Selection
             }
             else{
                 cerr<<"Correct Channel not selected."<<endl;
@@ -862,6 +817,8 @@ int main (int argc, char *argv[])
 
     cutsTable->Calc_Write(postfix, dName, channelpostfix);
     delete cutsTable;
+
+    delete trigger;
 
     fout->cd();
     TFile *foutmva = new TFile ("foutMVA.root","RECREATE");
