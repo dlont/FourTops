@@ -75,7 +75,7 @@ using namespace TopTree;
 using namespace reweight;
 
 bool split_ttbar = false;
-bool debug = true;
+bool debug = false;
 float topness;
 
 pair<float, vector<unsigned int> > MVAvals1;
@@ -315,7 +315,7 @@ int main (int argc, char *argv[])
     Dataset* theDataset = new Dataset(dName, dTitle, true, color, ls, lw, normf, xSect, vecfileNames);
     theDataset->SetEquivalentLuminosity(EqLumi*normf);
     datasets.push_back(theDataset);
-    float Luminosity = 15000.0; //pb^-1??
+    float Luminosity = 5.59; //pb^-1??
     vector<string> MVAvars;
 
     MVAvars.push_back("topness");
@@ -433,10 +433,10 @@ int main (int argc, char *argv[])
     MSPlot["InitElectronMissingHits"]                       = new MultiSamplePlot(datasets, "InitElectronMissingHits", 10, 0, 10, "MissingHits");
     MSPlot["InitElectronCutFlow"]                           = new MultiSamplePlot(datasets, "InitElectronCutFlow", 12, 0, 12, "CutNumber");
     MSPlot["InitElectronDiagRelIso"]                        = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
-    MSPlot["InitElectronDiagChIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
-    MSPlot["InitElectronDiagNIso"]                          = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
-    MSPlot["InitElectronDiagPhIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
-    MSPlot["InitElectronDiagPUChIso"]                       = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagChIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagChIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagNIso"]                          = new MultiSamplePlot(datasets, "InitElectronDiagNIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagPhIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagPhIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagPUChIso"]                       = new MultiSamplePlot(datasets, "InitElectronDiagPUChIso", 100, 0, 1, "RelIso");
 
     //B-tagging discriminators
     MSPlot["BdiscBJetCand_CSV"]                             = new MultiSamplePlot(datasets, "BdiscBJetCand_CSV", 20, 0, 1, "CSV b-disc.");
@@ -510,10 +510,8 @@ int main (int argc, char *argv[])
             CutsselecTable.push_back(string("At least 4 Jets"));
             CutsselecTable.push_back(string("At least 1 CSVM Jet"));
             CutsselecTable.push_back(string("At least 2 CSVM Jets"));
-            CutsselecTable.push_back(string("Exactly 5 Jets"));
-            CutsselecTable.push_back(string("Exactly 6 Jets"));
-            CutsselecTable.push_back(string("Exactly 7 jets"));
-            CutsselecTable.push_back(string("At Least 8 Jets"));
+            CutsselecTable.push_back(string("At Least 500 GeV HT"));
+
         }
         if(Muon && !Electron)
         {
@@ -524,10 +522,7 @@ int main (int argc, char *argv[])
             CutsselecTable.push_back(string("At least 4 Jets"));
             CutsselecTable.push_back(string("At least 1 CSVM Jet"));
             CutsselecTable.push_back(string("At least 2 CSVM Jets"));
-            CutsselecTable.push_back(string("Exactly 5 Jets"));
-            CutsselecTable.push_back(string("Exactly 6 Jets"));
-            CutsselecTable.push_back(string("Exactly 7 jets"));
-            CutsselecTable.push_back(string("At Least 8 Jets"));
+            CutsselecTable.push_back(string("At Least 500 GeV HT"));
         }
         if(!Muon && Electron)
         {
@@ -538,10 +533,7 @@ int main (int argc, char *argv[])
             CutsselecTable.push_back(string("At least 4 Jets"));
             CutsselecTable.push_back(string("At least 1 CSVM Jet"));
             CutsselecTable.push_back(string("At least 2 CSVM Jets"));
-            CutsselecTable.push_back(string("Exactly 5 Jets"));
-            CutsselecTable.push_back(string("Exactly 6 Jets"));
-            CutsselecTable.push_back(string("Exactly 7 jets"));
-            CutsselecTable.push_back(string("At Least 8 Jets"));
+            CutsselecTable.push_back(string("At Least 500 GeV HT"));
         }
     }
 
@@ -708,6 +700,11 @@ int main (int argc, char *argv[])
         int nEvents = end_d - event_start;
         cout <<"Will run over "<<  (end_d - event_start) << " events..."<<endl;
         cout <<"Starting event = = = = "<< event_start  << endl;
+        if(end_d < startEvent)
+        {
+            cout << "Starting event larger than number of events.  Exiting." << endl;
+            return 1;
+        }
 
         //define object containers
         vector<TRootElectron*> selectedElectrons;
@@ -839,6 +836,13 @@ int main (int argc, char *argv[])
                 // loading GenJets as I need them for JER
                 genjets = treeLoader.LoadGenJet(ievt);
             }
+            string currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
+            if(previousFilename != currentFilename)
+            {
+                previousFilename = currentFilename;
+                iFile++;
+                cout<<"File changed!!! => "<<currentFilename<<endl;
+            }
 
             ///////////////////////////////////////////
             //  Trigger
@@ -848,7 +852,7 @@ int main (int argc, char *argv[])
             int currentRun = event->runId();
             if(previousRun != currentRun)
             {
-                // cout <<"What run? "<< currentRun<<endl;
+                cout <<"What run? "<< currentRun<<endl;
                 previousRun = currentRun;
 
                 cout <<"Number of HLT Paths: " << event->nHLTPaths() <<endl;
@@ -871,16 +875,12 @@ int main (int argc, char *argv[])
 
                     // cout << " RUN " << event->runId() << endl;
 
-                    if( event->runId() <= 190738 )
-                        itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v8"), currentRun, iFile);
-                    else if( event->runId() >= 190782 && event->runId() <= 191411 )
-                        itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v9"), currentRun, iFile);
-                    else if( event->runId() >= 191695 && event->runId() <= 196531)
-                        itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v10"), currentRun, iFile);
-                    else if( event->runId() >= 198049 && event->runId() <= 208686)
-                        itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v11"), currentRun, iFile);
-                    // else if( event->runId() > 208686)
-                    //     itrigger = treeLoader.iTrigger (string ("HLT_Ele27_WP80_v11"), currentRun, iFile);
+                    if( Muon && Electron )
+                        itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2"), currentRun, iFile);
+                    else if( Muon && !Electron )
+                        itrigger = treeLoader.iTrigger (string ("HLT_IsoMu20_eta2p1_v2"), currentRun, iFile);
+                    else if( !Muon && Electron )
+                        itrigger = treeLoader.iTrigger (string ("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v2"), currentRun, iFile);
 
                     if(itrigger == 9999)
                     {
@@ -890,8 +890,12 @@ int main (int argc, char *argv[])
                 }
                 else
                 {
-                    itrigger = treeLoader.iTrigger (string ("HLT_Mu27_v1"), currentRun, iFile);
-                    cout << "iTrigger: " << itrigger << endl;
+                    if( Muon && Electron )
+                        itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1"), currentRun, iFile);
+                    else if( Muon && !Electron )
+                        itrigger = treeLoader.iTrigger (string ("HLT_IsoMu20_eta2p1_v1"), currentRun, iFile);
+                    else if( !Muon && Electron )
+                        itrigger = treeLoader.iTrigger (string ("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v1"), currentRun, iFile);
 
                     if(itrigger == 9999)
                     {
@@ -935,8 +939,9 @@ int main (int argc, char *argv[])
 
             // Apply trigger selection
             trigged = treeLoader.EventTrigged (itrigger);
-            trigged = true;  // Disabling the HLT requirement
+            //trigged = true;  // Disabling the HLT requirement
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
+            if(itrigger == 9999 ) cout << "Lumi Block: " << event->lumiBlockId() << " Event: " << event->eventId() << endl;
             if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
             // Declare selection instance
             Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets);
@@ -1209,21 +1214,9 @@ int main (int argc, char *argv[])
                                     if(nMtags>=2)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
-                                        if(nJets==5)
+                                        if(temp_HT>=500)
                                         {
                                             selecTable.Fill(d,7,scaleFactor);
-                                            if(nJets==6)
-                                            {
-                                                selecTable.Fill(d,8,scaleFactor);
-                                                if(nJets==7)
-                                                {
-                                                    selecTable.Fill(d,9,scaleFactor);
-                                                    if(nJets>=8)
-                                                    {
-                                                        selecTable.Fill(d,10,scaleFactor);
-                                                    }
-                                                }
-                                            }
                                         }
                                     }
                                 }
@@ -1253,21 +1246,9 @@ int main (int argc, char *argv[])
                                     if(nMtags>=2)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
-                                        if(nJets==5)
+                                        if(temp_HT>=500)
                                         {
                                             selecTable.Fill(d,7,scaleFactor);
-                                            if(nJets==6)
-                                            {
-                                                selecTable.Fill(d,8,scaleFactor);
-                                                if(nJets==7)
-                                                {
-                                                    selecTable.Fill(d,9,scaleFactor);
-                                                    if(nJets>=8)
-                                                    {
-                                                        selecTable.Fill(d,10,scaleFactor);
-                                                    }
-                                                }
-                                            }
                                         }
                                     }
                                 }
@@ -1297,21 +1278,9 @@ int main (int argc, char *argv[])
                                     if(nMtags>=2)
                                     {
                                         selecTable.Fill(d,6,scaleFactor);
-                                        if(nJets==5)
+                                        if(temp_HT>=500)
                                         {
                                             selecTable.Fill(d,7,scaleFactor);
-                                            if(nJets==6)
-                                            {
-                                                selecTable.Fill(d,8,scaleFactor);
-                                                if(nJets==7)
-                                                {
-                                                    selecTable.Fill(d,9,scaleFactor);
-                                                    if(nJets>=8)
-                                                    {
-                                                        selecTable.Fill(d,10,scaleFactor);
-                                                    }
-                                                }
-                                            }
                                         }
                                     }
                                 }
@@ -1398,7 +1367,7 @@ int main (int argc, char *argv[])
                 else MSPlot["METCutRej"]->Fill(metCut, datasets[d], true, Luminosity*scaleFactor );
             }
 
-
+            if(debug) cout << "HT: " << temp_HT << " nMTags: " << nMtags << endl;
 
             if (dilepton && Muon && Electron)
             {
@@ -1419,6 +1388,7 @@ int main (int argc, char *argv[])
             {
                 cout<<"Selection Passed."<<endl;
             }
+
             passed++;
 
             vector<TLorentzVector*> selectedMuonTLV_JC;
@@ -1710,6 +1680,23 @@ int main (int argc, char *argv[])
 
             }
 
+            if((dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0) && Muon && Electron)
+            {
+                cout <<"Data Event Passed Selection.  Run: "<< event->runId() << " LumiSection: " << event->lumiBlockId() << " Event: "<< event->eventId() << " HT: " << HT << " nMTags: " << nMtags <<endl;
+                cout <<"Muon Eta: " << selectedMuons[0]->Eta() << " Muon Pt: " << selectedMuons[0]->Pt() << " Electron Eta: " << selectedElectrons[0]->Eta() << " Electron Pt: " << selectedElectrons[0]->Pt() << endl;
+            }
+
+            if((dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0) && Muon && !Electron)
+            {
+                cout <<"Data Event Passed Selection.  Run: "<< event->runId() << " LumiSection: " << event->lumiBlockId() << " Event: "<< event->eventId() << " HT: " << HT << " nMTags: " << nMtags <<endl;
+                cout <<"Muon1 Eta: " << selectedMuons[0]->Eta() << " Muon1 Pt: " << selectedMuons[0]->Pt() << " Muon2 Eta: " << selectedMuons[1]->Eta() << " Muon2 Pt: " << selectedMuons[1]->Pt() << endl;
+            }
+            if((dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0) && !Muon && Electron)
+            {
+                cout <<"Data Event Passed Selection.  Run: "<< event->runId() << " LumiSection: " << event->lumiBlockId() << " Event: "<< event->eventId() << " HT: " << HT << " nMTags: " << nMtags <<endl;
+                cout <<"Electron1 Eta: " << selectedElectrons[0]->Eta() << " Electron1 Pt: " << selectedElectrons[0]->Pt() << " Electron2 Eta: " << selectedElectrons[1]->Eta() << " Electron2 Pt: " << selectedElectrons[1]->Pt() << endl;
+            }
+
             //////////////////
             //Filling nTuple//
             //////////////////
@@ -1717,10 +1704,26 @@ int main (int argc, char *argv[])
             //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
 
 
-
+            float vals[31] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,selectedJets[2]->Pt(),selectedJets[3]->Pt(),HT,0,0,0,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
             //                "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
-
-            float vals[31] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,selectedJets[2]->Pt(),selectedJets[3]->Pt(),HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
+            if(Muon && Electron)
+            {
+                vals[11] = muonpt;
+                vals[12] = muoneta;
+                vals[13] = selectedElectrons[0]->Pt();
+            }
+            if(Muon && !Electron)
+            {
+                vals[11] = muonpt;
+                vals[12] = muoneta;
+                vals[13] = selectedMuons[1]->Pt();
+            }
+            if(!Muon && Electron)
+            {
+                vals[11] = muonpt;
+                vals[12] = muoneta;
+                vals[13] = selectedElectrons[1]->Pt();
+            }
 
             tup->Fill(vals);
 
@@ -1756,7 +1759,7 @@ int main (int argc, char *argv[])
     selecTable.Write(  outputDirectory+"/FourTop"+postfix+"_Table"+channelpostfix+".tex",    false,true,true,true,false,false,true);
 
     fout->cd();
-    TFile *foutmva = new TFile ("foutMVA.root","RECREATE");
+    //TFile *foutmva = new TFile ("foutMVA.root","RECREATE");
     cout <<" after cd .."<<endl;
 
     string pathPNGJetCombi = pathPNG + "JetCombination/";
@@ -1770,7 +1773,8 @@ int main (int argc, char *argv[])
     {
         string name = it->first;
         MultiSamplePlot *temp = it->second;
-        temp->Write(fout, name, true, pathPNG, "pdf");
+        temp->Draw(name.c_str(), 0, false, false, false, 1);
+        temp->Write(fout, name, false, pathPNG, "pdf");
     }
 
 

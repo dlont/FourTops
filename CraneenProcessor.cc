@@ -52,7 +52,7 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
 int main(int argc, char** argv)
 {
     int NumberOfBins;	//fixed width nBins
-    int lumiScale = 11.802281;  //Amount of luminosity to scale to in fb^-1
+    float lumiScale = 5.59;  //Amount of luminosity to scale to in fb^-1
 
     bool jetSplit = false;
     bool jetTagsplit = false;
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     }
 
 
-    string xmlstring = "config/VarsStart.xml";
+    string xmlstring = "config/Vars.xml";
     const char * xmlchar = xmlstring.c_str();
     TiXmlDocument doc(xmlchar);
     bool loadOkay = doc.LoadFile();
@@ -287,8 +287,16 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
 
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
             {
-                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*ScaleFactor*Luminosity);
-                histo1D[dataSetName.c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
+                if(sVarofinterest.find("BDT")!=string::npos)
+                {
+                MSPlot[plotname]->Fill(BDT, datasets[d], true, ScaleFactor*Luminosity);
+                histo1D[dataSetName.c_str()]->Fill(BDT,NormFactor*ScaleFactor*Luminosity);
+                }
+                else
+                {
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
+                    histo1D[dataSetName.c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
+                }
             }
             else
             {
