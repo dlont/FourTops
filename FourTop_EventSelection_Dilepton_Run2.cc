@@ -241,7 +241,7 @@ int main (int argc, char *argv[])
     //Setting Lepton Channels (Setting both flags true will select Muon-Electron Channel when dilepton is also true)
     bool dilepton = true;
     bool Muon = true;
-    bool Electron = false;
+    bool Electron = true;
 
     if(Muon && Electron && dilepton)
     {
@@ -332,17 +332,17 @@ int main (int argc, char *argv[])
     MVAvars.push_back("Jet4Pt");
     MVAvars.push_back("HT2M");
     MVAvars.push_back("EventSph");
-    MVAvars.push_back("EventCen");
+//    MVAvars.push_back("EventCen");
     MVAvars.push_back("DiLepSph");
-    MVAvars.push_back("DiLepCen");
-    MVAvars.push_back("TopDiLepSph");
-    MVAvars.push_back("TopDiLepCen");
+//    MVAvars.push_back("DiLepCen");
+//    MVAvars.push_back("TopDiLepSph");
+//    MVAvars.push_back("TopDiLepCen");
 
     MVAComputer* Eventcomputer_;
 
     if(dilepton && Muon && Electron)
     {
-        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_9thJuly.root","MasterMVA_MuEl_9thJuly",MVAvars, "_MuElJuly9th2015");
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_13thJuly.root","MasterMVA_MuEl_13thJuly",MVAvars, "_MuElJuly13th2015");
     }
     else if(dilepton && Muon && !Electron)
     {
@@ -717,6 +717,8 @@ int main (int argc, char *argv[])
         selectedElectrons.reserve(10);
         selectedMuons.reserve(10);
 
+
+
         //////////////////////////////////////
         // Begin Event Loop
         //////////////////////////////////////
@@ -854,22 +856,31 @@ int main (int argc, char *argv[])
             {
                 cout <<"What run? "<< currentRun<<endl;
                 previousRun = currentRun;
+//                cout << "HLT Debug output" << endl;
+//                TRootRun *runInfos = new TRootRun();
+//                datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
+//                datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
+//                cout<<"SetBranchAddress(runInfos,&runInfos) : "<<datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos)<<endl;
+//                int rBytes = datasets[d]->runTree()->GetEntry(iFile, 1);
+//                int nPaths = runInfos->getHLTinfo(currentRun).nHLTPaths();
+//                cout <<"Number of HLT Paths: " << nPaths <<endl;
+//                int nTrigs = 0, firstTrig = 0;
+//                bool fTrig = false;
+//                for(int trigs = 0; trigs < nPaths; trigs++)
+//                {
+//                    if(event->trigHLT(trigs)) nTrigs++;
+//                    cout << trigs << " : " << runInfos->getHLTinfo(currentRun).hltNames(trigs) << " : " << (runInfos->getHLTinfo(currentRun).hltNames(trigs) == string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2") )<< endl;
+//                    if(event->trigHLT(trigs) && !fTrig)
+//                    {
+//                        fTrig = true;
+//                        firstTrig = trigs;
+//                    }
+//                }
+//                cout <<"Triggers Passed: " << nTrigs << ".  e.g. " << firstTrig <<endl;
 
-                cout <<"Number of HLT Paths: " << event->nHLTPaths() <<endl;
-                int nTrigs = 0, firstTrig = 0;
-                bool fTrig = false;
-                for(int trigs = 0; trigs < event->nHLTPaths(); trigs++)
-                {
-                    if(event->trigHLT(trigs)) nTrigs++;
-                    if(event->trigHLT(trigs) && !fTrig)
-                    {
-                        fTrig = true;
-                        firstTrig = trigs;
-                    }
-                }
-                cout <<"Triggers Passed: " << nTrigs << ".  e.g. " << firstTrig <<endl;
 
-                if(dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA")
+
+                if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
                 {
                     if (debug)cout <<"event loop 6a"<<endl;
 
