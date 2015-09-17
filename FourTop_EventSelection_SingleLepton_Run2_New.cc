@@ -65,11 +65,11 @@
 #include "TopTreeAnalysisBase/Tools/interface/MVAComputer.h"
 #include "TopTreeAnalysisBase/Tools/interface/JetTools.h"
 
-#include "TopTreeAnalysisBase/Analysis/interface/CutsTable.h"
-#include "TopTreeAnalysisBase/Analysis/interface/HadronicTopReco.h"
-#include "TopTreeAnalysisBase/Analysis/interface/EventBDT.h"
-#include "TopTreeAnalysisBase/Analysis/interface/Zpeak.h"
-#include "TopTreeAnalysisBase/Analysis/interface/Trigger.h"
+#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/CutsTable.h"
+#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/HadronicTopReco.h"
+#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/EventBDT.h"
+#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/Zpeak.h"
+#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/Trigger.h"
 
 using namespace std;
 using namespace TopTree;
@@ -132,10 +132,14 @@ int main (int argc, char *argv[])
     cout << "Ending Event: " << endEvent << endl;
     cout << "----------------------------------------" << endl;
 
+    cout<<"TOTALLY WORKING IN MAKEFILE!!"<<endl;
+
     ofstream eventlist;
     eventlist.open ("interesting_events_mu2.txt");
 
     int passed = 0;
+    int preTrig = 0;
+    int postTrig = 0;
     int ndefs =0;
     int negWeights = 0;
     float weightCount = 0.0;
@@ -164,10 +168,10 @@ int main (int argc, char *argv[])
     bool EventBDTOn = false;
     bool TrainMVA = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25 = false;
-    bool split_ttbar = false;
-    bool debug = true;
+    //bool split_ttbar = false;
+    bool debug = false;
     string MVAmethod = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
-    float Luminosity = 7.342; //pb^-1
+    float Luminosity = 40.240; //pb^-1
 
     if(Muon && SingleLepton){
         cout<<" ***** USING SINGLE MUON CHANNEL  ******"<<endl;
@@ -218,6 +222,38 @@ int main (int argc, char *argv[])
     Dataset* theDataset = new Dataset(dName, dTitle, true, color, ls, lw, normf, xSect, vecfileNames);
     theDataset->SetEquivalentLuminosity(EqLumi);
     datasets.push_back(theDataset);
+    dataSetName = theDataset->Name();
+
+    // for splitting the ttbar sample, it is essential to have the ttjets sample as the last
+    //dataset loaded
+    // if (split_ttbar && dataSetName.find("TTJets")<=0){
+    //     cout << " - splitting TTBar dataset ..."<< endl;
+    //     vector<string> ttbar_filenames = theDataset->Filenames();
+    //     cout <<"ttbar filenames =  "<< ttbar_filenames[0] <<endl;
+        
+    //     Dataset* ttbar_ll = new Dataset("TTJets_ll", "tt + ll" , true, 633, 2, 2, 1, 213.4,ttbar_filenames );
+    //     Dataset* ttbar_cc = new Dataset("TTJets_cc", "tt + cc" , true, 633, 2, 2, 1, 6.9, ttbar_filenames );
+    //     Dataset* ttbar_bb = new Dataset("TTJets_bb", "tt + bb" , true, 633, 2, 2, 1, 4.8, ttbar_filenames );
+        
+    //     ///heavy flav re-weight -> scaling ttbb up and ttjj down so that ttbb/ttjj matches CMS measurement.
+    //     double ll_rw = 0.976;
+    //     double bb_rw = 3.;
+
+    //     ttbar_ll->SetEquivalentLuminosity(EqLumi/ll_rw);
+    //     ttbar_cc->SetEquivalentLuminosity(EqLumi/ll_rw);
+    //     ttbar_bb->SetEquivalentLuminosity(EqLumi/bb_rw);
+        
+    //     ttbar_ll->SetColor(kRed);
+    //     ttbar_cc->SetColor(kRed-3);
+    //     ttbar_bb->SetColor(kRed+2);
+        
+        
+    //     datasets.pop_back();
+    //     datasets.push_back(ttbar_bb);
+    //     datasets.push_back(ttbar_cc);
+    //     datasets.push_back(ttbar_ll);     
+    // }     
+
 
     ////Event BDT/////////
     EventBDT* eventBDT;
@@ -238,7 +274,6 @@ int main (int argc, char *argv[])
     /////////////////////////////////
 
     cout <<"found sample with equivalent lumi "<<  theDataset->EquivalentLumi() <<endl;
-    dataSetName = theDataset->Name();
     if(dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0)
     {
         Luminosity = theDataset->EquivalentLumi();      cout <<"found DATA sample with equivalent lumi "<<  theDataset->EquivalentLumi() <<endl;
@@ -310,6 +345,10 @@ int main (int argc, char *argv[])
     cutsTable->CreateTable(datasets, Luminosity);
     zPeakMaker = new Zpeak(datasets);
 
+
+    LumiReWeighting LumiWeights;
+    LumiWeights = LumiReWeighting("../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIISpring15DR74-Asympt50ns.root", "../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data74X_50ns-Run246908-251883Cert/nominal.root", "pileup", "pileup");    
+
     /////////////////////////////////
     //       Loop on datasets      //
     /////////////////////////////////
@@ -319,7 +358,6 @@ int main (int argc, char *argv[])
     {
         cout<<"Load Dataset"<<endl;    treeLoader.LoadDataset (datasets[d], anaEnv);  //open files and load dataset
         string previousFilename = "";
-        int iFile = -1;
         bool nlo = false;
         dataSetName = datasets[d]->Name();
         if(dataSetName.find("bx50") != std::string::npos) bx25 = false;
@@ -339,12 +377,13 @@ int main (int argc, char *argv[])
 
         SourceDate *strdate = new SourceDate();
         string date_str = strdate->ReturnDateStr();
+        if(debug)cout<<"date print"<<endl;
 
         string channel_dir = "Craneens"+channelpostfix;
         string date_dir = channel_dir+"/Craneens" + date_str +"/";
         int mkdirstatus = mkdir(channel_dir.c_str(),0777);
         mkdirstatus = mkdir(date_dir.c_str(),0777);
-
+        if(debug)cout<<"created dirs"<<endl;
         string Ntuptitle   = "Craneen_" + channelpostfix;
         
         string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
@@ -358,7 +397,7 @@ int main (int argc, char *argv[])
         string NtupZname   = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenZ_" + dataSetName + postfix + ".root";
         TFile * tupZfile   = new TFile(NtupZname.c_str(),"RECREATE");
         TNtuple * tupZ     = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "invMassll:ScaleFactor:NormFactor:Luminosity");
-      
+        if(debug)cout<<"created craneens"<<endl;
         //////////////////////////////////////////////////
         // Loop on events
         /////////////////////////////////////////////////
@@ -444,7 +483,7 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////
 
             // Apply trigger selection
-            // trigged = treeLoader.EventTrigged (itrigger);
+            //trigged = treeLoader.EventTrigged (itrigger);
             bool trigged = false;  // Disabling the HLT requirement
 
             ///////////////////////////////////////////
@@ -453,11 +492,15 @@ int main (int argc, char *argv[])
 
 
             int currentRun = event->runId();
-            trigger->checkAvail(currentRun, datasets, d, treeLoader, event);
-            //trigged = trigger->checkIfFired();
+            trigger->checkAvail(currentRun, datasets, d, &treeLoader, event);
+            trigged = trigger->checkIfFired();
 
+            preTrig++;
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
-            if (!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
+            if(dataSetName == "Data"){
+            if (!trigged)          continue;  //If an HLT condition is not present, skip this event in the loop.       
+            }
+            postTrig++;
 
             // Declare selection instance
             Run2Selection r2selection(init_jets, init_muons, init_electrons, mets);
@@ -472,7 +515,7 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = r2selection.GetSelectedJets(); // ApplyJetId
                 if (debug)cout<<"Getting Tight Muons"<<endl;
-                selectedMuons                                       = r2selection.GetSelectedMuons(20, 2.4, 0.20);
+                selectedMuons                                       = r2selection.GetSelectedTightMuonsJuly2015(26, 2.1, 0.12);
                 nMu = selectedMuons.size(); //Number of Muons in Event
                 if (debug)cout<<"Getting Tight Electrons"<<endl;
                 selectedElectrons                                   = r2selection.GetSelectedElectrons("Tight", "PHYS14", true); // VBTF ID       
@@ -487,13 +530,13 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = r2selection.GetSelectedJets(); // ApplyJetId
                 if (debug)cout<<"Getting Tight Muons"<<endl;
-                selectedMuons                                       = r2selection.GetSelectedMuons();
+                selectedMuons                                       = r2selection.GetSelectedTightMuonsJuly2015(26, 2.1, 0.12);
                 nMu = selectedMuons.size(); //Number of Muons in Event
                 if (debug)cout<<"Getting Tight Electrons"<<endl;
                 selectedElectrons                                   = r2selection.GetSelectedElectrons("Loose", "PHYS14",true); // VBTF ID    
                 nEl = selectedElectrons.size(); //Number of Electrons in Event   
                 if (debug)cout<<"Getting Loose Muons"<<endl;
-                selectedExtraMuons                                  = r2selection.GetSelectedMuons(20, 2.4, 0.20);     
+                selectedExtraMuons                                  = r2selection.GetSelectedLooseMuonsJuly2015(20, 2.4, 0.20);     
                 nLooseMu = selectedExtraMuons.size();   //Number of loose muons      
             }
 
@@ -573,6 +616,14 @@ int main (int argc, char *argv[])
             //Filling Histogram of the number of vertices before Event Selection
             MSPlot["NbOfVertices"]->Fill(vertex.size(), datasets[d], true, Luminosity*scaleFactor);
 
+            double lumiWeight;
+            if(dataSetName.find("Data") == 0 || dataSetName.find("data") == 0 || dataSetName.find("DATA") == 0){
+                lumiWeight=1;
+            }
+            else{
+                lumiWeight = LumiWeights.ITweight( vertex.size() );
+            }
+            scaleFactor = scaleFactor * lumiWeight;
             if (!isGoodPV) continue; // Check that there is a good Primary Vertex
 
             if (debug) cout <<"Number of Muons = "<< nMu <<"    Electrons =  "  <<nEl<<"     Jets = "<< selectedJets.size()   <<" loose BJets = "<<  nLtags   <<
@@ -594,11 +645,11 @@ int main (int argc, char *argv[])
             //Apply the lepton, jet, btag and HT & MET selections
             if (Muon)
             {
-                if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=4 && nMtags >=2)) continue; // Muon Channel Selection
+                if  (  !( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6 && nMtags >=2)) continue; // Muon Channel Selection
 
             }
             else if(Electron){
-                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=4 && nMtags >=2)) continue; // Electron Channel Selection
+                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=6 && nMtags >=2)) continue; // Electron Channel Selection
             }
             else{
                 cerr<<"Correct Channel not selected."<<endl;
@@ -649,11 +700,11 @@ int main (int argc, char *argv[])
             float PUIso = 0;
             for (Int_t selmu =0; selmu < selectedMuons.size(); selmu++ )
             {
-                float relisomu = (selectedMuons[0]->chargedHadronIso() + max( 0.0, selectedMuons[0]->neutralHadronIso() + selectedMuons[0]->photonIso() - 0.) ) / selectedMuons[0]->Pt();
-                chargedHIso = selectedMuons[0]->chargedHadronIso();
-                neutralHIso = selectedMuons[0]->neutralHadronIso();
-                photonIso = selectedMuons[0]->photonIso();
-                PUIso = selectedMuons[0]->puChargedHadronIso();
+                float relisomu = (selectedMuons[0]->chargedHadronIso(4) + max( 0.0, selectedMuons[0]->neutralHadronIso(4) + selectedMuons[0]->photonIso(4) - 0.) ) / selectedMuons[0]->Pt();
+                chargedHIso = selectedMuons[0]->chargedHadronIso(4);
+                neutralHIso = selectedMuons[0]->neutralHadronIso(4);
+                photonIso = selectedMuons[0]->photonIso(4);
+                PUIso = selectedMuons[0]->puChargedHadronIso(4);
 
                 
                 MSPlot["leptonIso"]->Fill(relisomu, datasets[d], true, Luminosity*scaleFactor);
@@ -817,6 +868,16 @@ int main (int argc, char *argv[])
 
     cutsTable->Calc_Write(postfix, dName, channelpostfix);
     delete cutsTable;
+
+    if(Muon){
+
+        cout<<"TRIGGGG"<<endl;
+
+        cout<<"preTrig: "<<preTrig<<"   postTrig: "<<postTrig<<endl;
+        cout<<"********"<<endl;
+    }
+
+
 
     delete trigger;
 

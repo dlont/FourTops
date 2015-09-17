@@ -52,10 +52,17 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
 int main(int argc, char** argv)
 {
     int NumberOfBins;	//fixed width nBins
-    int lumiScale = 50;  //Amount of luminosity to scale to in fb^-1
+    float lumiScale = -1;  //Amount of luminosity to scale to in fb^-1
+    cout<<"!!!"<<endl;
+    cout<<"!!!"<<endl;
+    cout<<"!!!"<<endl;
+    cout<<"!!!"<<endl;
+    cout<<"!!!"<<endl;
 
     bool jetSplit = false; 
     bool jetTagsplit = false;
+    int isplit_ttbar = 0;
+    bool split_ttbar = false;
 
     string DatacardVar = "BDT"; //variable of interest for plotting
     //upper and lower bound of variable in plot
@@ -107,7 +114,7 @@ int main(int argc, char** argv)
     }
 
 
-    std::string slumiScale = intToStr(lumiScale);
+    //std::string slumiScale = intToStr(lumiScale);
 
     TiXmlHandle hDoc(&doc);
     TiXmlElement* pElem;
@@ -136,6 +143,13 @@ int main(int argc, char** argv)
         xmlFileName = child->FirstChild( "fileName")->ToElement()->GetText();
         xmlFileNameSys = child->FirstChild( "fileNameSys")->ToElement()->GetText();
         CraneenPath = child->FirstChild( "craneenPath")->ToElement()->GetText();
+
+        //split ttbar
+        TiXmlElement* childttbarsplit = child->FirstChild( "split_ttbar" )->ToElement();
+        // split_ttbar =  childttbarsplit->Attribute("split"); 
+        childttbarsplit->QueryIntAttribute("split", &isplit_ttbar);
+        split_ttbar = isplit_ttbar;
+        cout<<"TTBAR SPLIT "<<split_ttbar<<endl;
         cout<<"leptoAbbr: "<<leptoAbbr<<"  channel: "<<channel<<"  xmlFileName: "<<xmlFileName<<"  xmlFileNameSys: "<<xmlFileNameSys<<"  CraneenPath: "<<CraneenPath<<endl;
 
         //Get splittings from xml depending on JS or JTS
@@ -176,7 +190,7 @@ int main(int argc, char** argv)
             {
                 VoI = ppText;
                 string shapefileName = "";
-                shapefileName = "shapefile"+leptoAbbr+"_"+slumiScale+"_"+VoI+"_"+splitting+".root";
+                shapefileName = "shapefile"+leptoAbbr+"_"+"DATA"+"_"+VoI+"_"+splitting+".root";
                 cout<<shapefileName<<endl;
                 TFile *shapefile = new TFile((shapefileName).c_str(), "RECREATE");
                 TFile *errorfile = new TFile(("ScaleFiles"+leptoAbbr+"_light/Error"+VoI+".root").c_str(),"RECREATE");
@@ -226,6 +240,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
     cout<<"RUNNING NOMINAL DATASETS"<<endl;
     cout<<""<<endl;
     shapefile->cd();
+    errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
 
     const char *xmlfile = xmlNom.c_str();
     cout << "used config file: " << xmlfile << endl;
@@ -269,8 +284,6 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
 
-
-
         //for fixed bin width
         histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, plotLow, plotHigh);
         /////*****loop through entries and fill plots*****
@@ -278,18 +291,19 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             //artificial Lumi
-            if(lScale > 0 )
-            {
-                Luminosity = 1000*lScale;
-            }
+
             
-            if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
+            if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos || dataSetName.find("NP_overlay_Data")!=string::npos)
             {
-                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*ScaleFactor*Luminosity);
-                histo1D[dataSetName.c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
+                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, ScaleFactor);
+                histo1D[dataSetName.c_str()]->Fill(varofInterest,ScaleFactor);
             }
             else
             {
+                if(lScale > 0 )
+                {
+                    Luminosity = 1000*lScale;
+                }                
                 MSPlot[plotname]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
                 histo1D[dataSetName]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
             }
@@ -319,7 +333,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         //cout<<"writename  :"<<writename<<endl;
         histo1D[dataSetName.c_str()]->Write((writename).c_str());
 
-        canv->SaveAs((pathPNG+dataSetName+".pdf").c_str());
+        canv->SaveAs((pathPNG+dataSetName+".png").c_str());
     }
 
 
@@ -334,8 +348,8 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
     {
         string name = it->first;  
         MultiSamplePlot *temp = it->second;
-        temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 100);
-        temp->Write(shapefile, name, true, pathPNG, "pdf");
+        temp->Draw(sVarofinterest.c_str(), 2, false, false, false, 100);
+        temp->Write(shapefile, name, true, pathPNG, "png");
     }
     MSPlot.erase(plotname);
 };
@@ -418,7 +432,7 @@ void SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh,
         //cout<<"writename  :"<<writename<<endl;
 
         histo1D[plotname.c_str()]->Write((writename).c_str());
-        canv2->SaveAs(("Sys_"+plotname+".pdf").c_str());
+        canv2->SaveAs(("Sys_"+plotname+".png").c_str());
 
         if(dataSetName == "TTScaleDown")
         {
@@ -586,7 +600,7 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
             //cout<<"writename  :"<<writename<<endl;
             histo1D[histoName.c_str()]->Write((writename).c_str());
 
-            canv->SaveAs((pathPNG+histoName+".pdf").c_str());
+            canv->SaveAs((pathPNG+histoName+".png").c_str());
         }
     }
 
@@ -604,7 +618,7 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
         MultiSamplePlot *temp = it->second;
         temp->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 100);
-        temp->Write(shapefile, name, true, pathPNG, "pdf");
+        temp->Write(shapefile, name, true, pathPNG, "png");
     }
 
     for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
@@ -740,7 +754,7 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
                 writename = channel + numStr + sSplitVar + "__TTJets__scaleDown";
                 //cout<<"writename  :"<<writename<<endl;
                 histo1D[histoName.c_str()]->Write((writename).c_str());
-                canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
+                canv2->SaveAs(("Sys_"+histoName+".png").c_str());
                 errorfile->cd();
                 //errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
                 errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
@@ -753,7 +767,7 @@ void SplitSystematicsAnalyser(int nBins, float lScale, float plotLow, float plot
                 writename = channel + numStr + sSplitVar + "__TTJets__scaleUp";
                 //cout<<"writename  :"<<writename<<endl;
                 histo1D[histoName.c_str()]->Write((writename).c_str());
-                canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
+                canv2->SaveAs(("Sys_"+histoName+".png").c_str());
                 errorfile->cd();
                 errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
                 histo1D[histoName.c_str()]->Write("Plus");
@@ -949,7 +963,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
                 //cout<<"writename  :"<<writename<<endl;
                 histo1D[histoName.c_str()]->Write((writename).c_str());
 
-                canv->SaveAs((pathPNG+histoName+".pdf").c_str());
+                canv->SaveAs((pathPNG+histoName+".png").c_str());
             }
         }
     }
@@ -968,7 +982,7 @@ void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh
         MultiSamplePlot *temp = it->second;
         temp->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 1);
-        temp->Write(shapefile, name, true, pathPNG, "pdf");
+        temp->Write(shapefile, name, true, pathPNG, "png");
     }
     for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
     {
@@ -1138,7 +1152,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                     writename = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__TTJets__scaleDown";
                     //cout<<"writename  :"<<writename<<endl;
                     histo1D[histoName.c_str()]->Write((writename).c_str());
-                    canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
+                    canv2->SaveAs(("Sys_"+histoName+".png").c_str());
                     errorfile->cd();
                     //errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
                     errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
@@ -1151,7 +1165,7 @@ void Split2SystematicsAnalyser(int nBins, float lScale, float plotLow, float plo
                     writename = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__TTJets__scaleUp";
                     //cout<<"writename  :"<<writename<<endl;
                     histo1D[histoName.c_str()]->Write((writename).c_str());
-                    canv2->SaveAs(("Sys_"+histoName+".pdf").c_str());
+                    canv2->SaveAs(("Sys_"+histoName+".png").c_str());
                     errorfile->cd();
                     errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
                     histo1D[histoName.c_str()]->Write("Plus");
@@ -1175,10 +1189,16 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
 
     cout<<"PRODUCING DATACARD"<<endl;
 
-    string binname, histoName, dataSetName;
+    string binname, histoName, dataSetName, datacardname;
     ofstream card;
     std::string slScale = intToStr(lScale);
-    string datacardname = "datacard" + leptoAbbr + "_" + slScale + "_inc.txt";
+
+    if(lScale>0){
+        datacardname = "datacard" + leptoAbbr + "_" + slScale + "_inc.txt";   
+    }
+    else{
+        datacardname = "datacard" + leptoAbbr + "_inc.txt";          
+    }    
     card.open (datacardname.c_str());
 
     card << "imax " + static_cast<ostringstream*>( &(ostringstream() << nChannels) )->str() + "\n";
