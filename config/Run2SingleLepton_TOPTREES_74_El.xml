@@ -2,31 +2,30 @@
 <data>
 <datasets>
 
-<d name="Data"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="5.59" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v3/SingleMuon/crab_TOPTREE-SingleMuon-Run2015B-PromptReco-v1-MINIAOD--CMSSW_74X_v3--GR_P_V56-All-json-Cert_246908-251252-PromptReco/150715_152404/0000/TOPTREE_*"/>
+<d name="Data"     title="Data"    add="1"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="40.240" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v4/SingleElectron/crab_TOPTREE-SingleElectron-Run2015B-PromptReco-v1-MINIAOD--CMSSW_74X_v4--GR_P_V56-All/150724_114547/0000/TOPTREE_*.root"/>
 
-<d name="Data"     title="Data"    add="1"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="5.59" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v3/SingleElectron/crab_TOPTREE-SingleElectron-Run2015B-PromptReco-v1-MINIAOD--CMSSW_74X_v3--GR_P_V56-All-json-Cert_246908-251252-PromptReco/150715_202417/0000/TOPTREE_*"/>
+<d name="ttttNLO" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.563529176"  EqLumi="11304544.93933" xsection=".008823" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/FOURTOP_NLO_13TeV_aMCatNLO_LHE_pythia8/crab_TOPTREE_742_FOURTOP_1M_v3/150605_093838/0000/TOPTREE_*.root"/>
 
-<d name="ttttNLO" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.563529176"  EqLumi="11304544.939363" xsection=".008823" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/FOURTOP_NLO_13TeV_aMCatNLO_LHE_pythia8/crab_TOPTREE_742_FOURTOP_1M_v3/150605_093838/0000/TOPTREE_*.root"/>
+<d name="TTJets"  title="t\bar{t}+jets powheg"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1977.179" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TopTree/CMSSW_74X_v4/TT_TuneZ2star_13TeV-powheg-pythia6-tauola/crab_TOPTREE-TT_TuneZ2star_13TeV-powheg-pythia6-tauola-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v3-MINIAODSIM--CMSSW_74X_v4--MCRUN2_74_V9-All/150720_081210/0000/TOPTREE_*.root"/>
 
-<d name="TTJets"  title="t\bar{t}+jets"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="6002.008992979" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v2/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_TOPTREE-TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1-MINIAODSIM--CMSSW_74X_v2--MCRUN2_74_V9-All/150623_163459/0000/TOPTREE_*.root"/>
+<d name="T_tW"  title="t tW"  add="1"   color="7"  ls="0"  lw="2" normf="1"  EqLumi="27806.03932" xsection="35.6"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TopTree/CMSSW_74X_v4/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_TOPTREE-ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1-MINIAODSIM--CMSSW_74X_v4--MCRUN2_74_V9-All/150720_080904/0000/TOPTREE_*.root"/>
+
+<d name="Tbar_tW"  title="tbar tW"  add="1"   color="7"  ls="0"  lw="2" normf="1"  EqLumi="27861.6011" xsection="35.6"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TopTree/CMSSW_74X_v4/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_TOPTREE-ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2-MINIAODSIM--CMSSW_74X_v4--MCRUN2_74_V9-All/150720_080734/0000/TOPTREE*.root"/>
+
+<d name="DYJets"  title="DY+jets"   add="1"   color="214"  ls="1"  lw="2" normf="1"  EqLumi="3245.3374" xsection="6025.2"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v4/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/crab_TOPTREE-DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2-MINIAODSIM--CMSSW_74X_v4--MCRUN2_74_V9-All/150723_211556/0000/TOPTREE_*.root" />
+
+<d name="WJets"  title="WJets"   add="1"   color="413"  ls="1"  lw="2" normf="1"  EqLumi="386.6839" xsection="61526"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TopTree/CMSSW_74X_v4/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/crab_TOPTREE-WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1-MINIAODSIM--CMSSW_74X_v4--MCRUN2_74_V9-All/150720_081221/0000/TOPTREE_*.root"  />
+
+<d name="TTJets"  title="t\bar{t}+jets Madgraph MLM"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="5952.313" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TopTree/CMSSW_74X_v4/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_TOPTREE-TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1-MINIAODSIM--CMSSW_74X_v4--MCRUN2_74_V9-All/150720_081055/0000/TOPTREE_*.root"/>
+
+
+<d name="TTScaledown"  title="t\bar{t} Scale Down"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2257.28" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TT_scaledown_Tune4C_13TeV-pythia8-tauola/crab_TT_scaledown_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v4/150127_073733/0000/TOPTREE_*.root"/>
+
+<d name="TTScaleup"  title="t\bar{t} Scale Up"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2300.59" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TT_scaleup_Tune4C_13TeV-pythia8-tauola/crab_TT_scaleup_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v1/150121_152236/0000/TOPTREE_*.root"/>
+
+<d name="TTJets"  title="t\bar{t}+jets aMC@NLO"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="6002.008992979" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TopTree/CMSSW_74X_v4/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/crab_TOPTREE-TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1-MINIAODSIM--CMSSW_74X_v4--MCRUN2_74_V9-All/150720_081014/0000/TOPTREE_*.root"/>
 
 <d name="TTJets"  title="t\bar{t}+jets ONE FILE ONLY MadGraph PHYS14"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="0" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2_TOPTREE/150608_122520/0000/TOPTREE_1.root" />
-
-<d name="T_tW"  title="t tW"  add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="28044.9438" xsection="35.6"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v2/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_TOPTREE-ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1-MINIAODSIM--CMSSW_74X_v2--MCRUN2_74_V9-All/150623_163402/0000/TOPTREE_*.root"/>
-
-<d name="Tbar_tW"  title="tbar tW"  add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="28089.8876" xsection="35.6"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v2/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_TOPTREE-ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2-MINIAODSIM--CMSSW_74X_v2--MCRUN2_74_V9-All/150623_163259/0000/*.root"/>
-
-<d name="DYJets"  title="DY+jets"   add="1"   color="433"  ls="1"  lw="2" normf="1"  EqLumi="9805.7379" xsection="2008.4"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/crab_TOPTREE-DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2-MINIAODSIM--CMSSW_74X_v2--MCRUN2_74_V9-All/150713_124222/0000/TOPTREE_*.root" />
-
-<d name="WJets"  title="WJets"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1171.12839" xsection="20508.9"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v2/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/crab_TOPTREE-WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v1-MINIAODSIM--CMSSW_74X_v2--MCRUN2_74_V9-All/150623_163553/0000/TOPTREE_*.root"  />
-
-<d name="TTScaledown"  title="t\bar{t} PHYS14 Scale Down"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2257.28" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TT_scaledown_Tune4C_13TeV-pythia8-tauola/crab_TT_scaledown_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v4/150127_073733/0000/TOPTREE_*.root"/>
-
-<d name="TTScaleup"  title="t\bar{t} PHYS14 Scale Up"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2300.59" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TT_scaleup_Tune4C_13TeV-pythia8-tauola/crab_TT_scaleup_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v1/150121_152236/0000/TOPTREE_*.root"/>
-
-<d name="TTScaledown"  title="t\bar{t} PHYS14 Scale Down"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2257.28" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TT_scaledown_Tune4C_13TeV-pythia8-tauola/crab_TT_scaledown_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v4/150127_073733/0000/TOPTREE_1.root"/>
-
-<d name="TTScaleup"  title="t\bar{t} PHYS14 Scale Up"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2300.59" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TT_scaleup_Tune4C_13TeV-pythia8-tauola/crab_TT_scaleup_Tune4C_13TeV-pythia8-tauola_PHYS14_TOPTREE_v1/150121_152236/0000/TOPTREE_1.root"/>
 
 <d name="TbarToLeptons-tchannel"  title="tbar-tchannel"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="32464.3" xsection="61.6"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TBarToLeptons_t-channel_Tune4C_CSA14_13TeV-aMCatNLO-tauola/crab_TbarToLeptons_t-channel_TOPTREE_v1/141204_092219/0000/TOPTREE_*.root"  />
 
@@ -35,7 +34,6 @@
 <d name="TToLeptons"  title="Single t"   add="0"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="223000.0" xsection="103.04"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/crab_TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola_TOPTREE_v4/141205_074006/0000/TOPTREE_*.root"  />
 
 <d name="TbarToLeptons"  title="Single tbar"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="223000.0" xsection="103.04"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/TBarToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/crab_TbarToLeptons_TOPTREE_v1/141125_144851/0000/TOPTREE_*.root" />
-
 </datasets>
 
 
