@@ -265,6 +265,34 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
     int nEntries;
     float ScaleFactor, NormFactor, Luminosity, varofInterest;
 
+    // if (split_ttbar){
+    //     cout << " - splitting TTBar dataset ..." << ndatasets   << endl;
+    //     vector<string> ttbar_filenames = datasets[ndatasets]->Filenames();
+    //     cout <<"ttbar filenames =  "<< ttbar_filenames[0] <<endl;
+
+    //     Dataset* ttbar_ll = new Dataset("TTJets_ll", "tt + ll" , true, 633, 2, 2, 1, 213.4, ttbar_filenames );
+    //     Dataset* ttbar_cc = new Dataset("TTJets_cc", "tt + cc" , true, 633, 2, 2, 1, 6.9,   ttbar_filenames );
+    //     Dataset* ttbar_bb = new Dataset("TTJets_bb", "tt + bb" , true, 633, 2, 2, 1, 4.8,   ttbar_filenames );
+
+    //     ///heavy flav re-weight -> scaling ttbb up and ttjj down so that ttbb/ttjj matches CMS measurement.
+    //     double ll_rw = 0.976;
+    //     double bb_rw = 3.;
+
+    //     ttbar_ll->SetEquivalentLuminosity(newlumi/ll_rw);
+    //     ttbar_cc->SetEquivalentLuminosity(newlumi/ll_rw);
+    //     ttbar_bb->SetEquivalentLuminosity(newlumi/bb_rw);
+
+    //     ttbar_ll->SetColor(kRed);
+    //     ttbar_cc->SetColor(kRed-3);
+    //     ttbar_bb->SetColor(kRed+2);
+
+
+    //     datasets.pop_back();
+    //     datasets.push_back(ttbar_bb);
+    //     datasets.push_back(ttbar_cc);
+    //     datasets.push_back(ttbar_ll);     
+    // }     
+
     for (int d = 0; d < datasets.size(); d++)  //Loop through datasets
     {
         dataSetName = datasets[d]->Name();
