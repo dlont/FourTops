@@ -66,18 +66,24 @@ using namespace std;
 using namespace TopTree;
 using namespace reweight;
 
-class CutsTable()
-{
+class CutsTable{
 	public:
 		CutsTable(bool isMuon, bool isElectron);
 		~CutsTable();
 		void AddSelections();
+		void AddSelectionsMuons();
+
+		void CreateTable(vector < Dataset* > datasets, float Luminosity);
+		void FillTable(unsigned int d, bool isGoodPV, bool Trigged, float scaleFactor, int nMu, int nLooseMu, int nEl, int nLooseEl, int nJets, int nLtags, int nMtags, int nTtags);
+		void FillTableMuons(unsigned int d, float scaleFactor, vector < TRootMuon* > init_muons);
+
+		void Calc_Write(string postfix, string dName, string channelpostfix);
 
 
 	private:
 		vector<string> CutsselecTable;
 		string leptonChoice;
-
+		SelectionTable *selecTable;
 
 };
 
