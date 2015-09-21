@@ -315,7 +315,7 @@ int main (int argc, char *argv[])
     Dataset* theDataset = new Dataset(dName, dTitle, true, color, ls, lw, normf, xSect, vecfileNames);
     theDataset->SetEquivalentLuminosity(EqLumi*normf);
     datasets.push_back(theDataset);
-    float Luminosity = 5.59; //pb^-1??
+    float Luminosity = 2000; //pb^-1??
     vector<string> MVAvars;
 
     MVAvars.push_back("topness");
@@ -412,6 +412,7 @@ int main (int argc, char *argv[])
     MSPlot["MuonPt"]                                        = new MultiSamplePlot(datasets, "MuonPt", 30, 0, 300, "PT_{#mu}");
     MSPlot["MuonEta"]                                       = new MultiSamplePlot(datasets, "MuonEta", 40,-4, 4, "Muon #eta");
     MSPlot["MuonRelIsolation"]                              = new MultiSamplePlot(datasets, "MuonRelIsolation", 10, 0, .25, "RelIso");
+    MSPlot["InitMuonCutFlow"]                               = new MultiSamplePlot(datasets, "InitMuonCutFlow", 12, 0, 12, "CutNumber");
     //Electrons
     MSPlot["ElectronRelIsolation"]                          = new MultiSamplePlot(datasets, "ElectronRelIsolation", 10, 0, .25, "RelIso");
     MSPlot["ElectronPt"]                                    = new MultiSamplePlot(datasets, "ElectronPt", 30, 0, 300, "PT_{e}");
@@ -645,28 +646,57 @@ int main (int argc, char *argv[])
         //////////////////////////////////////////////////
 
         vector<JetCorrectorParameters> vCorrParam;
+        JetCorrectionUncertainty *jecUnc;
 
-        if(dataSetName.find("Data") == 0 || dataSetName.find("data") == 0 || dataSetName.find("DATA") == 0 ) // Data!
+        if((dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0) && bx25) // 25ns Data!
         {
-            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L1FastJet_AK5PFchs.txt");
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_L1FastJet_AK4PFchs.txt");
             vCorrParam.push_back(*L1JetCorPar);
-            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L2Relative_AK5PFchs.txt");
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_L2Relative_AK4PFchs.txt");
             vCorrParam.push_back(*L2JetCorPar);
-            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L3Absolute_AK5PFchs.txt");
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_L3Absolute_AK4PFchs.txt");
             vCorrParam.push_back(*L3JetCorPar);
-            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/FT_53_V21_AN4_Summer13_Data_L2L3Residual_AK5PFchs.txt");
+            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt");
             vCorrParam.push_back(*L2L3ResJetCorPar);
+            jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_Uncertainty_AK4PFchs.txt");
         }
-        else
+        else if((dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0) && !bx25) // 50ns Data!
         {
-            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L1FastJet_AK5PFchs.txt");
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_DATA_L1FastJet_AK4PFchs.txt");
             vCorrParam.push_back(*L1JetCorPar);
-            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L2Relative_AK5PFchs.txt");
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_DATA_L2Relative_AK4PFchs.txt");
             vCorrParam.push_back(*L2JetCorPar);
-            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_L3Absolute_AK5PFchs.txt");
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_DATA_L3Absolute_AK4PFchs.txt");
             vCorrParam.push_back(*L3JetCorPar);
+            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_DATA_L2L3Residual_AK4PFchs.txt");
+            vCorrParam.push_back(*L2L3ResJetCorPar);
+            jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_DATA_Uncertainty_AK4PFchs.txt");
         }
-        JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/START53_V23_Summer13_Uncertainty_AK5PFchs.txt");
+        else if(bx25) // 25ns MC!
+        {
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
+            vCorrParam.push_back(*L1JetCorPar);
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_L2Relative_AK4PFchs.txt");
+            vCorrParam.push_back(*L2JetCorPar);
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
+            vCorrParam.push_back(*L3JetCorPar);
+            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_L2L3Residual_AK4PFchs.txt");
+            vCorrParam.push_back(*L2L3ResJetCorPar);
+            jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_Uncertainty_AK4PFchs.txt");
+        }
+        else //50ns MC
+        {
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_MC_L1FastJet_AK4PFchs.txt");
+            vCorrParam.push_back(*L1JetCorPar);
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_MC_L2Relative_AK4PFchs.txt");
+            vCorrParam.push_back(*L2JetCorPar);
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_MC_L3Absolute_AK4PFchs.txt");
+            vCorrParam.push_back(*L3JetCorPar);
+            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_MC_L2L3Residual_AK4PFchs.txt");
+            vCorrParam.push_back(*L2L3ResJetCorPar);
+            jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_50nsV5_MC_Uncertainty_AK4PFchs.txt");
+        }
+//        JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_Uncertainty_AK4PFchs.txt");
 //    JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(*(new JetCorrectorParameters("JECFiles/Fall12_V7_DATA_UncertaintySources_AK5PFchs.txt", "SubTotalMC")));
 //    JetCorrectionUncertainty *jecUncTotal = new JetCorrectionUncertainty(*(new JetCorrectorParameters("JECFiles/Fall12_V7_DATA_UncertaintySources_AK5PFchs.txt", "Total")));
 
@@ -743,8 +773,64 @@ int main (int argc, char *argv[])
             float rho = event->fixedGridRhoFastjetAll();
             if (debug)cout <<"Rho: " << rho <<endl;
 
+            if (debug)cout <<"Number of Muons Loaded: " << init_muons.size() <<endl;
+
+            for (Int_t initmu =0; initmu < init_muons.size(); initmu++ )
+            {
+                float initreliso = init_muons[initmu]->relPfIso(4, 0.5);
+                MSPlot["InitMuonCutFlow"]->Fill(0, datasets[d], true, Luminosity*scaleFactor);
+                if(init_muons[initmu]->isGlobalMuon() && init_muons[initmu]->isPFMuon())
+                {
+                    MSPlot["InitMuonCutFlow"]->Fill(1, datasets[d], true, Luminosity*scaleFactor);
+                    if(fabs(init_muons[initmu]->Pt()) < 20)
+                    {
+                        MSPlot["InitMuonCutFlow"]->Fill(2, datasets[d], true, Luminosity*scaleFactor);
+                        if(fabs(init_muons[initmu]->Eta()) < 2.4)
+                        {
+                            MSPlot["InitMuonCutFlow"]->Fill(3, datasets[d], true, Luminosity*scaleFactor);
+                            if(fabs(init_muons[initmu]->chi2()) < 10)
+                            {
+                                MSPlot["InitMuonCutFlow"]->Fill(4, datasets[d], true, Luminosity*scaleFactor);
+                                if(fabs(init_muons[initmu]->nofTrackerLayersWithMeasurement()) > 5)
+                                {
+                                    MSPlot["InitMuonCutFlow"]->Fill(5, datasets[d], true, Luminosity*scaleFactor);
+                                    if(fabs(init_muons[initmu]->nofValidMuHits()) > 0)
+                                    {
+                                        MSPlot["InitMuonCutFlow"]->Fill(6, datasets[d], true, Luminosity*scaleFactor);
+                                        if(fabs(init_muons[initmu]->d0()) < 0.2)
+                                        {
+                                            MSPlot["InitMuonCutFlow"]->Fill(7, datasets[d], true, Luminosity*scaleFactor);
+                                            if(fabs(init_muons[initmu]->dz()) < 0.5)
+                                            {
+                                                MSPlot["InitMuonCutFlow"]->Fill(8, datasets[d], true, Luminosity*scaleFactor);
+                                                if(init_muons[initmu]->nofValidPixelHits() > 0)
+                                                {
+                                                    MSPlot["InitMuonCutFlow"]->Fill(9, datasets[d], true, Luminosity*scaleFactor);
+                                                    if(init_muons[initmu]->nofMatchedStations() > 1)
+                                                    {
+                                                        MSPlot["InitMuonCutFlow"]->Fill(10, datasets[d], true, Luminosity*scaleFactor);
+                                                        if(initreliso < 0.12)
+                                                        {
+                                                            MSPlot["InitMuonCutFlow"]->Fill(11, datasets[d], true, Luminosity*scaleFactor);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+
             if (debug)cout <<"Number of Electrons Loaded: " << init_electrons.size() <<endl;
             MSPlot["NbOfElectronsInit"]->Fill(init_electrons.size(), datasets[d], true, Luminosity*scaleFactor );
+
             for (Int_t initel =0; initel < init_electrons.size(); initel++ )
             {
                 float initreliso = ElectronRelIso(init_electrons[initel], rho);
@@ -889,7 +975,7 @@ int main (int argc, char *argv[])
                     if( Muon && Electron )
                         itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2"), currentRun, iFile);
                     else if( Muon && !Electron )
-                        itrigger = treeLoader.iTrigger (string ("HLT_IsoMu20_eta2p1_v2"), currentRun, iFile);
+                        itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v2"), currentRun, iFile);
                     else if( !Muon && Electron )
                         itrigger = treeLoader.iTrigger (string ("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v2"), currentRun, iFile);
 
@@ -904,7 +990,7 @@ int main (int argc, char *argv[])
                     if( Muon && Electron )
                         itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1"), currentRun, iFile);
                     else if( Muon && !Electron )
-                        itrigger = treeLoader.iTrigger (string ("HLT_IsoMu20_eta2p1_v1"), currentRun, iFile);
+                        itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v1"), currentRun, iFile);
                     else if( !Muon && Electron )
                         itrigger = treeLoader.iTrigger (string ("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v1"), currentRun, iFile);
 
@@ -953,7 +1039,7 @@ int main (int argc, char *argv[])
             //trigged = true;  // Disabling the HLT requirement
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
             if(itrigger == 9999 ) cout << "Lumi Block: " << event->lumiBlockId() << " Event: " << event->eventId() << endl;
-            if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
+            //if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
             // Declare selection instance
             Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets);
 
@@ -965,27 +1051,31 @@ int main (int argc, char *argv[])
                 selectedFatJets                                        = selection.GetSelectedFatJets(); // Relying solely on cuts defined in setPFJetCuts()
 
                 if (debug)cout<<"Getting Loose Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedDiMuons();
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring_15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
-                selectedElectrons                                   = selection.GetSelectedElectrons("Loose","PHYS14",true); // VBTF ID
+                if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
+                else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
+
             }
             if (Muon && !Electron && dilepton)
             {
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
-                if (debug)cout<<"Getting loose Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedDiMuons();
+                if (debug)cout<<"Getting Medium Muons"<<endl;
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring_15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
-                selectedElectrons                                   = selection.GetSelectedElectrons("Loose","PHYS14",true); // VBTF ID
+                if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
+                else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
             }
             if (!Muon && Electron && dilepton)
             {
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
-                if (debug)cout<<"Getting Tight Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons();
+                if (debug)cout<<"Getting Medium Muons"<<endl;
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring_15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
-                selectedElectrons                                   = selection.GetSelectedElectrons("Loose","PHYS14",true); // VBTF ID
+                if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
+                else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
             }
 
 
@@ -1343,7 +1433,7 @@ int main (int argc, char *argv[])
 
             //Filling Histogram of the number of vertices before Event Selection
 
-//            if (!trigged) continue;  // Redunant check that an HLT was triggered
+            if (!trigged) continue;  // check that an HLT was triggered
             if (!isGoodPV) continue; // Check that there is a good Primary Vertex
 ////            if (!(selectedJets.size() >= 6)) continue; //Selection of a minimum of 6 Jets in Event
 //
