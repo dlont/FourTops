@@ -42,7 +42,7 @@
 
 <d name="Tbar_tW_bx50"  title="tbar tW 50ns MuEl Skim"  add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="745.695095502" xsection="35.6"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v5/_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/21092015_132640/*.root"/>
 
-<d name="DYJetsW_bx50"  title="DY+Jets 50ns MuEl Skim"  add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="13.13487356" xsection="2008.4"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v5//21092015_100251/*.root"/>
+<d name="DYJets_bx50"  title="DY+Jets 50ns MuEl Skim"  add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="13.13487356" xsection="2008.4"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v5//21092015_100251/*.root"/>
 
 </datasets>
 
