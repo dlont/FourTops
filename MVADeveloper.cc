@@ -93,7 +93,7 @@ int main ()
     vector < Dataset* > datasets;
     cout << " - Loading datasets ..." << endl;
     treeLoader.LoadDatasets (datasets, xmlfile);
-    float Luminosity = 15000.0; //pb^-1??
+    float Luminosity = 2000.0; //pb^-1??
     vector<string> MVAvars;
 
     //A few bools to steer the MassReco and Event MVAs
@@ -143,7 +143,7 @@ int main ()
 
     if (dilep)
     {
-        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuEl_13thJuly", "MVA/MasterMVA_MuEl_13thJuly.root");
+        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuEl_25thAugust", "MVA/MasterMVA_MuEl_25thAugust.root");
     }
     else if (singlelep)
     {
@@ -168,7 +168,7 @@ int main ()
 
     if (dilep)
     {
-        // Eventtrainer_->bookWeight("Weight");
+        Eventtrainer_->bookWeight("Weight");
         Eventtrainer_->bookInputVar("topness");
         Eventtrainer_->bookInputVar("muonpt");
         Eventtrainer_->bookInputVar("muoneta");
@@ -216,7 +216,7 @@ int main ()
 
     for (unsigned int d = 0; d < datasets.size (); d++)
     {
-
+        cout <<"Beginning dataset loop: " << datasets[d]->Name() << " with " << datasets[d]->NofEvtsToRunOver() << " events." << endl;
         unsigned int ending = datasets[d]->NofEvtsToRunOver();
         int start = 0;
         cout <<"Number of events in total dataset = "<< ending <<endl;
@@ -441,7 +441,10 @@ int main ()
             }
 
             //  cout <<" # leftover jets " <<  selectedJets2ndPass.size()     << " multitopness  =  "<<  multitopness   <<endl;
-
+            float weight_0 = event->weight0();
+            float scaleFactor;
+            if(weight_0 < 0) scaleFactor = -1.0;
+            else scaleFactor = 1.0;
 
 
             if (dilep)
@@ -466,9 +469,9 @@ int main ()
                 float dSph = Sphericity(diLepSystemTLV), dCen = Centrality(diLepSystemTLV);
                 float tdSph = Sphericity(topDiLepSystemTLV), tdCen = Centrality(topDiLepSystemTLV);
 
-                if(datasets[d]->Name()=="ttttNLO_742")
+                if(datasets[d]->Name()=="ttttNLO_SUS_MuElSkim")
                 {
-                    //        Eventtrainer_->FillWeight("S","Weight",scaleFactor);
+                    Eventtrainer_->Fill("S","Weight",scaleFactor);
                     Eventtrainer_->Fill("S","topness",topness );
                     Eventtrainer_->Fill("S","muonpt",muonpt);
                     Eventtrainer_->Fill("S","muoneta",muoneta);
@@ -490,9 +493,9 @@ int main ()
 //                    Eventtrainer_->Fill("S","TopDiLepCen",tdCen  );
                 }
 
-                if(datasets[d]->Name()!="ttttNLO_742")
+                if(datasets[d]->Name()!="ttttNLO_SUS_MuElSkim")
                 {
-                    //	   Eventtrainer_->FillWeight("B","Weight", scaleFactor);
+                    Eventtrainer_->Fill("B","Weight", scaleFactor);
                     Eventtrainer_->Fill("B","topness",topness);
                     Eventtrainer_->Fill("B","muonpt",muonpt);
                     Eventtrainer_->Fill("B","muoneta",muoneta);
@@ -561,7 +564,7 @@ int main ()
         }
 
     }
-    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElJuly13th2015");
+    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElAugust25th2015", true);
 
 
 }
