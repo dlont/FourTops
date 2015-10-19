@@ -71,7 +71,7 @@ int main ()
 
 
     clock_t start = clock();
-    string xmlFileName = "config/Run2DiLepton_TOPTREES_BDTTrain.xml";
+    string xmlFileName = "config/Run2DiLepton_BDTTrain.xml";
 
     const char *xmlfile = xmlFileName.c_str();
     cout << "used config file: " << xmlfile << endl;
@@ -143,11 +143,11 @@ int main ()
 
     if (dilep)
     {
-        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuEl_25thAugust", "MVA/MasterMVA_MuEl_25thAugust.root");
+        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuEl_2ndOctober", "MVA/MasterMVA_MuEl_2ndOctober.root");
     }
     else if (singlelep)
     {
-        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_SingleMuon_24thMarch", "MVA/MasterMVA_SingleMuon_24thMarch.root");
+        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_SingleMuon_2ndOctober", "MVA/MasterMVA_SingleMuon_2ndOctober.root");
     }
 
 
@@ -183,11 +183,11 @@ int main ()
         Eventtrainer_->bookInputVar("Jet4Pt");
         Eventtrainer_->bookInputVar("HT2M");
         Eventtrainer_->bookInputVar("EventSph");
-//        Eventtrainer_->bookInputVar("EventCen");
+        Eventtrainer_->bookInputVar("EventCen");
         Eventtrainer_->bookInputVar("DiLepSph");
-//        Eventtrainer_->bookInputVar("DiLepCen");
-//        Eventtrainer_->bookInputVar("TopDiLepSph");
-//        Eventtrainer_->bookInputVar("TopDiLepCen");
+        Eventtrainer_->bookInputVar("DiLepCen");
+        Eventtrainer_->bookInputVar("TopDiLepSph");
+        Eventtrainer_->bookInputVar("TopDiLepCen");
     }
     else if (singlelep)
     {
@@ -218,10 +218,14 @@ int main ()
     {
         cout <<"Beginning dataset loop: " << datasets[d]->Name() << " with " << datasets[d]->NofEvtsToRunOver() << " events." << endl;
         unsigned int ending = datasets[d]->NofEvtsToRunOver();
-        int start = 0;
+        int start = 0, iFile = -1;
         cout <<"Number of events in total dataset = "<< ending <<endl;
         event_start = 0;
         nPassed = 0;
+        string previousFilename = "";
+        string dataSetName = datasets[d]->Name();
+
+
 
         cout << "Dataset loop..." << endl;
         cout <<" dataset name "  << datasets[d]->Name() <<endl;
@@ -252,16 +256,46 @@ int main ()
 
             event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, mets, false);  //load event
 
+            int currentRun = event->runId();
+            int itrigger = -1;
+            bool trigged = false;
+
+            string currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
+            if(previousFilename != currentFilename)
+            {
+                previousFilename = currentFilename;
+                iFile++;
+                cout<<"File changed!!! => "<<currentFilename<<endl;
+            }
+
+            if( Muon && Electron )
+                itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1"), currentRun, iFile);
+            else if( Muon && !Electron )
+                itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v1"), currentRun, iFile);
+            else if( !Muon && Electron )
+                itrigger = treeLoader.iTrigger (string ("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v1"), currentRun, iFile);
+
+            if(itrigger == 9999)
+            {
+                cerr << "NO VALID TRIGGER FOUND FOR THIS EVENT (" << dataSetName << ") IN RUN " << event->runId() << endl;
+                //exit(1);
+            }
+            trigged = treeLoader.EventTrigged (itrigger);
+
+            if(!trigged) continue; //without HLT don't keep going
+
+
+
 // Declare selection instance
             Run2Selection selection(init_jets, init_muons, init_electrons, mets);
 
             if (debug)cout<<"Getting Jets"<<endl;
             selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
             if (debug)cout<<"Getting Tight Muons"<<endl;
-            selectedMuons                                       = selection.GetSelectedDiMuons();
-            selectedExtraMuons = selection.GetSelectedMuons(20, 2.4, 0.20);
+            selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring15");
+            //selectedExtraMuons = selection.GetSelectedMuons(20, 2.4, 0.20);
             if (debug)cout<<"Getting Loose Electrons"<<endl;
-            selectedElectrons                                   = selection.GetSelectedElectrons("Loose","PHYS14",true); // VBTF ID
+            selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
 
             int nJets = selectedJets.size(); //Number of Jets in Event
             int nMu = selectedMuons.size(); //Number of Muons in Event
@@ -394,10 +428,12 @@ int main ()
                 std::cout<<nPassed<<" events have passed baseline selection"<<endl;
             }
 
-            if (dilep && !Muon && Electron) {
+            if (dilep && !Muon && Electron)
+            {
                 jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, &selectedElectronsTLV_JC[0], genEvt, 1.);
             }
-            else {
+            else
+            {
                 jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, &selectedMuonsTLV_JC[0], genEvt, 1.);
             }
 
@@ -425,16 +461,18 @@ int main ()
             double muonpt, muoneta;
             if(nJets >=6)
             {
-                if (dilep && !Muon && Electron) {
-                jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, &selectedElectronsTLV_JC[0], genEvt, 1.);
-                muonpt = selectedElectronsTLV_JC[0].Pt();
-                muoneta = selectedElectronsTLV_JC[0].Eta();
-            }
-            else {
-                jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, &selectedMuonsTLV_JC[0], genEvt, 1.);
-                muonpt = selectedMuons[0]->Pt();
-                muoneta = selectedMuons[0]->Eta();
-            }
+                if (dilep && !Muon && Electron)
+                {
+                    jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, &selectedElectronsTLV_JC[0], genEvt, 1.);
+                    muonpt = selectedElectronsTLV_JC[0].Pt();
+                    muoneta = selectedElectronsTLV_JC[0].Eta();
+                }
+                else
+                {
+                    jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, &selectedMuonsTLV_JC[0], genEvt, 1.);
+                    muonpt = selectedMuons[0]->Pt();
+                    muoneta = selectedMuons[0]->Eta();
+                }
                 MVAvals2ndPass = jetCombiner->getMVAValue(MVAmethod, 1);
 
                 multitopness = MVAvals2ndPass.first;
@@ -469,7 +507,7 @@ int main ()
                 float dSph = Sphericity(diLepSystemTLV), dCen = Centrality(diLepSystemTLV);
                 float tdSph = Sphericity(topDiLepSystemTLV), tdCen = Centrality(topDiLepSystemTLV);
 
-                if(datasets[d]->Name()=="ttttNLO_SUS_MuElSkim")
+                if(dataSetName.find("tttt")!=string::npos || dataSetName.find("TTTT")!=string::npos)
                 {
                     Eventtrainer_->Fill("S","Weight",scaleFactor);
                     Eventtrainer_->Fill("S","topness",topness );
@@ -486,14 +524,14 @@ int main ()
                     Eventtrainer_->Fill("S","Jet4Pt",selectedJets[3]->Pt());
                     Eventtrainer_->Fill("S","HT2M",HT2M  );
                     Eventtrainer_->Fill("S","EventSph",tSph  );
-//                    Eventtrainer_->Fill("S","EventCen",tCen  );
+                    Eventtrainer_->Fill("S","EventCen",tCen  );
                     Eventtrainer_->Fill("S","DiLepSph",dSph  );
-//                    Eventtrainer_->Fill("S","DiLepCen",dCen  );
-//                    Eventtrainer_->Fill("S","TopDiLepSph",tdSph  );
-//                    Eventtrainer_->Fill("S","TopDiLepCen",tdCen  );
+                    Eventtrainer_->Fill("S","DiLepCen",dCen  );
+                    Eventtrainer_->Fill("S","TopDiLepSph",tdSph  );
+                    Eventtrainer_->Fill("S","TopDiLepCen",tdCen  );
                 }
 
-                if(datasets[d]->Name()!="ttttNLO_SUS_MuElSkim")
+                else
                 {
                     Eventtrainer_->Fill("B","Weight", scaleFactor);
                     Eventtrainer_->Fill("B","topness",topness);
@@ -510,11 +548,11 @@ int main ()
                     Eventtrainer_->Fill("B","Jet4Pt", selectedJets[3]->Pt() );
                     Eventtrainer_->Fill("B","HT2M",HT2M  );
                     Eventtrainer_->Fill("B","EventSph",tSph  );
-//                    Eventtrainer_->Fill("B","EventCen",tCen  );
+                    Eventtrainer_->Fill("B","EventCen",tCen  );
                     Eventtrainer_->Fill("B","DiLepSph",dSph  );
-//                    Eventtrainer_->Fill("B","DiLepCen",dCen  );
-//                    Eventtrainer_->Fill("B","TopDiLepSph",tdSph  );
-//                    Eventtrainer_->Fill("B","TopDiLepCen",tdCen  );
+                    Eventtrainer_->Fill("B","DiLepCen",dCen  );
+                    Eventtrainer_->Fill("B","TopDiLepSph",tdSph  );
+                    Eventtrainer_->Fill("B","TopDiLepCen",tdCen  );
                 }
 
             }
@@ -564,7 +602,7 @@ int main ()
         }
 
     }
-    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElAugust25th2015", true);
+    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElOctober2nd2015", true);
 
 
 }
