@@ -193,7 +193,7 @@ int main (int argc, char *argv[])
 
     clock_t start = clock();
 
-    BTagWeightTools * bTool = new BTagWeightTools("SFb-pt_NOttbar_payload_EPS13.txt", "CSVM") ;
+    //BTagWeightTools * bTool = new BTagWeightTools("SFb-pt_NOttbar_payload_EPS13.txt", "CSVM") ;
 
     int doJESShift = 0; // 0: off 1: minus 2: plus
     cout << "doJESShift: " << doJESShift << endl;
@@ -759,6 +759,7 @@ int main (int argc, char *argv[])
             H = 0., HX =0., HT = 0., HTX = 0.,HTH=0.,HTXHX=0., sumpx_X = 0., sumpy_X= 0., sumpz_X =0., sume_X= 0. , sumpx =0., sumpy=0., sumpz=0., sume=0., jetpt =0., PTBalTopEventX = 0., PTBalTopSumJetX =0.;
 
             double ievt_d = ievt;
+            float centralWeight, scaleUp, scaleDown;
             currentfrac = ievt_d/end_d;
             if (debug)cout <<"event loop 1"<<endl;
 
@@ -769,6 +770,20 @@ int main (int argc, char *argv[])
 
             float scaleFactor = 1.;  // scale factor for the event
             event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, init_fatjets,  mets, debug);  //load event
+
+            string currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
+            if(previousFilename != currentFilename)
+            {
+                previousFilename = currentFilename;
+                iFile++;
+                cout<<"File changed!!! => "<<currentFilename<<endl;
+            }
+
+            TRootRun *runInfos = new TRootRun();
+            datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
+            datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
+            cout<<"SetBranchAddress(runInfos,&runInfos) : "<<datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos)<<endl;
+            int rBytes = datasets[d]->runTree()->GetEntry(iFile);
 
             float rho = event->fixedGridRhoFastjetAll();
             if (debug)cout <<"Rho: " << rho <<endl;
@@ -900,16 +915,7 @@ int main (int argc, char *argv[])
 
 
             }
-            float weight_0 = event->weight0();
-            if (debug)cout <<"Weight0: " << weight_0 <<endl;
-            if(nlo)
-            {
-                if(weight_0 < 0.0)
-                {
-                    scaleFactor = -1.0;  //Taking into account negative weights in NLO Monte Carlo
-                    negWeights++;
-                }
-            }
+
 
 
             string graphName;
@@ -924,13 +930,13 @@ int main (int argc, char *argv[])
                 // loading GenJets as I need them for JER
                 genjets = treeLoader.LoadGenJet(ievt);
             }
-            string currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
-            if(previousFilename != currentFilename)
-            {
-                previousFilename = currentFilename;
-                iFile++;
-                cout<<"File changed!!! => "<<currentFilename<<endl;
-            }
+//            string currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
+//            if(previousFilename != currentFilename)
+//            {
+//                previousFilename = currentFilename;
+//                iFile++;
+//                cout<<"File changed!!! => "<<currentFilename<<endl;
+//            }
 
             ///////////////////////////////////////////
             //  Trigger
@@ -942,27 +948,24 @@ int main (int argc, char *argv[])
             {
                 cout <<"What run? "<< currentRun<<endl;
                 previousRun = currentRun;
-//                cout << "HLT Debug output" << endl;
-//                TRootRun *runInfos = new TRootRun();
-//                datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
-//                datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
-//                cout<<"SetBranchAddress(runInfos,&runInfos) : "<<datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos)<<endl;
-//                int rBytes = datasets[d]->runTree()->GetEntry(iFile, 1);
-//                int nPaths = runInfos->getHLTinfo(currentRun).nHLTPaths();
-//                cout <<"Number of HLT Paths: " << nPaths <<endl;
-//                int nTrigs = 0, firstTrig = 0;
-//                bool fTrig = false;
-//                for(int trigs = 0; trigs < nPaths; trigs++)
+                cout << "HLT Debug output" << endl;
+
+                //runInfos->getHLTinfo(currentRun).gethltNameList();
+
+                treeLoader.ListTriggers(currentRun, iFile);
+
+                //int weightIdx = runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1");
+
+
+
+//                if(nlo)
 //                {
-//                    if(event->trigHLT(trigs)) nTrigs++;
-//                    cout << trigs << " : " << runInfos->getHLTinfo(currentRun).hltNames(trigs) << " : " << (runInfos->getHLTinfo(currentRun).hltNames(trigs) == string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v2") )<< endl;
-//                    if(event->trigHLT(trigs) && !fTrig)
+//                    if(weight_0 < 0.0)
 //                    {
-//                        fTrig = true;
-//                        firstTrig = trigs;
+//                        scaleFactor = -1.0;  //Taking into account negative weights in NLO Monte Carlo
+//                        negWeights++;
 //                    }
 //                }
-//                cout <<"Triggers Passed: " << nTrigs << ".  e.g. " << firstTrig <<endl;
 
 
 
@@ -988,7 +991,11 @@ int main (int argc, char *argv[])
                 else
                 {
                     if( Muon && Electron )
-                        itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1"), currentRun, iFile);
+                    {
+                        itrigger = treeLoader.iTrigger ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1", currentRun, iFile);
+                        cout << "iTrigger : " << itrigger << endl;
+                        cout << "runInfos Trigger : " << runInfos->getHLTinfo(currentRun).hltPath("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1") << endl;
+                    }
                     else if( Muon && !Electron )
                         itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v1"), currentRun, iFile);
                     else if( !Muon && Electron )
@@ -1043,6 +1050,17 @@ int main (int argc, char *argv[])
             // Declare selection instance
             Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets);
 
+            //Getting Event Weight
+
+            centralWeight = (event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1")))/(event->originalXWGTUP());
+            scaleUp = event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 5"))/(event->originalXWGTUP());
+            scaleDown = event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 9"))/(event->originalXWGTUP());
+
+            cout <<"Central Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1") << " Weight : " << centralWeight <<endl;
+            cout <<"Scale Up Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 5") << " Weight : " << scaleUp <<endl;
+            cout <<"Scale Down Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 9") << " Weight : " << scaleDown <<endl;
+
+
             // Define object selection cuts
             if (Muon && Electron && dilepton)
             {
@@ -1051,7 +1069,7 @@ int main (int argc, char *argv[])
                 selectedFatJets                                        = selection.GetSelectedFatJets(); // Relying solely on cuts defined in setPFJetCuts()
 
                 if (debug)cout<<"Getting Loose Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring_15");
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
                 else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
@@ -1062,7 +1080,7 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
                 if (debug)cout<<"Getting Medium Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring_15");
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
                 else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
@@ -1072,7 +1090,7 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
                 if (debug)cout<<"Getting Medium Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring_15");
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
                 else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
@@ -1204,7 +1222,7 @@ int main (int argc, char *argv[])
 
                 if(fabs(jet_flavor) == 5 || fabs(jet_flavor) == 4  )
                 {
-                    SF_tag =  bTool->getSF(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,dobTagEffShift );
+                    //SF_tag =  bTool->getSF(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,dobTagEffShift );
                     //  cout <<" "<<endl;
                     ////cout <<"jet SF nom "<< bTool->getWeight(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,0 )    <<endl;
                     //cout <<"jet SF minus "<< bTool->getWeight(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,-1 )    <<endl;
@@ -1213,7 +1231,7 @@ int main (int argc, char *argv[])
                 else
                 {
                     //  cout <<" light jet... "<<endl;
-                    SF_tag =  bTool->getSF(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,domisTagEffShift);
+                    //SF_tag =  bTool->getSF(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,domisTagEffShift);
                 }
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
                 {
@@ -1805,7 +1823,7 @@ int main (int argc, char *argv[])
             //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
 
 
-            float vals[31] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,selectedJets[2]->Pt(),selectedJets[3]->Pt(),HT,0,0,0,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,scaleFactor,nvertices,normfactor,Luminosity,weight_0};
+            float vals[31] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,selectedJets[2]->Pt(),selectedJets[3]->Pt(),HT,0,0,0,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,scaleFactor,nvertices,normfactor,Luminosity,centralWeight};
             //                "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
             if(Muon && Electron)
             {
