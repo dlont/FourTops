@@ -14,9 +14,9 @@
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/MuonEG/Run2015D-PromptReco-v3/30092015_163601/*.root"/>
 
 <d name="ttttNLO_SUS25_MuElSkim" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="48170712.95177414" xsection="0.009103" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v7/MuonEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/19102015_141916/Skimmed_TOPTREE*.root"/>
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v7/MuonEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/19102015_141916/Skimmed_TOPTREE_2.root"/>
 
-<d name="TTJets25_MuElSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1341.824564778" xsection="831.76"   PreselEff="0.0"
+<d name="TTJets25_MuElSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1341.824564778" xsection="831.76"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v7/MuonEG/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/19102015_114814/Skimmed_TOPTREE*.root"/>
 
 <d name="TTScaleUp25_MuElSkim"  title="t\bar{t} PHYS14 Scale Up"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1140.451572569" xsection="831.76"   PreselEff="0.0"
@@ -43,10 +43,10 @@
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/DoubleMuon/Run2015D-PromptReco-v3/30092015_102851/*.root"/>
 
 <d name="ttttNLO_SUS25_MuMuSkim" title="NLO SM tttt"  add="0"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="12033944.853345051" xsection="0.009103" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/DoubleMuon/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/30092015_225030/Skimmed_TOPTREE*.root"/>
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v7/DoubleMuon/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/19102015_192830/Skimmed_TOPTREE*.root"/>
 
 <d name="TTJets25_MuMuSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1341.824564778" xsection="831.76"   PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/DoubleMuon/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/30092015_204011/Skimmed_TOPTREE*.root"/>
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v7/DoubleMuon/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/19102015_165912/Skimmed_TOPTREE*.root"/>
 
 <d name="TTScaleUp25_MuMuSkim"  title="t\bar{t} PHYS14 Scale Up"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2401.667548331" xsection="831.76"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/DoubleMuon/TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8-RunIISpring15DR74-Asympt25ns/01102015_040134/Skimmed_TOPTREE*.root"/>
@@ -72,10 +72,10 @@
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/DoubleEG/Run2015D-PromptReco-v3/01102015_111341/*.root"/>
 
 <d name="ttttNLO_SUS25_ElElSkim" title="NLO SM tttt"  add="0"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="12033944.853345051" xsection="0.009103" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/DoubleEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/01102015_080136/Skimmed_TOPTREE*.root"/>
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v7/DoubleEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/20102015_003716/Skimmed_TOPTREE*.root"/>
 
 <d name="TTJets25_ElElSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1341.824564778" xsection="831.76"   PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/DoubleEG/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/01102015_055032/Skimmed_TOPTREE*.root"/>
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v7/DoubleEG/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/19102015_220556/Skimmed_TOPTREE*.root"/>
 
 <d name="TTScaleUp25_ElElSkim"  title="t\bar{t} PHYS14 Scale Up"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2401.667548331" xsection="831.76"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v6/DoubleEG/TT_TuneCUETP8M1_13TeV-powheg-scaleup-pythia8-RunIISpring15DR74-Asympt25ns/01102015_140004/Skimmed_TOPTREE*.root"/>

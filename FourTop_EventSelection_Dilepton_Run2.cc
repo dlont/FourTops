@@ -243,6 +243,23 @@ int main (int argc, char *argv[])
     bool Muon = true;
     bool Electron = true;
 
+    if(dName.find("MuElSkim") != std::string::npos)
+    {
+        Muon = true;
+        Electron = true;
+    }
+    else if(dName.find("MuMuSkim") != std::string::npos)
+    {
+        Muon = true;
+        Electron = false;
+    }
+    else if(dName.find("ElElSkim") != std::string::npos)
+    {
+        Muon = false;
+        Electron = true;
+    }
+    else cout << "Boolean setting by name failed" << endl;
+
     if(Muon && Electron && dilepton)
     {
         cout << " --> Using the Muon-Electron channel..." << endl;
@@ -251,13 +268,13 @@ int main (int argc, char *argv[])
     }
     else if(Muon && !Electron && dilepton)
     {
-        cout << " --> Using the Muon-Electron channel..." << endl;
+        cout << " --> Using the Muon-Muon channel..." << endl;
         channelpostfix = "_MuMu";
         xmlFileName = "config/Run2_Samples.xml";
     }
     else if(!Muon && Electron && dilepton)
     {
-        cout << " --> Using the Muon-Electron channel..." << endl;
+        cout << " --> Using the Electron-Electron channel..." << endl;
         channelpostfix = "_ElEl";
         xmlFileName = "config/Run2_Samples.xml";
     }
@@ -346,11 +363,15 @@ int main (int argc, char *argv[])
     }
     else if(dilepton && Muon && !Electron)
     {
-        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuMu_9thJuly.root","MasterMVA_MuMu_9thJuly",MVAvars, "_MuMuJuly9th2015");
+//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuMu_9thJuly.root","MasterMVA_MuMu_9thJuly",MVAvars, "_MuMuJuly9th2015");
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_13thJuly.root","MasterMVA_MuEl_13thJuly",MVAvars, "_MuElJuly13th2015");
+
     }
     else if(dilepton && !Muon && Electron)
     {
-        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_ElEl_9thJuly.root","MasterMVA_ElEl_9thJuly",MVAvars, "_ElElJuly9th2015");
+//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_ElEl_9thJuly.root","MasterMVA_ElEl_9thJuly",MVAvars, "_ElElJuly9th2015");
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_13thJuly.root","MasterMVA_MuEl_13thJuly",MVAvars, "_MuElJuly13th2015");
+
     }
 
     cout << " Initialized Eventcomputer_" << endl;
@@ -632,13 +653,17 @@ int main (int argc, char *argv[])
         //     string Ntupname = "Craneens/Craneen_" + dataSetName +postfix + "_" + date_str+  ".root";
 
         string Ntupname = "Craneens"+channelpostfix+"/Craneens"+ date_str  +"/Craneen_" + dataSetName +postfix + ".root";
+        string NMtupname = "Craneens"+channelpostfix+"/Craneens"+ date_str  +"/Mirena_" + dataSetName +postfix + ".root";
         string Ntuptitle = "Craneen_" + channelpostfix;
+        string NMtuptitle = "Craneen_" + channelpostfix;
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
+        TFile * tupMfile = new TFile(NMtupname.c_str(),"RECREATE");
 
         // TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
         TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:3rdJetPt:4thJetPt:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
+        TNtuple * Mtup = new TNtuple(NMtuptitle.c_str(),NMtuptitle.c_str(),"LeadingLeptonPt:LeadingLeptonIso:SecondLeptonPt:SecondLeptonIso:ScaleFactor:PU:NormFactor:Luminosity");
 
 
         //////////////////////////////////////////////////
@@ -747,6 +772,10 @@ int main (int argc, char *argv[])
         selectedElectrons.reserve(10);
         selectedMuons.reserve(10);
 
+        TRootRun *runInfos = new TRootRun();
+        datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
+        datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
+
 
 
         //////////////////////////////////////
@@ -759,7 +788,7 @@ int main (int argc, char *argv[])
             H = 0., HX =0., HT = 0., HTX = 0.,HTH=0.,HTXHX=0., sumpx_X = 0., sumpy_X= 0., sumpz_X =0., sume_X= 0. , sumpx =0., sumpy=0., sumpz=0., sume=0., jetpt =0., PTBalTopEventX = 0., PTBalTopSumJetX =0.;
 
             double ievt_d = ievt;
-            float centralWeight, scaleUp, scaleDown;
+            float centralWeight = 1, scaleUp = 1, scaleDown = 1;
             currentfrac = ievt_d/end_d;
             if (debug)cout <<"event loop 1"<<endl;
 
@@ -771,6 +800,9 @@ int main (int argc, char *argv[])
             float scaleFactor = 1.;  // scale factor for the event
             event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, init_fatjets,  mets, debug);  //load event
 
+            float nvertices = vertex.size();
+            float normfactor = datasets[d]->NormFactor();
+
             string currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
             if(previousFilename != currentFilename)
             {
@@ -779,11 +811,49 @@ int main (int argc, char *argv[])
                 cout<<"File changed!!! => "<<currentFilename<<endl;
             }
 
-            TRootRun *runInfos = new TRootRun();
-            datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
-            datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
-            cout<<"SetBranchAddress(runInfos,&runInfos) : "<<datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos)<<endl;
+
+            //cout<<"SetBranchAddress(runInfos,&runInfos) : "<<datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos)<<endl;
             int rBytes = datasets[d]->runTree()->GetEntry(iFile);
+
+            int currentRun = event->runId();
+
+            if(dataSetName.find("TTJets")!=std::string::npos)
+            {
+                centralWeight = (event->getWeight(1))/(abs(event->originalXWGTUP()));
+                scaleUp = event->getWeight(5)/(abs(event->originalXWGTUP()));
+                scaleDown = event->getWeight(9)/(abs(event->originalXWGTUP()));
+
+                //cout <<"Central Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1") << " Weight : " << centralWeight <<endl;
+                //cout <<"Scale Up Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 5") << " Weight : " << scaleUp <<endl;
+                //cout <<"Scale Down Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 9") << " Weight : " << scaleDown <<endl;
+            }
+            else if(dataSetName.find("tttt")!=std::string::npos || dataSetName.find("TTTT")!=std::string::npos)
+            {
+                centralWeight = (event->getWeight(1001))/(abs(event->originalXWGTUP()));
+                scaleUp = event->getWeight(1005)/(abs(event->originalXWGTUP()));
+                scaleDown = event->getWeight(1009)/(abs(event->originalXWGTUP()));
+
+                //cout << "Unscaled Central Weight: " << event->getWeight(1001) << " originalXWGTUP: " << event->originalXWGTUP() << endl;
+
+                //cout <<"Central Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("scale_variation 1") << " Weight : " << centralWeight <<endl;
+                //cout <<"Scale Up Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("scale_variation 5") << " Weight : " << scaleUp <<endl;
+                //cout <<"Scale Down Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("scale_variation 9") << " Weight : " << scaleDown <<endl;
+            }
+
+
+            if(dataSetName.find("scaleup") != std::string::npos)
+            {
+                scaleFactor *= scaleUp;
+            }
+            else if(dataSetName.find("scaledown") != std::string::npos)
+            {
+                scaleFactor *= scaleDown;
+            }
+            else
+            {
+                scaleFactor *= centralWeight;
+            }
+
 
             float rho = event->fixedGridRhoFastjetAll();
             if (debug)cout <<"Rho: " << rho <<endl;
@@ -943,29 +1013,31 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////
             bool trigged = false;
             std::string filterName = "";
-            int currentRun = event->runId();
+
             if(previousRun != currentRun)
             {
                 cout <<"What run? "<< currentRun<<endl;
                 previousRun = currentRun;
                 cout << "HLT Debug output" << endl;
 
+                //runInfos->getWeightInfo(currentRun).getweightNameList();
+
                 //runInfos->getHLTinfo(currentRun).gethltNameList();
 
-                treeLoader.ListTriggers(currentRun, iFile);
+//                treeLoader.ListTriggers(currentRun, iFile);
 
                 //int weightIdx = runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1");
 
 
 
-//                if(nlo)
-//                {
-//                    if(weight_0 < 0.0)
-//                    {
-//                        scaleFactor = -1.0;  //Taking into account negative weights in NLO Monte Carlo
-//                        negWeights++;
-//                    }
-//                }
+                if(nlo)
+                {
+                    if(centralWeight < 0.0)
+                    {
+                        //scaleFactor = -1.0;  //Taking into account negative weights in NLO Monte Carlo
+                        negWeights++;
+                    }
+                }
 
 
 
@@ -993,8 +1065,8 @@ int main (int argc, char *argv[])
                     if( Muon && Electron )
                     {
                         itrigger = treeLoader.iTrigger ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1", currentRun, iFile);
-                        cout << "iTrigger : " << itrigger << endl;
-                        cout << "runInfos Trigger : " << runInfos->getHLTinfo(currentRun).hltPath("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1") << endl;
+//                        cout << "iTrigger : " << itrigger << " iFile: " << iFile << endl;
+//                        cout << "runInfos Trigger : " << runInfos->getHLTinfo(currentRun).hltPath("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1") << endl;
                     }
                     else if( Muon && !Electron )
                         itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v1"), currentRun, iFile);
@@ -1042,23 +1114,18 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////
 
             // Apply trigger selection
-            trigged = treeLoader.EventTrigged (itrigger);
+            trigged = treeLoader.EventTrigged (221);  //artifical HLT for Mirena
+//            trigged = treeLoader.EventTrigged (itrigger);
             //trigged = true;  // Disabling the HLT requirement
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
-            if(itrigger == 9999 ) cout << "Lumi Block: " << event->lumiBlockId() << " Event: " << event->eventId() << endl;
+//            if(itrigger == 9999 ) cout << "Lumi Block: " << event->lumiBlockId() << " Event: " << event->eventId() << endl;
             //if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
             // Declare selection instance
             Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets);
 
             //Getting Event Weight
 
-            centralWeight = (event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1")))/(event->originalXWGTUP());
-            scaleUp = event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 5"))/(event->originalXWGTUP());
-            scaleDown = event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 9"))/(event->originalXWGTUP());
 
-            cout <<"Central Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1") << " Weight : " << centralWeight <<endl;
-            cout <<"Scale Up Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 5") << " Weight : " << scaleUp <<endl;
-            cout <<"Scale Down Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 9") << " Weight : " << scaleDown <<endl;
 
 
             // Define object selection cuts
@@ -1070,6 +1137,7 @@ int main (int argc, char *argv[])
 
                 if (debug)cout<<"Getting Loose Muons"<<endl;
                 selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring15");
+                selectedExtraMuons                                  = selection.GetSelectedMuons(0, 2.4, 1, "Loose", "Spring15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
                 else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
@@ -1094,6 +1162,30 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
                 else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
+            }
+
+
+            ///////////////////////////////////////
+            ////  Plots for Mirena  ///////////////
+            ///////////////////////////////////////
+
+            if(selectedExtraMuons.size() == 2 && Muon && !Electron)
+            {
+                float reliso1 = selectedExtraMuons[0]->relPfIso(4, 0.5);
+                float reliso2 = selectedExtraMuons[1]->relPfIso(4, 0.5);
+                Mtup->Fill(selectedExtraMuons[0]->Pt(), reliso1, selectedExtraMuons[1]->Pt(), reliso2, scaleFactor, nvertices, normfactor, Luminosity);
+            }
+            else if(selectedExtraMuons.size() == 1 && selectedElectrons.size() == 1 && Muon && Electron)
+            {
+                float reliso1 = selectedExtraMuons[0]->relPfIso(4, 0.5);
+                float reliso2 = ElectronRelIso(selectedElectrons[0], rho);
+                Mtup->Fill(selectedExtraMuons[0]->Pt(), reliso1, selectedElectrons[0]->Pt(), reliso2, scaleFactor, nvertices, normfactor, Luminosity);
+            }
+            else if(selectedElectrons.size() == 2 && !Muon && Electron)
+            {
+                float reliso1 = ElectronRelIso(selectedElectrons[0], rho);
+                float reliso2 = ElectronRelIso(selectedElectrons[1], rho);
+                Mtup->Fill(selectedElectrons[0]->Pt(), reliso1, selectedElectrons[1]->Pt(), reliso2, scaleFactor, nvertices, normfactor, Luminosity);
             }
 
 
@@ -1477,6 +1569,8 @@ int main (int argc, char *argv[])
                 cerr<<"Correct Channel not selected."<<endl;
                 exit(1);
             }
+
+
             sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
 
             //Scan for best MET Cut before Jet requirements
@@ -1725,8 +1819,7 @@ int main (int argc, char *argv[])
 
 
 
-            float nvertices = vertex.size();
-            float normfactor = datasets[d]->NormFactor();
+
 
             ///////////////////
             //MET Based Plots//
@@ -1849,8 +1942,14 @@ int main (int argc, char *argv[])
 
         } //End Loop on Events
 
+        tupfile->cd();
         tup->Write();
         tupfile->Close();
+
+
+        tupMfile->cd();
+        Mtup->Write();
+        tupMfile->Close();
         cout <<"n events passed  =  "<<passed <<endl;
         cout <<"n events with negative weights = "<<negWeights << endl;
         cout << "Event Count: " << eventCount << endl;
