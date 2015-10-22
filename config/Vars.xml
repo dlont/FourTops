@@ -9,10 +9,9 @@
 		<fileNameSys>config/Run2SingleLepton_samples_Sys74.xml</fileNameSys>
 		<!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/Craneen_</craneenPath-->
 		<!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/CraneenJets_</craneenPath-->
-		<craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens17_9_2015_merge/Craneen_</craneenPath>
+		<craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens21_10_2015/Craneen_</craneenPath> <!-- 17_9 no scale weights-->
 
 		<lumiScale lumi=5/>
-		<split_ttbar split=0/> <!-- 0 for false , 1 for true -->
 
 		<splitting splitVar="nJets" bSplit=6 tSplit=10 wSplit=2 >JS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nMtags" bSplit1=6 tSplit1=10 wSplit1=4 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
@@ -26,7 +25,7 @@
 		</splitting>
 
 		<datacardVar>BDT</datacardVar> <!-- variable for which datacard will be produced -->
-		<var lBound= 0 uBound=2000 nBins=20 >HT</var>
+		<!--var lBound= 0 uBound=2000 nBins=20 >HT</var>
 		<var lBound= 20 uBound=400 nBins=38 >LeadingMuonPt</var>
 		<var lBound= -2.5 uBound=4.5 nBins=24 >LeadingMuonEta</var>
 		<var lBound= -3.5 uBound=5.5 nBins=28 >leptonphi</var>
@@ -36,14 +35,14 @@
 		<var lBound= 1.5 uBound=7.5 nBins=6 >nTtags</var>
 		<var lBound= 0 uBound=700 nBins=28 >met</var>
 		<var lBound= 0 uBound=1600 nBins=16 >1stjetpt</var>
-		<var lBound= 0 uBound=900 nBins=18 >LeadingBJetPt</var>
+		<var lBound= 0 uBound=900 nBins=18 >LeadingBJetPt</var-->
 		<var lBound= -0.5 uBound=1.0 nBins=15 >BDT</var>
-		<var lBound= 0 uBound=4 nBins=20>angletop1top2</var>
+		<!--var lBound= 0 uBound=4 nBins=20>angletop1top2</var>
 		<var lBound= 0 uBound=1000 nBins=20>HTb</var>
 		<var lBound= 0.2 uBound=1.5 nBins=26>HTH</var>
 		<var lBound= 0 uBound=0.8 nBins=24>HTRat</var>
 		<var lBound= -1 uBound=1.5 nBins=30>multitopness</var>
-		<var lBound= 0 uBound=0.3 nBins=10>leptonIso</var>
+		<var lBound= 0 uBound=0.3 nBins=10>leptonIso</var-->
 
 
 		<!--var lBound= 0 uBound=600 nBins=20 >jetpT</var>
@@ -64,7 +63,6 @@
 		<craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_El/Craneens10_9_2015_merge/Craneen_</craneenPath>
 
 		<lumiScale lumi=50/>
-		<split_ttbar split=true/>
 
 
 		<splitting splitVar="nJets" bSplit=6 tSplit=10 wSplit=2 >JS</splitting>
@@ -94,7 +92,7 @@
 		<var lBound= 0.2 uBound=1.5 nBins=26>HTH</var>
 		<var lBound= 0 uBound=0.8 nBins=24>HTRat</var>
 		<var lBound= -1 uBound=1.5 nBins=30>multitopness</var>
-		<var lBound= 0 uBound=0.1 nBins=10>leptonIso</var>		
+		<var lBound= 0 uBound=0.3 nBins=10>leptonIso</var>		
 
 		<!--var lBound= 0 uBound=600 nBins=20 >jetpT</var>    
 		<var lBound= -15 uBound=15 nBins=50 >csvDisc</var>
