@@ -76,7 +76,7 @@ for i, row in enumerate(execCommands):
     print 'File {} opened'.format(fileNames[i])
     outfiles.append(outfile)
     row.insert(0, "nohup")
-    popen = subprocess.Popen(row, stdout=outfiles[i])
+    popen = subprocess.Popen(row, stdout=outfiles[i], stderr=outfiles[i])
     print 'Job {} begun'.format(row[2])
     processes.append(popen)
     procsStarted += 1
