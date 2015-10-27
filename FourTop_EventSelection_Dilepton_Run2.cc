@@ -653,17 +653,16 @@ int main (int argc, char *argv[])
         //     string Ntupname = "Craneens/Craneen_" + dataSetName +postfix + "_" + date_str+  ".root";
 
         string Ntupname = "Craneens"+channelpostfix+"/Craneens"+ date_str  +"/Craneen_" + dataSetName +postfix + ".root";
-        string NMtupname = "Craneens"+channelpostfix+"/Craneens"+ date_str  +"/Mirena_" + dataSetName +postfix + ".root";
         string Ntuptitle = "Craneen_" + channelpostfix;
-        string NMtuptitle = "Craneen_" + channelpostfix;
+        string controlTuptitle = "ControlCraneen_" + channelpostfix;
 
         TFile * tupfile = new TFile(Ntupname.c_str(),"RECREATE");
-        TFile * tupMfile = new TFile(NMtupname.c_str(),"RECREATE");
+//        TFile * tupMfile = new TFile(NMtupname.c_str(),"RECREATE");
 
         // TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
         TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:3rdJetPt:4thJetPt:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
-        TNtuple * Mtup = new TNtuple(NMtuptitle.c_str(),NMtuptitle.c_str(),"LeadingLeptonPt:LeadingLeptonIso:SecondLeptonPt:SecondLeptonIso:ScaleFactor:PU:NormFactor:Luminosity");
+        TNtuple * controlTup = new TNtuple(controlTuptitle.c_str(),controlTuptitle.c_str(),"LeadingLeptonPt:LeadingLeptonIso:LeadingLeptonEta:SecondLeptonPt:SecondLeptonIso:SecondLeptonEta:LeadingJetPt:LeadingBJetPt:nJets:nMtags:ScaleFactor:PU:NormFactor:Luminosity");
 
 
         //////////////////////////////////////////////////
@@ -1114,12 +1113,12 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////
 
             // Apply trigger selection
-            trigged = treeLoader.EventTrigged (221);  //artifical HLT for Mirena
-//            trigged = treeLoader.EventTrigged (itrigger);
+//            trigged = treeLoader.EventTrigged (221);  //artifical HLT for Mirena
+            trigged = treeLoader.EventTrigged (itrigger);
             //trigged = true;  // Disabling the HLT requirement
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
 //            if(itrigger == 9999 ) cout << "Lumi Block: " << event->lumiBlockId() << " Event: " << event->eventId() << endl;
-            //if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop.
+            if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop. this is present to cut down on compute time.
             // Declare selection instance
             Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets);
 
@@ -1136,7 +1135,7 @@ int main (int argc, char *argv[])
                 selectedFatJets                                        = selection.GetSelectedFatJets(); // Relying solely on cuts defined in setPFJetCuts()
 
                 if (debug)cout<<"Getting Loose Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring15");
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.25, "Loose", "Spring15");
                 selectedExtraMuons                                  = selection.GetSelectedMuons(0, 2.4, 1, "Loose", "Spring15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
@@ -1148,7 +1147,7 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
                 if (debug)cout<<"Getting Medium Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring15");
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.25, "Loose", "Spring15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
                 else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
@@ -1158,35 +1157,12 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Jets"<<endl;
                 selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
                 if (debug)cout<<"Getting Medium Muons"<<endl;
-                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.2, "Loose", "Spring15");
+                selectedMuons                                       = selection.GetSelectedMuons(20, 2.4, 0.25, "Loose", "Spring15");
                 if (debug)cout<<"Getting Loose Electrons"<<endl;
                 if(bx25) selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_25ns",true); // VBTF ID
                 else selectedElectrons                                   = selection.GetSelectedElectrons("Loose","Spring15_50ns",true); // VBTF ID
             }
 
-
-            ///////////////////////////////////////
-            ////  Plots for Mirena  ///////////////
-            ///////////////////////////////////////
-
-            if(selectedExtraMuons.size() == 2 && Muon && !Electron)
-            {
-                float reliso1 = selectedExtraMuons[0]->relPfIso(4, 0.5);
-                float reliso2 = selectedExtraMuons[1]->relPfIso(4, 0.5);
-                Mtup->Fill(selectedExtraMuons[0]->Pt(), reliso1, selectedExtraMuons[1]->Pt(), reliso2, scaleFactor, nvertices, normfactor, Luminosity);
-            }
-            else if(selectedExtraMuons.size() == 1 && selectedElectrons.size() == 1 && Muon && Electron)
-            {
-                float reliso1 = selectedExtraMuons[0]->relPfIso(4, 0.5);
-                float reliso2 = ElectronRelIso(selectedElectrons[0], rho);
-                Mtup->Fill(selectedExtraMuons[0]->Pt(), reliso1, selectedElectrons[0]->Pt(), reliso2, scaleFactor, nvertices, normfactor, Luminosity);
-            }
-            else if(selectedElectrons.size() == 2 && !Muon && Electron)
-            {
-                float reliso1 = ElectronRelIso(selectedElectrons[0], rho);
-                float reliso2 = ElectronRelIso(selectedElectrons[1], rho);
-                Mtup->Fill(selectedElectrons[0]->Pt(), reliso1, selectedElectrons[1]->Pt(), reliso2, scaleFactor, nvertices, normfactor, Luminosity);
-            }
 
 
             vector<TRootJet*>      selectedLBJets;
@@ -1325,15 +1301,15 @@ int main (int argc, char *argv[])
                     //  cout <<" light jet... "<<endl;
                     //SF_tag =  bTool->getSF(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,domisTagEffShift);
                 }
-                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
+                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.605   )
                 {
 
                     selectedLBJets.push_back(selectedJets[seljet]);
-                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.679)
+                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.890)
                     {
                         selectedMBJets.push_back(selectedJets[seljet]);
 
-                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.898)
+                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.970)
                         {
                             selectedTBJets.push_back(selectedJets[seljet]);
                         }
@@ -1630,6 +1606,30 @@ int main (int argc, char *argv[])
                 treeLoader.LoadMCEvent(ievt, genEvt, 0, mcParticlesMatching_,false);
                 if (debug) cout <<"size   "<< mcParticlesMatching_.size()<<endl;
             }
+
+
+            ///////////////////
+            // Control Tuple //
+            ///////////////////
+            if(selectedMuons.size() == 2 && Muon && !Electron)
+            {
+                float reliso1 = selectedMuons[0]->relPfIso(4, 0.5);
+                float reliso2 = selectedMuons[1]->relPfIso(4, 0.5);
+                controlTup->Fill(selectedMuons[0]->Pt(), reliso1, selectedMuons[0]->Eta(), selectedMuons[1]->Pt(), reliso2, selectedMuons[1]->Eta(), selectedJets[0]->Pt(), selectedMBJets[0]->Pt(), nJets, nMtags, scaleFactor, nvertices, normfactor, Luminosity);
+            }
+            else if(selectedMuons.size() == 1 && selectedElectrons.size() == 1 && Muon && Electron)
+            {
+                float reliso1 = selectedMuons[0]->relPfIso(4, 0.5);
+                float reliso2 = ElectronRelIso(selectedElectrons[0], rho);
+                controlTup->Fill(selectedMuons[0]->Pt(), reliso1, selectedMuons[0]->Eta(), selectedElectrons[1]->Pt(), reliso2, selectedElectrons[1]->Eta(), selectedJets[0]->Pt(), selectedMBJets[0]->Pt(), nJets, nMtags, scaleFactor, nvertices, normfactor, Luminosity);
+            }
+            else if(selectedElectrons.size() == 2 && !Muon && Electron)
+            {
+                float reliso1 = ElectronRelIso(selectedElectrons[0], rho);
+                float reliso2 = ElectronRelIso(selectedElectrons[1], rho);
+                controlTup->Fill(selectedElectrons[0]->Pt(), reliso1, selectedElectrons[0]->Eta(), selectedElectrons[1]->Pt(), reliso2, selectedElectrons[1]->Eta(), selectedJets[0]->Pt(), selectedMBJets[0]->Pt(), nJets, nMtags, scaleFactor, nvertices, normfactor, Luminosity);
+            }
+
 
             //////////////////////////////////////
             // MVA Hadronic Top Reconstructions //
@@ -1947,9 +1947,9 @@ int main (int argc, char *argv[])
         tupfile->Close();
 
 
-        tupMfile->cd();
-        Mtup->Write();
-        tupMfile->Close();
+//        tupMfile->cd();
+//        Mtup->Write();
+//        tupMfile->Close();
         cout <<"n events passed  =  "<<passed <<endl;
         cout <<"n events with negative weights = "<<negWeights << endl;
         cout << "Event Count: " << eventCount << endl;

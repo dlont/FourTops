@@ -104,7 +104,7 @@ int main ()
     int jet_flavor;
     double JetPt, JetEta;
     double SF_tag =1.;
-    float workingpointvalue = 0.679; //working points updated to 2012 BTV-POG recommendations.
+    float workingpointvalue = 0.890; //working points updated to 2015 BTV-POG recommendations.
 
     cout <<"Instantiating jet combiner..."<<endl;
 
@@ -127,7 +127,7 @@ int main ()
     bool Electron = true;
     int nPassed = 0;
 
-    BTagWeightTools * bTool = new BTagWeightTools("SFb-pt_NOttbar_payload_EPS13.txt", "CSVM") ;
+//    BTagWeightTools * bTool = new BTagWeightTools("SFb-pt_NOttbar_payload_EPS13.txt", "CSVM") ;
 
     int dobTagEffShift = 0; //0: off (except nominal scalefactor for btag eff) 1: minus 2: plus
     cout << "dobTagEffShift: " << dobTagEffShift << endl;
@@ -143,7 +143,7 @@ int main ()
 
     if (dilep)
     {
-        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuEl_2ndOctober", "MVA/MasterMVA_MuEl_2ndOctober.root");
+        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuEl_26thOctober", "MVA/MasterMVA_MuEl_26thOctober.root");
     }
     else if (singlelep)
     {
@@ -224,6 +224,7 @@ int main ()
         nPassed = 0;
         string previousFilename = "";
         string dataSetName = datasets[d]->Name();
+        float centralWeight = 0;
 
 
 
@@ -238,7 +239,7 @@ int main ()
             {
                 std::cout<<"Processing the "<<ievt<<"th event, time = "<< ((double)clock() - start) / CLOCKS_PER_SEC << " ("<<100*(ievt-start)/(100000-event_start)<<"%)"<<flush<<"\r"<<endl;
             }
-            if(nPassed >= 7000) continue;
+            if(nPassed >= 2000) continue;
 
             mcParticlesMatching_.clear();
             genEvt = treeLoader.LoadGenEvent(ievt,false);
@@ -253,6 +254,11 @@ int main ()
             selectedLBJets.clear();
             selectedMBJets.clear();
             selectedTBJets.clear();
+
+            if(ievt%1000 == 0)
+            {
+                cout << "LoadingEvent" << endl;
+            }
 
             event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, mets, false);  //load event
 
@@ -367,8 +373,8 @@ int main ()
                     HTb += selectedJets[seljet]->Pt();
                 }
 
-                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244) selectedLBJets.push_back(selectedJets[seljet]);
-                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.898) selectedTBJets.push_back(selectedJets[seljet]);
+                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.605) selectedLBJets.push_back(selectedJets[seljet]);
+                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.970) selectedTBJets.push_back(selectedJets[seljet]);
             }
 
 
@@ -479,10 +485,16 @@ int main ()
             }
 
             //  cout <<" # leftover jets " <<  selectedJets2ndPass.size()     << " multitopness  =  "<<  multitopness   <<endl;
-            float weight_0 = event->weight0();
-            float scaleFactor;
-            if(weight_0 < 0) scaleFactor = -1.0;
-            else scaleFactor = 1.0;
+            if(dataSetName.find("TTJets")!=std::string::npos)
+            {
+                centralWeight = (event->getWeight(1))/(abs(event->originalXWGTUP()));
+            }
+            else if(dataSetName.find("tttt")!=std::string::npos || dataSetName.find("TTTT")!=std::string::npos)
+            {
+                centralWeight = (event->getWeight(1001))/(abs(event->originalXWGTUP()));
+            }
+            float scaleFactor = 1.0;
+            scaleFactor *= centralWeight;
 
 
             if (dilep)
@@ -509,7 +521,7 @@ int main ()
 
                 if(dataSetName.find("tttt")!=string::npos || dataSetName.find("TTTT")!=string::npos)
                 {
-                    Eventtrainer_->Fill("S","Weight",scaleFactor);
+                    Eventtrainer_->FillWeight("S","Weight",scaleFactor);
                     Eventtrainer_->Fill("S","topness",topness );
                     Eventtrainer_->Fill("S","muonpt",muonpt);
                     Eventtrainer_->Fill("S","muoneta",muoneta);
@@ -533,7 +545,7 @@ int main ()
 
                 else
                 {
-                    Eventtrainer_->Fill("B","Weight", scaleFactor);
+                    Eventtrainer_->FillWeight("B","Weight", scaleFactor);
                     Eventtrainer_->Fill("B","topness",topness);
                     Eventtrainer_->Fill("B","muonpt",muonpt);
                     Eventtrainer_->Fill("B","muoneta",muoneta);
@@ -602,7 +614,7 @@ int main ()
         }
 
     }
-    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElOctober2nd2015", true);
+    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElOctober26th2015", true);
 
 
 }
