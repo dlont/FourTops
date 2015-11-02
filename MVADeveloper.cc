@@ -71,7 +71,7 @@ int main ()
 
 
     clock_t start = clock();
-    string xmlFileName = "config/Run2DiLepton_BDTTrain.xml";
+    string xmlFileName = "/user/heilman/CMSSW_7_6_0_pre2/src/TopBrussels/FourTops/config/Run2DiLepton_BDTTrain.xml";
 
     const char *xmlfile = xmlFileName.c_str();
     cout << "used config file: " << xmlfile << endl;
@@ -141,9 +141,17 @@ int main ()
 
     MVATrainer* Eventtrainer_;
 
-    if (dilep)
+    if (dilep && Muon && Electron)
     {
         Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuEl_26thOctober", "MVA/MasterMVA_MuEl_26thOctober.root");
+    }
+    else if (dilep && Muon && !Electron)
+    {
+        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_MuMu_26thOctober", "MVA/MasterMVA_MuMu_26thOctober.root");
+    }
+    else if (dilep && !Muon && Electron)
+    {
+        Eventtrainer_ = new MVATrainer("BDT","MasterMVA_ElEl_26thOctober", "MVA/MasterMVA_ElEl_26thOctober.root");
     }
     else if (singlelep)
     {
@@ -226,6 +234,23 @@ int main ()
         string dataSetName = datasets[d]->Name();
         float centralWeight = 0;
 
+        if(dataSetName.find("MuEl")==string::npos && dilep && Muon && Electron)
+        {
+            continue;
+        }
+        else if(dataSetName.find("MuMu")==string::npos && dilep && Muon && !Electron)
+        {
+            continue;
+        }
+        else if(dataSetName.find("ElEl")==string::npos && dilep && !Muon && Electron)
+        {
+            continue;
+        }
+        else
+        {
+
+        }
+
 
 
         cout << "Dataset loop..." << endl;
@@ -239,7 +264,7 @@ int main ()
             {
                 std::cout<<"Processing the "<<ievt<<"th event, time = "<< ((double)clock() - start) / CLOCKS_PER_SEC << " ("<<100*(ievt-start)/(100000-event_start)<<"%)"<<flush<<"\r"<<endl;
             }
-            if(nPassed >= 2000) continue;
+            if(nPassed >= 5000) continue;
 
             mcParticlesMatching_.clear();
             genEvt = treeLoader.LoadGenEvent(ievt,false);

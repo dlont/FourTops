@@ -17,10 +17,10 @@
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/Run2015D-PromptReco-v4/24102015_003512/*.root"/>
 
 <d name="ttttNLO_SUS25_MuElSkim" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="63144018.46" xsection="0.009103" PreselEff="0.0"
-   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/22102015_181415/Skimmed_TOPTREE_1.root"/>
+   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/22102015_181415/Skimmed_TOPTREE_*.root"/>
 
 <d name="TTJets25_MuElSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2839.504184" xsection="831.76"   PreselEff="0.0"
-   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/23102015_103221/Skimmed_TOPTREE_1.root"/>
+   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/23102015_103221/Skimmed_TOPTREE_*.root"/>
 
 <d name="T_tW25_MuElSkim"  title="t tW"  add="0"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="4300.252809" xsection="35.6"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt25ns/23102015_213520/Skimmed_TOPTREE*.root"/>
@@ -42,11 +42,11 @@
 <d name="NP_overlay_Data_Run2015D_PromptReco_v4_MuMuSkim" title="MuMu Run2015D_PromptReco_v4 Data"  add="0"   color="40" ls="0"  lw="2" normf="1"  EqLumi="208.604635" xsection="1" PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/Run2015D-PromptReco-v4/24102015_165224/*.root"/>
 
-<d name="ttttNLO_SUS25_MuMuSkim" title="NLO SM tttt"  add="0"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="47099637.48" xsection="0.009103" PreselEff="0.0"
-   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/24102015_082141/Skimmed_TOPTREE_1.root"/>
+<d name="ttttNLO_SUS25_MuMuSkim" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="47099637.48" xsection="0.009103" PreselEff="0.0"
+   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/24102015_082141/Skimmed_TOPTREE_*.root"/>
 
-<d name="TTJets25_MuMuSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1775.242859" xsection="831.76"   PreselEff="0.0"
-   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/24102015_013719/Skimmed_TOPTREE_1.root"/>
+<d name="TTJets25_MuMuSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1775.242859" xsection="831.76"   PreselEff="0.0"
+   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/24102015_013719/Skimmed_TOPTREE_*.root"/>
 
 <d name="T_tW25_MuMuSkim"  title="t tW"  add="0"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="2661.460674" xsection="35.6"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt25ns/01102015_004033/Skimmed_TOPTREE*.root"/>
@@ -68,11 +68,11 @@
 <d name="NP_overlay_Data_Run2015D_PromptReco_v4_ElElSkim" title="ElEl Run2015D_PromptReco_v4 Data"  add="0"   color="40" ls="0"  lw="2" normf="1"  EqLumi="86.1769497" xsection="1" PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/Run2015D-PromptReco-v4/25102015_040358/*.root"/>
 
-<d name="ttttNLO_SUS25_ElElSkim" title="NLO SM tttt"  add="0"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="50341975.17" xsection="0.009103" PreselEff="0.0"
-   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/24102015_224256/Skimmed_TOPTREE_1.root"/>
+<d name="ttttNLO_SUS25_ElElSkim" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="50341975.17" xsection="0.009103" PreselEff="0.0"
+   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/24102015_224256/Skimmed_TOPTREE_*.root"/>
 
-<d name="TTJets25_ElElSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2079.343801" xsection="831.76"   PreselEff="0.0"
-   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/24102015_200030/Skimmed_TOPTREE_1.root"/>
+<d name="TTJets25_ElElSkim"  title="t\bar{t}+jets MadGraph Run-2 Start 25ns"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2079.343801" xsection="831.76"   PreselEff="0.0"
+   filenames="dcap://maite.iihe.ac.be/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/24102015_200030/Skimmed_TOPTREE_*.root"/>
 
 <d name="T_tW25_ElElSkim"  title="t tW"  add="0"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="3047.724719" xsection="35.6"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt25ns/25102015_013355/Skimmed_TOPTREE*.root"/>
