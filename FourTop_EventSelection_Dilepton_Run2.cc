@@ -124,7 +124,7 @@ int main (int argc, char *argv[])
 {
 
     //Checking Passed Arguments to ensure proper execution of MACRO
-    if(argc < 14)
+    if(argc < 12)
     {
         std::cerr << "TOO FEW INPUTs FROM XMLFILE.  CHECK XML INPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
         return 1;
@@ -142,13 +142,13 @@ int main (int argc, char *argv[])
     const float xSect               = strtod(argv[9], NULL);
     const float PreselEff           = strtod(argv[10], NULL);
     string fileName                 = argv[11];
-    const int startEvent            = strtol(argv[argc-2], NULL, 10);
-    const int endEvent              = strtol(argv[argc-1], NULL, 10);
+//    const int startEvent            = strtol(argv[argc-2], NULL, 10);
+//    const int endEvent              = strtol(argv[argc-1], NULL, 10);
     vector<string> vecfileNames;
-    for(int args = 11; args < argc-2; args++)
-    {
-        vecfileNames.push_back(argv[args]);
-    }
+//    for(int args = 11; args < argc-2; args++)
+//    {
+        vecfileNames.push_back(argv[11]);
+//    }
 
 
 
@@ -162,9 +162,9 @@ int main (int argc, char *argv[])
     cout << "Dataset normf: " << normf << endl;
     cout << "Dataset EqLumi: " << EqLumi << endl;
     cout << "Dataset xSect: " << xSect << endl;
-    cout << "Dataset File Name: " << vecfileNames[0] << endl;
-    cout << "Beginning Event: " << startEvent << endl;
-    cout << "Ending Event: " << endEvent << endl;
+    cout << "Dataset File Name: " << fileName << endl;
+//    cout << "Beginning Event: " << startEvent << endl;
+//    cout << "Ending Event: " << endEvent << endl;
     cout << "----------------------------------------" << endl;
 //    cin.get();
 
@@ -349,28 +349,31 @@ int main (int argc, char *argv[])
     MVAvars.push_back("Jet4Pt");
     MVAvars.push_back("HT2M");
     MVAvars.push_back("EventSph");
-//    MVAvars.push_back("EventCen");
+    MVAvars.push_back("EventCen");
     MVAvars.push_back("DiLepSph");
-//    MVAvars.push_back("DiLepCen");
-//    MVAvars.push_back("TopDiLepSph");
-//    MVAvars.push_back("TopDiLepCen");
+    MVAvars.push_back("DiLepCen");
+    MVAvars.push_back("TopDiLepSph");
+    MVAvars.push_back("TopDiLepCen");
 
     MVAComputer* Eventcomputer_;
 
     if(dilepton && Muon && Electron)
     {
-        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_13thJuly.root","MasterMVA_MuEl_13thJuly",MVAvars, "_MuElJuly13th2015");
+//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_26thOctober.root","MasterMVA_MuEl_26thOctober",MVAvars, "_MuElOctober26th2015");
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_26thOctober.root","MasterMVA_MuEl_26thOctober",MVAvars, "_MuElOctober26th2015");
     }
     else if(dilepton && Muon && !Electron)
     {
 //        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuMu_9thJuly.root","MasterMVA_MuMu_9thJuly",MVAvars, "_MuMuJuly9th2015");
-        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_13thJuly.root","MasterMVA_MuEl_13thJuly",MVAvars, "_MuElJuly13th2015");
+//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuMu_26thOctober.root","MasterMVA_MuMu_26thOctober",MVAvars, "_MuMuOctober26th2015");
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_26thOctober.root","MasterMVA_MuEl_26thOctober",MVAvars, "_MuElOctober26th2015");
 
     }
     else if(dilepton && !Muon && Electron)
     {
 //        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_ElEl_9thJuly.root","MasterMVA_ElEl_9thJuly",MVAvars, "_ElElJuly9th2015");
-        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_13thJuly.root","MasterMVA_MuEl_13thJuly",MVAvars, "_MuElJuly13th2015");
+//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_ElEl_26thOctober.root","MasterMVA_ElEl_26thOctober",MVAvars, "_ElElOctober26th2015");
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_26thOctober.root","MasterMVA_MuEl_26thOctober",MVAvars, "_MuElOctober26th2015");
 
     }
 
@@ -738,23 +741,23 @@ int main (int argc, char *argv[])
 
         cout <<"Number of events in total dataset = "<<  ending  <<endl;
 
-        int event_start = startEvent;
+        int event_start = 0;
         if (verbose > 1) cout << " - Loop over events " << endl;
 
         float BDTScore, MHT, MHTSig, STJet,muoneta, muonpt,electronpt,bjetpt, EventMass, EventMassX , SumJetMass, SumJetMassX,H,HX ,HTHi,HTRat, HT, HTX,HTH,HTXHX, sumpx_X, sumpy_X, sumpz_X, sume_X, sumpx, sumpy, sumpz, sume, jetpt,PTBalTopEventX,PTBalTopSumJetX , PTBalTopMuMet;
 
         double currentfrac =0.;
-        double end_d;
-        if(endEvent > ending)
-            end_d = ending;
-        else
-            end_d = endEvent;
-
+        double end_d = ending;
+//        if(endEvent > ending)
+//            end_d = ending;
+//        else
+//            end_d = endEvent;
+//
         //end_d = 10000; //artifical ending for debug
         int nEvents = end_d - event_start;
         cout <<"Will run over "<<  (end_d - event_start) << " events..."<<endl;
         cout <<"Starting event = = = = "<< event_start  << endl;
-        if(end_d < startEvent)
+        if(end_d < event_start)
         {
             cout << "Starting event larger than number of events.  Exiting." << endl;
             return 1;
@@ -1621,7 +1624,7 @@ int main (int argc, char *argv[])
             {
                 float reliso1 = selectedMuons[0]->relPfIso(4, 0.5);
                 float reliso2 = ElectronRelIso(selectedElectrons[0], rho);
-                controlTup->Fill(selectedMuons[0]->Pt(), reliso1, selectedMuons[0]->Eta(), selectedElectrons[1]->Pt(), reliso2, selectedElectrons[1]->Eta(), selectedJets[0]->Pt(), selectedMBJets[0]->Pt(), nJets, nMtags, scaleFactor, nvertices, normfactor, Luminosity);
+                controlTup->Fill(selectedMuons[0]->Pt(), reliso1, selectedMuons[0]->Eta(), selectedElectrons[0]->Pt(), reliso2, selectedElectrons[0]->Eta(), selectedJets[0]->Pt(), selectedMBJets[0]->Pt(), nJets, nMtags, scaleFactor, nvertices, normfactor, Luminosity);
             }
             else if(selectedElectrons.size() == 2 && !Muon && Electron)
             {
