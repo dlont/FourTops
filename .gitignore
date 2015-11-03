@@ -1,0 +1,17 @@
+__init__.py
+*.pyc
+*.o
+*.so
+*.root
+*.dylib
+*.dll
+*.pdf
+*.png
+*.tex
+*DS_Store
+
+
+
+
+
+

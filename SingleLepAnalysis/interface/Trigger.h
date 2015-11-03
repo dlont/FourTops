@@ -47,6 +47,10 @@ class Trigger{
 		string previousFilename;
 		int iFile;
 	    std::map<std::string,std::pair<int,bool> > triggermap;
+	    TRootRun *runInfos2;
+	    string previousDatasetName;
+
+
 };
 
 #endif

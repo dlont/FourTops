@@ -48,6 +48,11 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
 void Split_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string xmlNom, float lScale);
 void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string channel, string leptoAbbr, bool jetSplit, bool jetTagsplit, string sSplitVar1, float fbSplit1, float ftSplit1, float fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom, float lScale);
 
+void GetScaleEnvelope(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath, string shapefileName);
+void GetScaleEnvelopeSplit(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath, string shapefileName);
+
+string DatacardVar = "BDT"; //variable of interest for plotting //global
+
 
 int main(int argc, char** argv)
 {
@@ -64,7 +69,6 @@ int main(int argc, char** argv)
     int isplit_ttbar = 0;
     bool split_ttbar = false;
 
-    string DatacardVar = "BDT"; //variable of interest for plotting
     //upper and lower bound of variable in plot
     float lBound, uBound, bSplit, tSplit, wSplit, bSplit1, tSplit1, wSplit1, bSplit2, tSplit2, wSplit2;  // + the bottom, top, and width of the splitting for 1 & 2 variables
 
@@ -82,6 +86,10 @@ int main(int argc, char** argv)
                 cout << "now selecting channel : " << chan << endl;
             }
         }
+        else{
+            cout<<"no arguments supplied"<<endl;
+            return 0;
+        }
         while(iarg<argc){
             string val = argv[iarg];
             iarg++;
@@ -96,7 +104,9 @@ int main(int argc, char** argv)
                 cout << "!!!!!!! doing Jet split !!!" << endl;
             }
         }
+
     }
+
 
 
     string xmlstring = "config/Vars.xml";
@@ -145,11 +155,11 @@ int main(int argc, char** argv)
         CraneenPath = child->FirstChild( "craneenPath")->ToElement()->GetText();
 
         //split ttbar
-        TiXmlElement* childttbarsplit = child->FirstChild( "split_ttbar" )->ToElement();
+        //TiXmlElement* childttbarsplit = child->FirstChild( "split_ttbar" )->ToElement();
         // split_ttbar =  childttbarsplit->Attribute("split"); 
-        childttbarsplit->QueryIntAttribute("split", &isplit_ttbar);
-        split_ttbar = isplit_ttbar;
-        cout<<"TTBAR SPLIT "<<split_ttbar<<endl;
+        // childttbarsplit->QueryIntAttribute("split", &isplit_ttbar);
+        // split_ttbar = isplit_ttbar;
+        // cout<<"TTBAR SPLIT "<<split_ttbar<<endl;
         cout<<"leptoAbbr: "<<leptoAbbr<<"  channel: "<<channel<<"  xmlFileName: "<<xmlFileName<<"  xmlFileNameSys: "<<xmlFileNameSys<<"  CraneenPath: "<<CraneenPath<<endl;
 
         //Get splittings from xml depending on JS or JTS
@@ -222,8 +232,12 @@ int main(int argc, char** argv)
                         DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, xmlFileName, lumiScale);
                     }
                 }
-                errorfile->Close();
                 shapefile->Close();
+
+                // GetScaleEnvelope(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath, shapefileName);
+                errorfile->Close();
+
+
                 delete shapefile;
                 delete errorfile;
                 cout<<""<<endl;                cout<<"end var"<<endl;
@@ -233,25 +247,157 @@ int main(int argc, char** argv)
     cout<<" DONE !! "<<endl;
 }
 
+void GetScaleEnvelope(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath, string shapefileName){
+
+    const char *xmlfile = xmlNom.c_str();    cout << "used config file: " << xmlfile << endl;
+
+    ///////////////////////////////////////////////////////////// Load Datasets ////////////////////////////////////////////////////////////////////
+    TTreeLoader treeLoader;
+    vector < Dataset* > datasets;                   //cout<<"vector filled"<<endl;
+    treeLoader.LoadDatasets (datasets, xmlfile);    //cout<<"datasets loaded"<<endl;
+
+    for (int d = 0; d < datasets.size(); d++){  //Loop through datasets
+        string dataSetName = datasets[d]->Name();
+        if(dataSetName.find("TTJets")!=string::npos){
+            cout<<"Producing envelope for scale uncertainty"<<endl;
+            histo1D["weightPlus"] = new TH1F("Plus","Plus", nBins, plotLow, plotHigh);
+            histo1D["weightMinus"] = new TH1F("Minus","Minus", nBins, plotLow, plotHigh);
+
+            TFile * reopenSF = new TFile(shapefileName.c_str());
+            histo1D["weight0"] = (TH1F*)reopenSF->Get("Genweight_tt");
+            histo1D["weight1"] = (TH1F*)reopenSF->Get("weight1");
+            histo1D["weight2"] = (TH1F*)reopenSF->Get("weight2");
+            histo1D["weight3"] = (TH1F*)reopenSF->Get("weight3");
+            histo1D["weight4"] = (TH1F*)reopenSF->Get("weight4");
+            histo1D["weight5"] = (TH1F*)reopenSF->Get("weight5");
+            histo1D["weight6"] = (TH1F*)reopenSF->Get("weight6");
+            histo1D["weight7"] = (TH1F*)reopenSF->Get("weight7");
+            histo1D["weight8"] = (TH1F*)reopenSF->Get("weight8");
+
+            // float weighty = weight0->Integral(); cout<<weighty<<endl;
+
+            cout<<"Got weights"<<endl;
+
+
+            for(int binN = 1; binN <nBins+1; ++binN){
+            float binContentMax = -1, binContentMin =  1000000000000000;  
+
+                for(int weightIt = 1; weightIt<9; ++weightIt){
+                    if(weightIt == 6 || weightIt == 8){
+                        continue; //extreme weights with 1/2u and 2u
+                    }
+
+                    string weightStr = static_cast<ostringstream*>( &(ostringstream() << weightIt) )->str();
+                    string weightHistoName = ("weight"+weightStr).c_str();
+                    cout<<"weight histo name: "<<weightHistoName<<endl;
+                    cout<<histo1D[weightHistoName.c_str()]->GetBinContent(binN)<<endl;
+                    if(binContentMin > histo1D[weightHistoName]->GetBinContent(binN) ) binContentMin = histo1D[weightHistoName]->GetBinContent(binN);
+                    if(binContentMax < histo1D[weightHistoName]->GetBinContent(binN) ) binContentMax = histo1D[weightHistoName]->GetBinContent(binN);
+                    cout<<"binContentMax: "<<binContentMax<<"binContentMin: "<<binContentMin<<endl;
+                    // cout<<"bin number : "<<binN<<"   bincontent: "<<histo1D["weight0"]->GetBinContent(binN)<<endl;
+                }
+                histo1D["weightPlus"]->SetBinContent(binN, binContentMax);
+                histo1D["weightMinus"]->SetBinContent(binN, binContentMin);
+            }  
+
+
+            errorfile->cd();
+            // errorfile->SetWritable();
+            // errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
+            errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
+            histo1D["weightMinus"]->Write("Minus");
+            histo1D["weightPlus"]->Write("Plus");
+        }    
+    }
+}
+
+void GetScaleEnvelopeSplit(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath, string shapefileName){
+
+    const char *xmlfile = xmlNom.c_str();    cout << "used config file: " << xmlfile << endl;
+
+    ///////////////////////////////////////////////////////////// Load Datasets ////////////////////////////////////////////////////////////////////
+    TTreeLoader treeLoader;
+    vector < Dataset* > datasets;                   //cout<<"vector filled"<<endl;
+    treeLoader.LoadDatasets (datasets, xmlfile);    //cout<<"datasets loaded"<<endl;
+
+    string plotname;   ///// Jet Split plot
+    string numStr;
+    string sbSplit = static_cast<ostringstream*>( &(ostringstream() << fbSplit) )->str();
+    string stSplit = static_cast<ostringstream*>( &(ostringstream() << ftSplit) )->str();
+    string swSplit = static_cast<ostringstream*>( &(ostringstream() << fwSplit) )->str();
+    for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
+    {
+        numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+        plotname = sVarofinterest + numStr + sSplitVar;
+        MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
+    }
+
+    for (int d = 0; d < datasets.size(); d++){  //Loop through datasets
+        string dataSetName = datasets[d]->Name();
+        if(dataSetName.find("TTJets")!=string::npos){
+            cout<<"Producing envelope for scale uncertainty"<<endl;
+            for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
+            {
+                numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+                histo1D[("weightPlus"+numStr).c_str()] = new TH1F("Plus","Plus", nBins, plotLow, plotHigh);
+                histo1D[("weightMinus"+numStr).c_str()] = new TH1F("Minus","Minus", nBins, plotLow, plotHigh);
+
+                TFile * reopenSF = new TFile(shapefileName.c_str());
+                histo1D[("Genweight_tt"+numStr).c_str()] = (TH1F*)reopenSF->Get(("Genweight_tt"+numStr).c_str());
+                histo1D[("weight1"+numStr).c_str()] = (TH1F*)reopenSF->Get(("weight1"+numStr).c_str());
+                histo1D[("weight2"+numStr).c_str()] = (TH1F*)reopenSF->Get(("weight2"+numStr).c_str());
+                histo1D[("weight3"+numStr).c_str()] = (TH1F*)reopenSF->Get(("weight3"+numStr).c_str());
+                histo1D[("weight4"+numStr).c_str()] = (TH1F*)reopenSF->Get(("weight4"+numStr).c_str());
+                histo1D[("weight5"+numStr).c_str()] = (TH1F*)reopenSF->Get(("weight5"+numStr).c_str());
+                histo1D[("weight6"+numStr).c_str()] = (TH1F*)reopenSF->Get(("weight6"+numStr).c_str());
+                histo1D[("weight7"+numStr).c_str()] = (TH1F*)reopenSF->Get(("weight7"+numStr).c_str());
+                histo1D[("weight8"+numStr).c_str()] = (TH1F*)reopenSF->Get(("weight8"+numStr).c_str());
+
+                cout<<"Got weights"<<endl;
+
+
+                for(int binN = 1; binN <nBins+1; ++binN){
+                float binContentMax = -1, binContentMin =  1000000000000000;  
+
+                    for(int weightIt = 1; weightIt<9; ++weightIt){
+                        if(weightIt == 6 || weightIt == 8){
+                            continue; //extreme weights with 1/2u and 2u
+                        }
+
+                        string weightStr = static_cast<ostringstream*>( &(ostringstream() << weightIt) )->str();
+                        string weightHistoName = ("weight"+weightStr+numStr).c_str();
+                        if(binContentMin > histo1D[weightHistoName]->GetBinContent(binN) ) binContentMin = histo1D[weightHistoName]->GetBinContent(binN);
+                        if(binContentMax < histo1D[weightHistoName]->GetBinContent(binN) ) binContentMax = histo1D[weightHistoName]->GetBinContent(binN);
+                        cout<<"binContentMax: "<<binContentMax<<"binContentMin: "<<binContentMin<<endl;
+                        // cout<<"bin number : "<<binN<<"   bincontent: "<<histo1D["weight0"]->GetBinContent(binN)<<endl;
+                    }
+                    histo1D[("weightPlus"+numStr).c_str()]->SetBinContent(binN, binContentMax);
+                    histo1D[("weightMinus"+numStr).c_str()]->SetBinContent(binN, binContentMin);
+                }  
+
+
+                errorfile->cd();
+                errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
+                errorfile->cd(("MultiSamplePlot_"+sVarofinterest).c_str());
+                histo1D[("weightMinus"+numStr).c_str()]->Write("Minus");
+                histo1D[("weightPlus"+numStr).c_str()]->Write("Plus");
+            }
+        }    
+    }
+}
 
 void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath)
 {
-    cout<<""<<endl;
-    cout<<"RUNNING NOMINAL DATASETS"<<endl;
-    cout<<""<<endl;
+    cout<<""<<endl;    cout<<"RUNNING NOMINAL DATASETS"<<endl;    cout<<""<<endl;
     shapefile->cd();
     errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest).c_str());
 
-    const char *xmlfile = xmlNom.c_str();
-    cout << "used config file: " << xmlfile << endl;
+    const char *xmlfile = xmlNom.c_str();    cout << "used config file: " << xmlfile << endl;
 
-    string pathPNG = "FourTop_Light";
-    pathPNG += leptoAbbr;
-    pathPNG += "_MSPlots/";
-    mkdir(pathPNG.c_str(),0777);
-    cout <<"Making directory :"<< pathPNG  <<endl;		//make directory
+    string pathPNG = "FourTop_Light";    pathPNG += leptoAbbr;    pathPNG += "_MSPlots/";
+    mkdir(pathPNG.c_str(),0777);    cout <<"Making directory :"<< pathPNG  <<endl;		//make directory
 
-    ///////////////////////////////////////////////////////////// Load Datasets //////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
+    ///////////////////////////////////////////////////////////// Load Datasets ////////////////////////////////////////////////////////////////////
     TTreeLoader treeLoader;
     vector < Dataset* > datasets; 					//cout<<"vector filled"<<endl;
     treeLoader.LoadDatasets (datasets, xmlfile);	//cout<<"datasets loaded"<<endl;
@@ -263,7 +409,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
     //***********************************************OPEN FILES & GET NTUPLES**********************************************
     string dataSetName, filepath;
     int nEntries;
-    float ScaleFactor, NormFactor, Luminosity, varofInterest;
+    float ScaleFactor, NormFactor, Luminosity, varofInterest, GenWeight, weight1, weight2, weight3, weight4, weight5, weight6, weight7, weight8;
 
     // if (split_ttbar){
     //     cout << " - splitting TTBar dataset ..." << ndatasets   << endl;
@@ -295,48 +441,84 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
 
     for (int d = 0; d < datasets.size(); d++)  //Loop through datasets
     {
-        dataSetName = datasets[d]->Name();
-        cout<<"Dataset:  :"<<dataSetName<<endl;
+        dataSetName = datasets[d]->Name();        cout<<"Dataset:  :"<<dataSetName<<endl;
 
-        filepath = CraneenPath+dataSetName + "_Run2_TopTree_Study.root";
-        //cout<<"filepath: "<<filepath<<endl;
+        filepath = CraneenPath+dataSetName + "_Run2_TopTree_Study.root";        //cout<<"filepath: "<<filepath<<endl;
 
         FileObj[dataSetName.c_str()] = new TFile((filepath).c_str()); //create TFile for each dataset
         string nTuplename = "Craneen__"+ leptoAbbr;
         nTuple[dataSetName.c_str()] = (TNtuple*)FileObj[dataSetName.c_str()]->Get(nTuplename.c_str()); //get ntuple for each dataset
-        nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();
-        cout<<"                 nEntries: "<<nEntries<<endl;
+        nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();        cout<<"                 nEntries: "<<nEntries<<endl;
 
         nTuple[dataSetName.c_str()]->SetBranchAddress(sVarofinterest.c_str(),&varofInterest);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor",&ScaleFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
-
+        nTuple[dataSetName.c_str()]->SetBranchAddress("GenWeight",&GenWeight);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("weight1",&weight1);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("weight2",&weight2);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("weight3",&weight3);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("weight4",&weight4);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("weight5",&weight5);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("weight6",&weight6);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("weight7",&weight7);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("weight8",&weight8);
+        cout<<"got variables"<<endl;
         //for fixed bin width
         histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, plotLow, plotHigh);
+        if(dataSetName.find("TTJets")!=string::npos){
+            // histo1D["Genweight_tt"] = new TH1F("Genweight","Genweight", nBins, plotLow, plotHigh);
+            // histo1D["weight1_tt"] = new TH1F("weight1","weight1", nBins, plotLow, plotHigh);
+            // histo1D["weight2_tt"] = new TH1F("weight2","weight2", nBins, plotLow, plotHigh);
+            // histo1D["weight3_tt"] = new TH1F("weight3","weight3", nBins, plotLow, plotHigh);
+            // histo1D["weight4_tt"] = new TH1F("weight4","weight4", nBins, plotLow, plotHigh);
+            // histo1D["weight5_tt"] = new TH1F("weight5","weight5", nBins, plotLow, plotHigh);
+            // histo1D["weight6_tt"] = new TH1F("weight6","weight6", nBins, plotLow, plotHigh);
+            // histo1D["weight7_tt"] = new TH1F("weight7","weight7", nBins, plotLow, plotHigh);
+            // histo1D["weight8_tt"] = new TH1F("weight8","weight8", nBins, plotLow, plotHigh);            
+        }
+        else if(dataSetName.find("tttt")!=string::npos){
+            // histo1D["Genweight_tttt"] = new TH1F("Genweight_tttt","Genweight_tttt", nBins, plotLow, plotHigh);
+        }
+
+        cout<<"made th1fs"<<endl;
         /////*****loop through entries and fill plots*****
         for (int j = 0; j<nEntries; j++)
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
-            //artificial Lumi
-
-            
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos || dataSetName.find("NP_overlay_Data")!=string::npos)
             {
-                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, ScaleFactor);
-                histo1D[dataSetName.c_str()]->Fill(varofInterest,ScaleFactor);
+                MSPlot[plotname]->Fill(varofInterest, datasets[d], true,  1.);
+                histo1D[dataSetName.c_str()]->Fill(varofInterest, 1.);
             }
             else
             {
-                if(lScale > 0 )
+                if(lScale > 0 ) //artificial Lumi
                 {
                     Luminosity = 1000*lScale;
-                }                
+                }               
+                Luminosity = 45; 
                 MSPlot[plotname]->Fill(varofInterest, datasets[d], true, ScaleFactor*Luminosity);
                 histo1D[dataSetName]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity);
-            }
 
+                // if (dataSetName == "TTJets"){
+                //     histo1D["Genweight_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*GenWeight);
+                //     //cout<<"genweight: "<<GenWeight<<endl;
+                //     histo1D["weight1_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight1);
+                //     histo1D["weight2_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight2);
+                //     histo1D["weight3_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight3);
+                //     histo1D["weight4_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight4);
+                //     histo1D["weight5_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight5);
+                //     histo1D["weight6_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight6);
+                //     histo1D["weight7_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight7);
+                //     histo1D["weight8_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight8);                    
+                // }
+                // else if (dataSetName.find("tttt")!=string::npos){
+                //     histo1D["Genweight_tttt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*GenWeight);
+                // }
+            }
         }
+        cout<<"after for loop entries"<<endl;
         if(dataSetName == "TTJets")  //to put nominal histo into error file
         {
             errorfile->cd();
@@ -347,43 +529,73 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
 
         shapefile->cd();
         TCanvas *canv = new TCanvas();
-
         histo1D[dataSetName.c_str()]->Draw();
         string writename = "";
-        if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
-        {
+        if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos){
             writename = channel + "__data_obs__nominal";
         }
-        else
-        {
+        else{
             writename = channel + "__" + dataSetName +"__nominal";
         }
-        //cout<<"writename  :"<<writename<<endl;
+        cout<<"writename  :"<<writename<<endl;
         histo1D[dataSetName.c_str()]->Write((writename).c_str());
-
         canv->SaveAs((pathPNG+dataSetName+".png").c_str());
+        cout<<"datasetname:   "<<dataSetName<<endl;
+        // if ( sVarofinterest==DatacardVar && dataSetName.find("TTJets")!= string::npos ){
+        //     cout<<"  making weights histos"<<endl;
+       
+        //     // TCanvas *canv0 = new TCanvas();
+        //     // histo1D["Genweight_tt"]->Draw();
+        //     // histo1D["Genweight_tt"]->Write("Genweight_tt");                  
+        //     // canv0->SaveAs("Genweight_tt.png");
+
+        //     // for(int ii=1; ii<9; ii++){
+        //     //     TCanvas *canv1 = new TCanvas();
+        //     //     string weightstring = static_cast<ostringstream*>( &(ostringstream() << ii) )->str();
+        //     //     string weighthisto = "weight"+weightstring+"_tt";
+        //     //     cout<<"weight histo:  "<<weighthisto<<endl;
+        //     //     histo1D[weighthisto]->Draw();
+        //     //     histo1D[weighthisto]->Write(("weight"+weightstring).c_str());
+        //     //     canv1->SaveAs(("weight"+weightstring+".png").c_str());
+
+        //     // }    
+        // }
+        // else if ( sVarofinterest==DatacardVar && dataSetName.find("tttt")!=string::npos ){
+        //     TCanvas *canv2 = new TCanvas();
+        //     histo1D["Genweight_tttt"]->Draw();
+        //     histo1D["Genweight_tttt"]->Write("Genweight_tttt");                  
+        //     canv2->SaveAs("Genweight_tttt.png");            
+        // }
+        cout<<"saved histos"<<endl;
     }
+    cout<<"unloading datasets"<<endl;
 
-
-    treeLoader.UnLoadDataset();
-
+    // treeLoader.UnLoadDataset();
+    cout<<"make scale dirs"<<endl;
     string scaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
-    mkdir(scaleFileDir.c_str(),0777);
+    // mkdir(scaleFileDir.c_str(),0777);
     string scaleFileName = scaleFileDir + "/Error"+sVarofinterest+".root";
-    MSPlot[plotname]->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
-
+    cout<<"plotname: "<<plotname<<endl;
+    // MSPlot[plotname.c_str()]->Draw();
+    // MSPlot[plotname.c_str()]->setErrorBandFile("ScaleFilesMu_light/ErrorBDTSave2.root"); //set error file for uncertainty bands on multisample plot
+    cout<<"running delete loop"<<endl;
     for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++)
     {
         string name = it->first;  
+        cout<<"name: "<<name<<endl;
         MultiSamplePlot *temp = it->second;
         temp->Draw(sVarofinterest.c_str(), 2, false, false, false, 100);
         temp->Write(shapefile, name, true, pathPNG, "png");
     }
     MSPlot.erase(plotname);
+
+    for(map<string,TH1F*>::const_iterator it = histo1D.begin(); it!=histo1D.end();it++){
+        histo1D.erase(it->first);
+    }
 };
 
 
-void SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
+void SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile* errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
 {
     cout<<""<<endl;
     cout<<"RUNNING SYS"<<endl;
@@ -519,7 +731,7 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
     //***********************************************OPEN FILES & GET NTUPLES**********************************************
     string dataSetName, filepath, histoName;
     int nEntries;
-    float ScaleFactor, NormFactor, Luminosity, varofInterest, splitVar;
+    float ScaleFactor, NormFactor, Luminosity, varofInterest, splitVar, GenWeight, weight1, weight2, weight3, weight4, weight5, weight6, weight7, weight8;
 
     for (int d = 0; d < datasets.size(); d++)  //Loop through datasets
     {
@@ -540,7 +752,15 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar.c_str(), &splitVar);
-
+        nTuple[dataSetName.c_str()]->SetBranchAddress("GenWeight",&GenWeight);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("weight1",&weight1);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("weight2",&weight2);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("weight3",&weight3);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("weight4",&weight4);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("weight5",&weight5);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("weight6",&weight6);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("weight7",&weight7);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("weight8",&weight8);
 
 
         //for fixed bin width
@@ -549,6 +769,22 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
             numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
             histoName = dataSetName + numStr + sSplitVar;
             histo1D[histoName.c_str()] = new TH1F(histoName.c_str(),histoName.c_str(), nBins, plotLow, plotHigh);
+
+            if(dataSetName.find("TTJets")!=string::npos){
+                histo1D[("Genweight_tt"+numStr).c_str()] = new TH1F(("Genweight_tt"+numStr).c_str(),"Genweight", nBins, plotLow, plotHigh);
+                histo1D[("weight1_tt"+numStr).c_str()] = new TH1F(("weight1_tt"+numStr).c_str(),"weight1", nBins, plotLow, plotHigh);
+                histo1D[("weight2_tt"+numStr).c_str()] = new TH1F(("weight2_tt"+numStr).c_str(),"weight2", nBins, plotLow, plotHigh);
+                histo1D[("weight3_tt"+numStr).c_str()] = new TH1F(("weight3_tt"+numStr).c_str(),"weight3", nBins, plotLow, plotHigh);
+                histo1D[("weight4_tt"+numStr).c_str()] = new TH1F(("weight4_tt"+numStr).c_str(),"weight4", nBins, plotLow, plotHigh);
+                histo1D[("weight5_tt"+numStr).c_str()] = new TH1F(("weight5_tt"+numStr).c_str(),"weight5", nBins, plotLow, plotHigh);
+                histo1D[("weight6_tt"+numStr).c_str()] = new TH1F(("weight6_tt"+numStr).c_str(),"weight6", nBins, plotLow, plotHigh);
+                histo1D[("weight7_tt"+numStr).c_str()] = new TH1F(("weight7_tt"+numStr).c_str(),"weight7", nBins, plotLow, plotHigh);
+                histo1D[("weight8_tt"+numStr).c_str()] = new TH1F(("weight8_tt"+numStr).c_str(),"weight8", nBins, plotLow, plotHigh);            
+            }
+            else if(dataSetName.find("tttt")!=string::npos){
+                histo1D[("Genweight_tttt"+numStr).c_str()] = new TH1F(("Genweight_tttt"+numStr).c_str(),"Genweight_tttt", nBins, plotLow, plotHigh);
+            }
+
         }
         /////*****loop through entries and fill plots*****
         for (int j = 0; j<nEntries; j++)
@@ -567,6 +803,22 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
                 plotname = sVarofinterest + stSplit + sSplitVar;
                 histoName = dataSetName + stSplit + sSplitVar;
                 //outsiderange = false;
+                if (dataSetName == "TTJets"){
+                    histo1D[("Genweight_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*GenWeight);
+                    //cout<<"genweight: "<<GenWeight<<endl;
+                    histo1D[("weight1_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight1);
+                    histo1D[("weight2_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight2);
+                    histo1D[("weight3_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight3);
+                    histo1D[("weight4_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight4);
+                    histo1D[("weight5_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight5);
+                    histo1D[("weight6_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight6);
+                    histo1D[("weight7_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight7);
+                    histo1D[("weight8_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight8);                    
+                }
+                else if (dataSetName.find("tttt")!=string::npos){
+                    histo1D[("Genweight_tttt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*GenWeight);
+                }
+
             }
             else //If it doesn't belong in the last bin, find out which it belongs in
             {
@@ -578,6 +830,22 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
                         numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
                         plotname = sVarofinterest + numStr + sSplitVar;
                         histoName = dataSetName + numStr + sSplitVar;
+                        if (dataSetName == "TTJets"){
+                            histo1D[("Genweight_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*GenWeight);
+                            //cout<<"genweight: "<<GenWeight<<endl;
+                            histo1D[("weight1_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight1);
+                            histo1D[("weight2_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight2);
+                            histo1D[("weight3_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight3);
+                            histo1D[("weight4_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight4);
+                            histo1D[("weight5_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight5);
+                            histo1D[("weight6_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight6);
+                            histo1D[("weight7_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight7);
+                            histo1D[("weight8_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight8);                    
+                        }
+                        else if (dataSetName.find("tttt")!=string::npos){
+                            histo1D[("Genweight_tttt"+numStr).c_str()]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*GenWeight);
+                        }
+
                         outsiderange = false;
                         break;
                     }
@@ -629,6 +897,31 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
             histo1D[histoName.c_str()]->Write((writename).c_str());
 
             canv->SaveAs((pathPNG+histoName+".png").c_str());
+            if ( sVarofinterest==DatacardVar && dataSetName.find("TTJets")!= string::npos ){
+                cout<<"  making weights histos"<<endl;
+           
+                TCanvas *canv0 = new TCanvas();
+                histo1D[("Genweight_tt"+numStr).c_str()]->Draw();
+                histo1D[("Genweight_tt"+numStr).c_str()]->Write(("Genweight_tt"+numStr).c_str());                  
+                canv0->SaveAs(("Genweight_tt"+numStr+".png").c_str());
+
+                for(int ii=1; ii<9; ii++){
+                    TCanvas *canv1 = new TCanvas();
+                    string weightstring = static_cast<ostringstream*>( &(ostringstream() << ii) )->str();
+                    string weighthisto = "weight"+weightstring+"_tt";
+                    histo1D[weighthisto]->Draw();
+                    histo1D[weighthisto]->Write(("weight"+weightstring).c_str());
+                    canv1->SaveAs(("weight"+weightstring+".png").c_str());
+
+                }    
+       
+            }
+            else if ( sVarofinterest==DatacardVar && dataSetName.find("tttt")!=string::npos ){
+                TCanvas *canv2 = new TCanvas();
+                histo1D[("Genweight_tttt"+numStr).c_str()]->Draw();
+                histo1D[("Genweight_tttt"+numStr).c_str()]->Write(("Genweight_tttt"+numStr).c_str());                  
+                canv2->SaveAs(("Genweight_tttt"+numStr+".png").c_str());            
+            }
         }
     }
 

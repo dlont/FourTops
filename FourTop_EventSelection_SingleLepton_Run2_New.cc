@@ -164,8 +164,8 @@ int main (int argc, char *argv[])
     bool SingleLepton = true;
     bool Muon = true;
     bool Electron = false;
-    bool HadTopOn = false;
-    bool EventBDTOn = false;
+    bool HadTopOn = true;
+    bool EventBDTOn = true;
     bool TrainMVA = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25 = false;
     bool bTagReweight = true;
@@ -173,7 +173,7 @@ int main (int argc, char *argv[])
     //bool split_ttbar = false;
     bool debug = false;
     string MVAmethod = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
-    float Luminosity = 40.240; //pb^-1
+    float Luminosity = 569.017464628; //pb^-1
 
     if(Muon && SingleLepton){
         cout<<" ***** USING SINGLE MUON CHANNEL  ******"<<endl;
@@ -231,11 +231,11 @@ int main (int argc, char *argv[])
     BTagWeightTools *btwt;
     // BTagCalibrationReader * bTagReadercomb;
 
-    if(bTagReweight){
+    if(bTagReweight && dataSetName.find("Data")==string::npos){
         //Btag documentation : http://mon.iihe.ac.be/~smoortga/TopTrees/BTagSF/BTaggingSF_inTopTrees.pdf
         bTagCalib = new BTagCalibration("CSVv2","CSVv2_13TeV_combTomujets.csv");
         bTagReader = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"mujets","central"); //mujets
-        btwt = new BTagWeightTools(bTagReader,30,999, 2.4, "HistosPtEtaNew.root");        
+        btwt = new BTagWeightTools(bTagReader,30,999, 2.4, "HistosPtEta_"+dataSetName+".root");        
         // bTagReadercomb = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"comb","central"); //comb
     }
 
@@ -349,11 +349,13 @@ int main (int argc, char *argv[])
     /////////////////////////////////
     cout << " - Loop over datasets ... " << datasets.size () << " datasets !" << endl;
 
+    TFile * btaghistos = new TFile("histos/HistosPtEta.root");
+
     for (unsigned int d = 0; d < datasets.size(); d++)
     {
         cout<<"Load Dataset"<<endl;    treeLoader.LoadDataset (datasets[d], anaEnv);  //open files and load dataset
-        string previousFilename = "";
-        string currentFilename = "";
+        string previousFilename2 = "";
+        string currentfilename2 = "";
 
         bool nlo = false;
         dataSetName = datasets[d]->Name();
@@ -435,9 +437,9 @@ int main (int argc, char *argv[])
         vector<TRootJet*>      selectedMBJets; //CSVM btags
         vector<TRootJet*>      selectedTBJets; //CSVT btags
         vector<TRootJet*>      selectedLightJets;
-        int iFile = -1;
-
-
+        int iFile2 = -1;
+        datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
+        datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
 
         //////////////////////////////////////
         // Begin Event Loop
@@ -465,40 +467,6 @@ int main (int argc, char *argv[])
             event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, mets, debug);  //load event
             if(debug)cout<<"after tree load"<<endl;
 
-            int currentRun = event->runId();
-
-            currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
-            if(previousFilename != currentFilename){
-                previousFilename = currentFilename;
-                iFile++;
-                //cout<<"File changed!!! => iFile = "<<iFile << " new file is " << datasets[d]->eventTree()->GetFile()->GetName() << " in sample " << datasets[d]->Name() << endl;
-            }
-            datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
-            datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
-            cout<<"SetBranchAddress(runInfos,&runInfos) : "<<datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos)<<endl;
-            int rBytes = datasets[d]->runTree()->GetEntry(iFile); 
-            
-            float weight_0 = (event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1")))/(event->originalXWGTUP());; //nominal
-            float weight_1 = 1;
-            float weight_2 = 1;
-            float weight_3 = 1;
-            float weight_4 = 1;
-            float weight_5 = 1;
-            float weight_6 = 1;
-            float weight_7 = 1;
-            float weight_8 = 1;
-
-            cout<<"weight0: "<<weight_0<<endl;
-
-            if(nlo)
-            {
-                if(weight_0 < 0.0)
-                {
-                    scaleFactor = -1.0;  //Taking into account negative weights in NLO Monte Carlo
-                    negWeights++;
-                }
-            }
-
             float rho = event->fixedGridRhoFastjetAll();
             if (debug)cout <<"Rho: " << rho <<endl;
 
@@ -516,15 +484,21 @@ int main (int argc, char *argv[])
 
 
             currentRun = event->runId();
-            trigger->checkAvail(currentRun, datasets, d, &treeLoader, event);
-            trigged = trigger->checkIfFired();
 
-            preTrig++;
-            if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
-            if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos){
-            if (!trigged)          continue;  //If an HLT condition is not present, skip this event in the loop.       
+            currentfilename2 = datasets[d]->eventTree()->GetFile()->GetName();
+            if(previousFilename2 != currentfilename2){
+                previousFilename2 = currentfilename2;
+                iFile2++;
+                //cout<<"File changed!!! => iFile2 = "<<iFile2 << " new file is " << datasets[d]->eventTree()->GetFile()->GetName() << " in sample " << datasets[d]->Name() << endl;
             }
-            postTrig++;
+
+            // cout<<"SetBranchAddress(runInfos,&runInfos) : "<<datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos)<<endl;
+            int rBytes = datasets[d]->runTree()->GetEntry(iFile2); 
+            // cout<<"GET HLT NAMES list: "<<ievt<<endl;
+            // //runInfos->getHLTinfo(currentRun).gethltNameList();
+            // cout<<"macro ifile: "<<iFile2<<"   current run: "<<currentRun<<endl;
+            // cout<<"Get HLT NAMES LIST BY TREELOADER"<<endl;
+            // treeLoader.ListTriggers(currentRun, iFile2);
 
             // Declare selection instance
             Run2Selection r2selection(init_jets, init_muons, init_electrons, mets);
@@ -628,15 +602,57 @@ int main (int argc, char *argv[])
             if (debug)	cout <<"PrimaryVertexBit: " << isGoodPV << " TriggerBit: " << trigged <<endl;
             if (debug) cin.get();
 
-            weightCount += scaleFactor;
-            eventCount++;
-
-            cutsTable->FillTable(d, isGoodPV, trigged, scaleFactor, nMu, nLooseMu, nEl, nLooseEl, nJets, nLtags, nMtags, nTtags);
-
 
             /////////////////////////////////
             // Applying baseline selection //
             /////////////////////////////////
+
+
+            float weight_0 = 1; //nominal
+            float weight_1 = 1;
+            float weight_2 = 1;
+            float weight_3 = 1;
+            float weight_4 = 1;
+            float weight_5 = 1;
+            float weight_6 = 1;
+            float weight_7 = 1;
+            float weight_8 = 1;
+
+
+
+
+            trigger->checkAvail(currentRun, datasets, d, &treeLoader, event);
+            trigged = trigger->checkIfFired();
+            trigged=true;
+
+            preTrig++;
+            if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
+            if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos){
+            if (!trigged)          continue;  //If an HLT condition is not present, skip this event in the loop.       
+            }
+            postTrig++;
+
+            cutsTable->FillTable(d, isGoodPV, trigged, scaleFactor, nMu, nLooseMu, nEl, nLooseEl, nJets, nLtags, nMtags, nTtags);
+
+            if(dataSetName.find("tttt") != string::npos){
+                weight_0 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1")/(abs(event->originalXWGTUP()))); //nominal               
+            }
+            if(dataSetName.find("TTJets") != string::npos){
+                weight_0 = (runInfos->getWeightInfo(currentRun).weightIndex("scale_variation 1")/(abs(event->originalXWGTUP()))); //nominal                   
+            }
+            weightCount += scaleFactor;
+            eventCount++;
+
+
+            if(nlo)
+            {
+                if(weight_0 < 0.0)
+                {
+                    scaleFactor = -1.0;  //Taking into account negative weights in NLO Monte Carlo
+                    negWeights++;
+                }
+            }
+
 
             //Filling Histogram of the number of vertices before Event Selection
             MSPlot["NbOfVertices"]->Fill(vertex.size(), datasets[d], true, Luminosity*scaleFactor);
@@ -672,10 +688,21 @@ int main (int argc, char *argv[])
                 cerr<<"Correct Channel not selected."<<endl;
                 exit(1);
             }
-
+            if(dataSetName.find("TTJets")!=string::npos){
+                weight_1 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 2")/(abs(event->originalXWGTUP())));                
+                weight_2 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 3")/(abs(event->originalXWGTUP())));                
+                weight_3 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 4")/(abs(event->originalXWGTUP())));                
+                weight_4 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 5")/(abs(event->originalXWGTUP())));                
+                weight_5 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 6")/(abs(event->originalXWGTUP())));                
+                weight_6 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 7")/(abs(event->originalXWGTUP())));                
+                weight_7 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 8")/(abs(event->originalXWGTUP())));                
+                weight_8 = (runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 9")/(abs(event->originalXWGTUP())));                  
+            }
+            //cout<<"weight0: "<<weight_0<<" weight1: "<<weight_1<<" weight2: "<<weight_2<<endl;
 
             double lumiWeight;
-            if(dataSetName.find("Data") !=string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos){
+            if(dataSetName.find("Data") !=string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos)
+            {
                 lumiWeight=1;
             }
             else{
@@ -683,29 +710,34 @@ int main (int argc, char *argv[])
             }
             scaleFactor = scaleFactor * lumiWeight;
             float bTagEff(-1);
-            if(bTagReweight){
-            //get btag weight info
-                cout<<"bTagEff"<<endl;
-                for(int jetbtag = 0; jetbtag<selectedJets.size(); jetbtag++){
-                    float jetpt = selectedJets[jetbtag]->Pt();
-                    float jeteta = selectedJets[jetbtag]->Eta();
-                    float jetdisc = selectedJets[jetbtag]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
-                    BTagEntry::JetFlavor jflav;
-                    int jetpartonflav = std::abs(selectedJets[jetbtag]->partonFlavour());
-                    cout<<"parton flavour: "<<jetpartonflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
-                    if(jetpartonflav == 5){
-                        jflav = BTagEntry::FLAV_B;
-                    }
-                    else if(jetpartonflav == 4){
-                        jflav = BTagEntry::FLAV_C;
-                    }
-                    else{
-                        jflav = BTagEntry::FLAV_UDSG;
-                    }
-                    bTagEff = bTagReader->eval(jflav, jeteta, jetpt, jetdisc);                     
-                    cout<<"btag efficiency = "<<bTagEff<<endl;       
-                }      
-                btwt->FillMCEfficiencyHistos(selectedJets); 
+            // if(bTagReweight && dataSetName.find("Data")==string::npos){
+            // //get btag weight info
+            //     for(int jetbtag = 0; jetbtag<selectedJets.size(); jetbtag++){
+            //         float jetpt = selectedJets[jetbtag]->Pt();
+            //         float jeteta = selectedJets[jetbtag]->Eta();
+            //         float jetdisc = selectedJets[jetbtag]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+            //         BTagEntry::JetFlavor jflav;
+            //         int jetpartonflav = std::abs(selectedJets[jetbtag]->partonFlavour());
+            //         if(debug) cout<<"parton flavour: "<<jetpartonflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
+            //         if(jetpartonflav == 5){
+            //             jflav = BTagEntry::FLAV_B;
+            //         }
+            //         else if(jetpartonflav == 4){
+            //             jflav = BTagEntry::FLAV_C;
+            //         }
+            //         else{
+            //             jflav = BTagEntry::FLAV_UDSG;
+            //         }
+            //         bTagEff = bTagReader->eval(jflav, jeteta, jetpt, jetdisc);                     
+            //         if(debug)cout<<"btag efficiency = "<<bTagEff<<endl;       
+            //     }      
+            //     btwt->FillMCEfficiencyHistos(selectedJets); 
+            // }
+
+            float btagWeight = 1;
+            if(bTagReweight && dataSetName.find("Data")==string::npos){
+                btagWeight =  btwt->getMCEventWeight(selectedJets, btaghistos, false);
+                // cout<<"btag weight "<<btagWeight<<endl;
             }
 
             float fleptonSF = 0;
@@ -717,9 +749,10 @@ int main (int argc, char *argv[])
                     fleptonSF = electronSFWeight->at(selectedElectrons[0]->Eta(),selectedElectrons[0]->Pt(),0);
                 }
             }
-            cout<<"lepton SF:  "<<fleptonSF<<endl;
+            if(debug) cout<<"lepton SF:  "<<fleptonSF<<endl;
 
             scaleFactor *= fleptonSF;
+            scaleFactor *= btagWeight;
 
             if(debug)
             {

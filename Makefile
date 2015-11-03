@@ -35,8 +35,8 @@ SOFLAGS       = -shared
 endif
 
 CXXFLAGS	  += $(ROOTCFLAGS)
-LIBS		  = -I./TMVA/include -L./TMVA/lib $(ROOTLIBS) -lEG -I.. -L. -L../TopTreeProducer/src -L libTopTreeAna74 -L TopTreeAnaContent74
-LIBS_NoTMVA   = $(ROOTLIBS_NoTMVA) -lEG -I.. -L. -L../TopTreeProducer/src -L libTopTreeAna74 -L TopTreeAnaContent74
+LIBS		  = -I./TMVA/include -L./TMVA/lib $(ROOTLIBS) -lEG -I.. -L. -L libTopTreeAna74 -L TopTreeAnaContent74
+LIBS_NoTMVA   = $(ROOTLIBS_NoTMVA) -lEG -I.. -L. -L libTopTreeAna74 -L TopTreeAnaContent74
 ifeq ($(UNAME), Darwin)
 LIBS          += -I/opt/local/include
 endif
