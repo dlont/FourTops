@@ -48,6 +48,7 @@
 		<var lBound= 0 uBound=0.8 nBins=24>HTRat</var>
 		<var lBound= -1 uBound=1.5 nBins=30>multitopness</var>
 		<var lBound= 0 uBound=0.3 nBins=10>leptonIso</var>
+		<var lBound= -0.5 uBound=50.5 nBins=51>PU</var>
 
 
 		<!--var lBound= 0 uBound=600 nBins=20 >jetpT</var>
@@ -98,6 +99,7 @@
 		<var lBound= 0 uBound=0.8 nBins=24>HTRat</var>
 		<var lBound= -1 uBound=1.5 nBins=30>multitopness</var>
 		<var lBound= 0 uBound=0.3 nBins=10>leptonIso</var>		
+		<var lBound= -0.5 uBound=50.5 nBins=51>PU</var>
 
 		<!--var lBound= 0 uBound=600 nBins=20 >jetpT</var>    
 		<var lBound= -15 uBound=15 nBins=50 >csvDisc</var>
