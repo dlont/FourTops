@@ -4,7 +4,7 @@ import time
 import os
 import glob
 
-tree = ET.ElementTree(file='config/Run2SingleLepton_TOPTREES_74.xml')
+tree = ET.ElementTree(file='config/Run2SingleLepton_TOPTREES_74_50ns.xml')
 #tree = ET.ElementTree(file='config/Testing.xml')
 
 root = tree.getroot()
@@ -18,7 +18,7 @@ numCores = 8
 args = []
 execCommands = []
 topTrees = []
-jobSize = 4000000
+jobSize = 1000000
 for d in datasets:
     if d.attrib['add'] == '1':
         print "found dataset to be added..." + str(d.attrib['name'])
