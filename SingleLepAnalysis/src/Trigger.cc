@@ -110,6 +110,7 @@ int Trigger::checkIfFired(){
 	trigged =0;
 
 	for(UInt_t itrig=0; itrig<triggerList.size() && trigged==0; itrig++){
+		cout<<"fired: "<<triggermap[triggerList[itrig]].second<<endl;
 	    if(triggermap[triggerList[itrig]].second)   trigged=1;
 	}
 
