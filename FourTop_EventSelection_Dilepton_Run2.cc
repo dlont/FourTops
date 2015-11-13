@@ -64,7 +64,6 @@
 //#include "TopTreeAnalysisBase/Tools/interface/BTagSFUtil.h"
 #include "TopTreeAnalysisBase/Tools/interface/BTagWeightTools.h"
 
-
 #include "TopTreeAnalysisBase/Tools/interface/JetCombiner.h"
 #include "TopTreeAnalysisBase/Tools/interface/MVATrainer.h"
 #include "TopTreeAnalysisBase/Tools/interface/MVAComputer.h"
@@ -145,10 +144,10 @@ int main (int argc, char *argv[])
 //    const int startEvent            = strtol(argv[argc-2], NULL, 10);
 //    const int endEvent              = strtol(argv[argc-1], NULL, 10);
     vector<string> vecfileNames;
-//    for(int args = 11; args < argc-2; args++)
-//    {
-        vecfileNames.push_back(argv[11]);
-//    }
+    for(int args = 11; args < argc; args++)
+    {
+        vecfileNames.push_back(argv[args]);
+    }
 
 
 
@@ -162,7 +161,11 @@ int main (int argc, char *argv[])
     cout << "Dataset normf: " << normf << endl;
     cout << "Dataset EqLumi: " << EqLumi << endl;
     cout << "Dataset xSect: " << xSect << endl;
-    cout << "Dataset File Name: " << fileName << endl;
+    for(int files = 0; files < vecfileNames.size(); files++)
+    {
+        cout << "Dataset File Names: " << vecfileNames[files] << endl;
+    }
+
 //    cout << "Beginning Event: " << startEvent << endl;
 //    cout << "Ending Event: " << endEvent << endl;
     cout << "----------------------------------------" << endl;
@@ -177,7 +180,7 @@ int main (int argc, char *argv[])
     int ndefs =0;
     int negWeights = 0;
     float weightCount = 0.0;
-    int eventCount = 0;
+    int eventCount = 0, trigCount = 0;
 
     string btagger = "CSVL";
     float scalefactorbtageff, mistagfactor;
@@ -336,8 +339,8 @@ int main (int argc, char *argv[])
     vector<string> MVAvars;
 
     MVAvars.push_back("topness");
-    MVAvars.push_back("muonpt");
-    MVAvars.push_back("muoneta");
+    MVAvars.push_back("LeadLepPt");
+    MVAvars.push_back("LeadLepEta");
     MVAvars.push_back("HTH");
     MVAvars.push_back("HTRat");
     MVAvars.push_back("HTb");
@@ -365,15 +368,15 @@ int main (int argc, char *argv[])
     else if(dilepton && Muon && !Electron)
     {
 //        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuMu_9thJuly.root","MasterMVA_MuMu_9thJuly",MVAvars, "_MuMuJuly9th2015");
-//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuMu_26thOctober.root","MasterMVA_MuMu_26thOctober",MVAvars, "_MuMuOctober26th2015");
-        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_26thOctober.root","MasterMVA_MuEl_26thOctober",MVAvars, "_MuElOctober26th2015");
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuMu_26thOctober.root","MasterMVA_MuMu_26thOctober",MVAvars, "_MuMuOctober26th2015");
+//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_26thOctober.root","MasterMVA_MuEl_26thOctober",MVAvars, "_MuElOctober26th2015");
 
     }
     else if(dilepton && !Muon && Electron)
     {
 //        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_ElEl_9thJuly.root","MasterMVA_ElEl_9thJuly",MVAvars, "_ElElJuly9th2015");
-//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_ElEl_26thOctober.root","MasterMVA_ElEl_26thOctober",MVAvars, "_ElElOctober26th2015");
-        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_26thOctober.root","MasterMVA_MuEl_26thOctober",MVAvars, "_MuElOctober26th2015");
+        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_ElEl_26thOctober.root","MasterMVA_ElEl_26thOctober",MVAvars, "_ElElOctober26th2015");
+//        Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_MuEl_26thOctober.root","MasterMVA_MuEl_26thOctober",MVAvars, "_MuElOctober26th2015");
 
     }
 
@@ -458,10 +461,18 @@ int main (int argc, char *argv[])
     MSPlot["InitElectronMissingHits"]                       = new MultiSamplePlot(datasets, "InitElectronMissingHits", 10, 0, 10, "MissingHits");
     MSPlot["InitElectronCutFlow"]                           = new MultiSamplePlot(datasets, "InitElectronCutFlow", 12, 0, 12, "CutNumber");
     MSPlot["InitElectronDiagRelIso"]                        = new MultiSamplePlot(datasets, "InitElectronDiagRelIso", 100, 0, 1, "RelIso");
-    MSPlot["InitElectronDiagChIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagChIso", 100, 0, 1, "RelIso");
-    MSPlot["InitElectronDiagNIso"]                          = new MultiSamplePlot(datasets, "InitElectronDiagNIso", 100, 0, 1, "RelIso");
-    MSPlot["InitElectronDiagPhIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagPhIso", 100, 0, 1, "RelIso");
-    MSPlot["InitElectronDiagPUChIso"]                       = new MultiSamplePlot(datasets, "InitElectronDiagPUChIso", 100, 0, 1, "RelIso");
+    MSPlot["InitElectronDiagChIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagChIso", 100, 0, 10, "RelIso");
+    MSPlot["InitElectronDiagNIso"]                          = new MultiSamplePlot(datasets, "InitElectronDiagNIso", 100, 0, 10, "RelIso");
+    MSPlot["InitElectronDiagPhIso"]                         = new MultiSamplePlot(datasets, "InitElectronDiagPhIso", 100, 0, 10, "RelIso");
+    MSPlot["InitElectronDiagPUChIso"]                       = new MultiSamplePlot(datasets, "InitElectronDiagPUChIso", 100, 0, 10, "RelIso");
+    MSPlot["CloseElRelIso"]                                 = new MultiSamplePlot(datasets, "CloseElRelIso", 20, 0, 0.2, "RelIso");
+    MSPlot["CloseElChIso"]                                  = new MultiSamplePlot(datasets, "CloseElChIso", 100, 0, 10, "ChIso");
+    MSPlot["CloseElNIso"]                                   = new MultiSamplePlot(datasets, "CloseElNIso", 100, 0, 10, "NIso");
+    MSPlot["CloseElPhIso"]                                  = new MultiSamplePlot(datasets, "CloseElPhIso", 100, 0, 10, "PhIso");
+    MSPlot["CloseElPUChIso"]                                = new MultiSamplePlot(datasets, "CloseElPUChIso", 100, 0, 10, "PUChIso");
+    //General Lepton Plots
+    MSPlot["CloseLepPt"]                                     = new MultiSamplePlot(datasets, "CloseLepPt", 10, -0, 300, "GeV");
+    MSPlot["CloseLepEta"]                                    = new MultiSamplePlot(datasets, "CloseLepEta", 50, -2.5, 2.5, "#eta");
 
     //B-tagging discriminators
     MSPlot["BdiscBJetCand_CSV"]                             = new MultiSamplePlot(datasets, "BdiscBJetCand_CSV", 20, 0, 1, "CSV b-disc.");
@@ -474,6 +485,10 @@ int main (int argc, char *argv[])
     MSPlot["HT_SelectedJets"]                               = new MultiSamplePlot(datasets, "HT_SelectedJets", 30, 0, 1500, "HT");
     MSPlot["HTExcess2M"]                                    = new MultiSamplePlot(datasets, "HTExcess2M", 30, 0, 1500, "HT_{Excess 2 M b-tags}");
     MSPlot["HTH"]                                           = new MultiSamplePlot(datasets, "HTH", 20, 0, 1, "HTH");
+    MSPlot["PreselJetLepdR"]                                = new MultiSamplePlot(datasets, "PreselJetEldR", 40, 0, 0.4, "#Delta R");
+    MSPlot["CloseLetJepRat"]                                 = new MultiSamplePlot(datasets, "CloseLetJepRat", 20, 0, 10, "p^{jet}_{T}/p^{l}_{T}");
+    MSPlot["CloseJetMC"]                                    = new MultiSamplePlot(datasets, "CloseJetMC", 28, -6, 22, "PDG ID");
+    MSPlot["CloseJetHOverE"]                                = new MultiSamplePlot(datasets, "CloseJetHOverE", 25, -0, 1.0, "Jet H/E");
     //MET
     MSPlot["MET"]                                           = new MultiSamplePlot(datasets, "MET", 70, 0, 700, "MET");
     MSPlot["METCutAcc"]                                     = new MultiSamplePlot(datasets, "METCutAcc", 30, 0, 150, "MET cut pre-jet selection");
@@ -499,7 +514,8 @@ int main (int argc, char *argv[])
     //ZMass window plots
     MSPlot["ZMassWindowWidthAcc"]                           = new MultiSamplePlot(datasets, "ZMassWindowWidthAcc", 20, 0, 100, "Z mass window width");
     MSPlot["ZMassWindowWidthRej"]                           = new MultiSamplePlot(datasets, "ZMassWindowWidthRej", 20, 0, 100, "Z mass window width");
-    MSPlot["DiLepMass"]                                     = new MultiSamplePlot(datasets, "DiLepMass", 30, 0, 150, "m_{ll}");
+    MSPlot["PreselDiLepMass"]                               = new MultiSamplePlot(datasets, "PreselDiLepMass", 30, 0, 150, "m_{ll}");
+    MSPlot["PostselDiLepMass"]                              = new MultiSamplePlot(datasets, "PostselDiLepMass", 30, 0, 150, "m_{ll}");
 
     //n-1 Cut Plots
     MSPlot["NMinusOne"]                                     = new MultiSamplePlot(datasets, "NMinusOne", 8, 0, 8, "CutNumber");
@@ -512,6 +528,7 @@ int main (int argc, char *argv[])
     // 2D histograms //
     ///////////////////
     histo2D["HTLepSep"] = new TH2F("HTLepSep","dR_{ll}:HT",50,0,1000, 20, 0,4);
+    histo2D["CloseJetdRvsIso"] = new TH2F("CloseJetdRvsIso","PFIso:#Delta R",20,0,1, 20, 15,0.15);
 
     //Plots
     string pathPNG = "MSPlots_FourTop"+postfix+channelpostfix;
@@ -1121,9 +1138,9 @@ int main (int argc, char *argv[])
             //trigged = true;  // Disabling the HLT requirement
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
 //            if(itrigger == 9999 ) cout << "Lumi Block: " << event->lumiBlockId() << " Event: " << event->eventId() << endl;
-            if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop. this is present to cut down on compute time.
+//            if(!trigged)		   continue;  //If an HLT condition is not present, skip this event in the loop. this is present to cut down on compute time.
             // Declare selection instance
-            Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets);
+            Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets, rho);
 
             //Getting Event Weight
 
@@ -1194,8 +1211,9 @@ int main (int argc, char *argv[])
             //////////////////////////////////
 
             float diLepMass = 0, diMuMass = 0;
-            bool ZVeto = false;
+            bool ZVeto = false, sameCharge = false;
             float ZMass = 91, ZMassWindow = 15;
+            int cj1 = 0, cj2 = 0;
             TLorentzVector lep1, lep2, diLep;
 
             for(int selmu = 0; selmu < selectedMuons.size(); selmu++)
@@ -1207,19 +1225,48 @@ int main (int argc, char *argv[])
             {
                 selectedElectronsTLV_JC.push_back(*selectedElectrons[selel]);
             }
-
+            for (Int_t seljet =0; seljet < selectedJets.size(); seljet++ )
+            {
+                selectedJetsTLV.push_back(*selectedJets[seljet]);
+            }
             if(nMu ==2 && nEl == 0 && Muon && !Electron)
             {
                 lep1 = selectedMuonsTLV_JC[0];
                 lep2 = selectedMuonsTLV_JC[1];
                 diLep = lep1 + lep2;
                 diLepMass = diLep.M();
-                MSPlot["DiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity*scaleFactor );
+                if(selectedMuons[0]->charge() == selectedMuons[1]->charge())
+                {
+                    sameCharge = true;
+                    MSPlot["PreselDiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity*scaleFactor );
+                }
                 for(int mass = 0; mass < 20; mass++)
                 {
                     float windowRes = 2.5;
                     if(((diLepMass < (ZMass-(mass*windowRes))) || (diLepMass > (ZMass+(mass*windowRes)))) && diLepMass > 20) MSPlot["ZMassWindowWidthAcc"]->Fill((2*mass*windowRes), datasets[d], true, Luminosity*scaleFactor );
                     else MSPlot["ZMassWindowWidthRej"]->Fill((2*mass*windowRes), datasets[d], true, Luminosity*scaleFactor );
+                }
+                for (Int_t seljet =0; seljet < selectedJetsTLV.size(); seljet++ )
+                {
+                    if(lep1.DeltaR(selectedJetsTLV[seljet]) < lep1.DeltaR(selectedJetsTLV[cj1])) cj1 = seljet;
+                    if(lep2.DeltaR(selectedJetsTLV[seljet]) < lep2.DeltaR(selectedJetsTLV[cj2])) cj2 = seljet;
+                }
+                if(selectedJetsTLV.size() > 0)
+                {
+                    if(lep1.DeltaR(selectedJetsTLV[cj1]) < 0.2)
+                    {
+                        MSPlot["CloseLepPt"]->Fill(selectedMuons[0]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseLepEta"]->Fill(selectedMuons[0]->Eta(), datasets[d], true, Luminosity*scaleFactor);
+                        float HOverE = (selectedJets[cj1]->chargedHadronEnergyFraction() + selectedJets[cj1]->neutralHadronEnergyFraction())/(selectedJets[cj1]->chargedEmEnergyFraction() + selectedJets[cj1]->neutralEmEnergyFraction());
+                        MSPlot["CloseJetHOverE"]->Fill(HOverE, datasets[d], true, Luminosity*scaleFactor);
+                    }
+                    if(lep1.DeltaR(selectedJetsTLV[cj2]) < 0.2)
+                    {
+                        MSPlot["CloseLepPt"]->Fill(selectedMuons[1]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseLepEta"]->Fill(selectedMuons[1]->Eta(), datasets[d], true, Luminosity*scaleFactor);
+                        float HOverE = (selectedJets[cj2]->chargedHadronEnergyFraction() + selectedJets[cj2]->neutralHadronEnergyFraction())/(selectedJets[cj2]->chargedEmEnergyFraction() + selectedJets[cj2]->neutralEmEnergyFraction());
+                        MSPlot["CloseJetHOverE"]->Fill(HOverE, datasets[d], true, Luminosity*scaleFactor);
+                    }
                 }
             }
 
@@ -1229,12 +1276,51 @@ int main (int argc, char *argv[])
                 lep2 = selectedElectronsTLV_JC[1];
                 diLep = lep1 + lep2;
                 diLepMass = diLep.M();
-                MSPlot["DiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity*scaleFactor );
+                if(selectedElectrons[0]->charge() == selectedElectrons[1]->charge())
+                {
+                    sameCharge = true;
+                    MSPlot["PreselDiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity*scaleFactor );
+                }
+
                 for(int mass = 0; mass < 20; mass++)
                 {
                     float windowRes = 2.5;
                     if(((diLepMass < (ZMass-(mass*windowRes))) || (diLepMass > (ZMass+(mass*windowRes)))) && diLepMass > 20) MSPlot["ZMassWindowWidthAcc"]->Fill((2*mass*windowRes), datasets[d], true, Luminosity*scaleFactor );
                     else MSPlot["ZMassWindowWidthRej"]->Fill((2*mass*windowRes), datasets[d], true, Luminosity*scaleFactor );
+                }
+                for (Int_t seljet =0; seljet < selectedJetsTLV.size(); seljet++ )
+                {
+                    if(lep1.DeltaR(selectedJetsTLV[seljet]) < lep1.DeltaR(selectedJetsTLV[cj1])) cj1 = seljet;
+                    if(lep2.DeltaR(selectedJetsTLV[seljet]) < lep2.DeltaR(selectedJetsTLV[cj2])) cj2 = seljet;
+                }
+                if(selectedJetsTLV.size() > 0)
+                {
+                    histo2D["CloseJetdRvsIso"]->Fill(lep1.DeltaR(selectedJetsTLV[cj1]), ElectronRelIso(selectedElectrons[0], rho));
+                    histo2D["CloseJetdRvsIso"]->Fill(lep2.DeltaR(selectedJetsTLV[cj2]), ElectronRelIso(selectedElectrons[1], rho));
+                    if(lep1.DeltaR(selectedJetsTLV[cj1]) < 0.2)
+                    {
+                        MSPlot["CloseElRelIso"]->Fill(ElectronRelIso(selectedElectrons[0], rho), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseElChIso"]->Fill(selectedElectrons[0]->chargedHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseElNIso"]->Fill(selectedElectrons[0]->neutralHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseElPhIso"]->Fill(selectedElectrons[0]->photonIso(3), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseElPUChIso"]->Fill(selectedElectrons[0]->puChargedHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseLepPt"]->Fill(selectedElectrons[0]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseLepEta"]->Fill(selectedElectrons[0]->Eta(), datasets[d], true, Luminosity*scaleFactor);
+                        float HOverE = (selectedJets[cj1]->chargedHadronEnergyFraction() + selectedJets[cj1]->neutralHadronEnergyFraction())/(selectedJets[cj1]->chargedEmEnergyFraction() + selectedJets[cj1]->neutralEmEnergyFraction());
+                        MSPlot["CloseJetHOverE"]->Fill(HOverE, datasets[d], true, Luminosity*scaleFactor);
+                    }
+                    if(lep1.DeltaR(selectedJetsTLV[cj2]) < 0.2)
+                    {
+                        MSPlot["CloseElRelIso"]->Fill(ElectronRelIso(selectedElectrons[1], rho), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseElChIso"]->Fill(selectedElectrons[1]->chargedHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseElNIso"]->Fill(selectedElectrons[1]->neutralHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseElPhIso"]->Fill(selectedElectrons[1]->photonIso(3), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseElPUChIso"]->Fill(selectedElectrons[1]->puChargedHadronIso(3), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseLepPt"]->Fill(selectedElectrons[1]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+                        MSPlot["CloseLepEta"]->Fill(selectedElectrons[1]->Eta(), datasets[d], true, Luminosity*scaleFactor);
+                        float HOverE = (selectedJets[cj2]->chargedHadronEnergyFraction() + selectedJets[cj2]->neutralHadronEnergyFraction())/(selectedJets[cj2]->chargedEmEnergyFraction() + selectedJets[cj2]->neutralEmEnergyFraction());
+                        MSPlot["CloseJetHOverE"]->Fill(HOverE, datasets[d], true, Luminosity*scaleFactor);
+                    }
                 }
             }
             else if(nEl == 1 && nMu == 1 && Electron && Muon)
@@ -1243,7 +1329,7 @@ int main (int argc, char *argv[])
                 lep2 = selectedElectronsTLV_JC[0];
                 diLep = lep1 + lep2;
                 diLepMass = diLep.M();
-                MSPlot["DiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity*scaleFactor );
+                MSPlot["PreselDiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity*scaleFactor );
                 for(int mass = 0; mass < 20; mass++)
                 {
                     float windowRes = 2.5;
@@ -1276,9 +1362,33 @@ int main (int argc, char *argv[])
             for (Int_t seljet =0; seljet < selectedJets.size(); seljet++ )
             {
                 selectedJetsTLV.push_back(*selectedJets[seljet]);
+                if(nEl == 2 && nMu == 0 && Electron && !Muon)
+                {
+                    MSPlot["PreselJetLepdR"]->Fill(lep1.DeltaR(selectedJetsTLV[seljet]), datasets[d], true, Luminosity*scaleFactor );
+                    if(lep1.DeltaR(selectedJetsTLV[seljet])< 0.25)
+                    {
+                        MSPlot["CloseLetJepRat"]->Fill(selectedJetsTLV[seljet].Pt()/lep1.Pt(), datasets[d], true, Luminosity*scaleFactor );
+                        MSPlot["CloseJetMC"]->Fill(selectedJets[seljet]->partonFlavour(), datasets[d], true, Luminosity*scaleFactor );
+
+
+                    }
+                    MSPlot["PreselJetLepdR"]->Fill(lep2.DeltaR(selectedJetsTLV[seljet]), datasets[d], true, Luminosity*scaleFactor );
+                    if(lep2.DeltaR(selectedJetsTLV[seljet])< 0.25)
+                    {
+                        MSPlot["CloseLetJepRat"]->Fill(selectedJetsTLV[seljet].Pt()/lep2.Pt(), datasets[d], true, Luminosity*scaleFactor );
+                        MSPlot["CloseJetMC"]->Fill(selectedJets[seljet]->partonFlavour(), datasets[d], true, Luminosity*scaleFactor );
+                    }
+                }
+                else if(nEl == 0 && nMu == 2 && !Electron && Muon)
+                {
+                    MSPlot["PreselJetLepdR"]->Fill(lep1.DeltaR(selectedJetsTLV[seljet]), datasets[d], true, Luminosity*scaleFactor );
+                    MSPlot["PreselJetLepdR"]->Fill(lep2.DeltaR(selectedJetsTLV[seljet]), datasets[d], true, Luminosity*scaleFactor );
+                    if(lep1.DeltaR(selectedJetsTLV[seljet])< 0.25) MSPlot["CloseLetJepRat"]->Fill(selectedJetsTLV[seljet].Pt()/lep1.Pt(), datasets[d], true, Luminosity*scaleFactor );
+                    if(lep2.DeltaR(selectedJetsTLV[seljet])< 0.25) MSPlot["CloseLetJepRat"]->Fill(selectedJetsTLV[seljet].Pt()/lep2.Pt(), datasets[d], true, Luminosity*scaleFactor );
+                }
                 jet_flavor = selectedJets[seljet]->partonFlavour();
-                JetPt = selectedJets[seljet]->Pt() ;
-                JetEta = selectedJets[seljet]->Eta() ;
+                JetPt = selectedJets[seljet]->Pt();
+                JetEta = selectedJets[seljet]->Eta();
                 temp_HT += JetPt;
                 if (JetPt > 800.) JetPt = 800;
                 if (JetEta > 2.4)
@@ -1384,6 +1494,7 @@ int main (int argc, char *argv[])
             selecTable.Fill(d,0,scaleFactor);
             weightCount += scaleFactor;
             eventCount++;
+            if(trigged) trigCount++;
             if(Muon && Electron && dilepton)   //Muon-Electron Selection Table
             {
                 if(isGoodPV && trigged)
@@ -1417,7 +1528,7 @@ int main (int argc, char *argv[])
             }
             if(Muon && !Electron && dilepton)   //Muon-Electron Selection Table
             {
-                if(diLepMass < 20 || (diLepMass > (ZMass-ZMassWindow) && diLepMass < (ZMass+ZMassWindow))) ZVeto = true;
+                if(sameCharge && (diLepMass < 20 || (diLepMass > (ZMass-ZMassWindow) && diLepMass < (ZMass+ZMassWindow)))) ZVeto = true;
                 if(isGoodPV && trigged)
                 {
                     selecTable.Fill(d,1,scaleFactor);
@@ -1449,7 +1560,7 @@ int main (int argc, char *argv[])
             }
             if(!Muon && Electron && dilepton)   //Muon-Electron Selection Table
             {
-                if(diLepMass < 20 || (diLepMass > (ZMass-ZMassWindow) && diLepMass < (ZMass-ZMassWindow))) ZVeto = true;
+                if(sameCharge && (diLepMass < 20 || (diLepMass > (ZMass-ZMassWindow) && diLepMass < (ZMass-ZMassWindow)))) ZVeto = true;
                 if(isGoodPV && trigged)
                 {
                     selecTable.Fill(d,1,scaleFactor);
@@ -1560,21 +1671,25 @@ int main (int argc, char *argv[])
             }
 
             if(debug) cout << "HT: " << temp_HT << " nMTags: " << nMtags << endl;
+            vector<TLorentzVector*> selectedLeptonTLV_JC;
 
             if (dilepton && Muon && Electron)
             {
                 if (!(nJets>=4 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
                 if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                selectedLeptonTLV_JC.push_back(selectedMuons[0]);
             }
             else if (dilepton && Muon && !Electron)
             {
                 if (!(nJets>=4 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
                 if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                selectedLeptonTLV_JC.push_back(selectedMuons[0]);
             }
             else if (dilepton && !Muon && Electron)
             {
                 if (!(nJets>=4 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
                 if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                selectedLeptonTLV_JC.push_back(selectedElectrons[0]);
             }
             if(debug)
             {
@@ -1583,8 +1698,7 @@ int main (int argc, char *argv[])
 
             passed++;
 
-            vector<TLorentzVector*> selectedMuonTLV_JC;
-            selectedMuonTLV_JC.push_back(selectedMuons[0]);
+
 
             ///////////////////////
             // Getting Gen Event //
@@ -1638,7 +1752,7 @@ int main (int argc, char *argv[])
             // MVA Hadronic Top Reconstructions //
             //////////////////////////////////////
 
-            jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedMuonTLV_JC[0], genEvt, scaleFactor);
+            jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedLeptonTLV_JC[0], genEvt, scaleFactor);
             double TriJetMass, DiJetMass;
             vector<TRootPFJet*> MVASelJets1;
             TLorentzVector Wh, Bh, Th;
@@ -1744,6 +1858,10 @@ int main (int argc, char *argv[])
                 float reliso = selectedMuons[selmu]->relPfIso(4, 0.5);
                 MSPlot["MuonRelIsolation"]->Fill(reliso, datasets[d], true, Luminosity*scaleFactor);
             }
+            if(Muon && !Electron && nMu ==2 && sameCharge && !ZVeto)
+            {
+                MSPlot["PostselDiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity*scaleFactor );
+            }
 
             //////////////////////////
             // Electron Based Plots //
@@ -1754,6 +1872,10 @@ int main (int argc, char *argv[])
                 float reliso = ElectronRelIso(selectedElectrons[selel], rho);
                 MSPlot["ElectronRelIsolation"]->Fill(reliso, datasets[d], true, Luminosity*scaleFactor);
                 MSPlot["ElectronPt"]->Fill(selectedElectrons[selel]->Pt(), datasets[d], true, Luminosity*scaleFactor);
+            }
+            if(!Muon && Electron && nEl ==2 && sameCharge && !ZVeto)
+            {
+                MSPlot["PostselDiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity*scaleFactor );
             }
 
             //////////////////////
@@ -1866,8 +1988,8 @@ int main (int argc, char *argv[])
             /////////////////////
 
             Eventcomputer_->FillVar("topness",topness);
-            Eventcomputer_->FillVar("muonpt",muonpt);
-            Eventcomputer_->FillVar("muoneta",muoneta);
+            Eventcomputer_->FillVar("LeadLepPt",muonpt);
+            Eventcomputer_->FillVar("LeadLepEta",muoneta);
             Eventcomputer_->FillVar("HTH", HTH);
             Eventcomputer_->FillVar("HTRat",HTRat);
             Eventcomputer_->FillVar("HTb", HTb);
@@ -1955,6 +2077,7 @@ int main (int argc, char *argv[])
 //        tupMfile->Close();
         cout <<"n events passed  =  "<<passed <<endl;
         cout <<"n events with negative weights = "<<negWeights << endl;
+        cout << "n events passing Trigger = " << trigCount << endl;
         cout << "Event Count: " << eventCount << endl;
         cout << "Weight Count: " << weightCount << endl;
         //important: free memory
@@ -2096,13 +2219,14 @@ float Centrality(vector<TLorentzVector> parts)
 float ElectronRelIso(TRootElectron* el, float rho)
 {
     double EffectiveArea = 0.;
-    // Updated to 2015 EA from https://indico.cern.ch/event/370494/contribution/2/attachments/736984/1011061/Rami_update_on_CB_ELE_ID_PHYS14PU20bx25.pdf
-    if (fabs(el->superClusterEta()) >= 0.0   && fabs(el->superClusterEta()) < 0.8   ) EffectiveArea = 0.1013;
-    if (fabs(el->superClusterEta()) >= 0.8   && fabs(el->superClusterEta()) < 1.3 ) EffectiveArea = 0.0988;
-    if (fabs(el->superClusterEta()) >= 1.3 && fabs(el->superClusterEta()) < 2.0   ) EffectiveArea = 0.0572;
-    if (fabs(el->superClusterEta()) >= 2.0   && fabs(el->superClusterEta()) < 2.2   ) EffectiveArea = 0.0842;
-    if (fabs(el->superClusterEta()) >= 2.2   && fabs(el->superClusterEta()) < 2.5   ) EffectiveArea = 0.1530;
-    if (fabs(el->superClusterEta()) >= 2.5) EffectiveArea = -9999;
+    // Updated to Spring 2015 EA from https://github.com/cms-sw/cmssw/blob/CMSSW_7_4_14/RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt#L8
+    if (fabs(el->superClusterEta()) >= 0.0   && fabs(el->superClusterEta()) < 1.0   ) EffectiveArea = 0.1752;
+    if (fabs(el->superClusterEta()) >= 1.0   && fabs(el->superClusterEta()) < 1.479 ) EffectiveArea = 0.1862;
+    if (fabs(el->superClusterEta()) >= 1.479 && fabs(el->superClusterEta()) < 2.0   ) EffectiveArea = 0.1411;
+    if (fabs(el->superClusterEta()) >= 2.0   && fabs(el->superClusterEta()) < 2.2   ) EffectiveArea = 0.1534;
+    if (fabs(el->superClusterEta()) >= 2.2   && fabs(el->superClusterEta()) < 2.3   ) EffectiveArea = 0.1903;
+    if (fabs(el->superClusterEta()) >= 2.3   && fabs(el->superClusterEta()) < 2.4   ) EffectiveArea = 0.2243;
+    if (fabs(el->superClusterEta()) >= 2.4   && fabs(el->superClusterEta()) < 5.0   ) EffectiveArea = 0.2687;
 
     double isoCorr = 0;
     isoCorr = el->neutralHadronIso(3) + el->photonIso(3) - rho*EffectiveArea;
