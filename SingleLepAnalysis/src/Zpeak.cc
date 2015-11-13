@@ -20,10 +20,10 @@ Zpeak::~Zpeak(){
 
 void Zpeak::invariantMass(Run2Selection r2selection){
 	isTwoLeptons_=false;
-	looseMuons_ = r2selection.GetSelectedMuons();
-	tightMuons_ = r2selection.GetSelectedMuons(20, 2.4, 0.20);
-	looseElectrons_ = r2selection.GetSelectedElectrons("Tight", "PHYS14", true);
-	tightElectrons_ = r2selection.GetSelectedElectrons("Loose", "PHYS14", true);
+	looseMuons_ = r2selection.GetSelectedMuons(26, 2.1, 0.12, "Loose", "Spring15");
+	tightMuons_ = r2selection.GetSelectedMuons(26, 2.1, 0.12, "Tight", "Spring15");
+	looseElectrons_ = r2selection.GetSelectedElectrons("Loose", "Spring15_50ns", true);
+	tightElectrons_ = r2selection.GetSelectedElectrons("Tight", "Spring15_50ns", true);
 	if (tightMuons_.size() == 2){
 		diLeptonCollection_ = *tightMuons_[0] + *tightMuons_[1];
 		diLeptonInvMass_ = diLeptonCollection_.M();

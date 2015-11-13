@@ -2,7 +2,7 @@
 
 Trigger::Trigger(bool isMuon, bool isElectron):
 muon(false), electron(false), trigged(false), redotrigmap(false), triggerList(), currentRun(0), previousRun(-1), currentFilename(""),
- previousFilename(""), iFile(-1), triggermap()
+ previousFilename(""), iFile(-1), triggermap(), runInfos2(new TRootRun()), previousDatasetName("")
 {
 	if(isMuon){
 		muon = true;
@@ -21,61 +21,78 @@ Trigger::~Trigger(){
 
 void Trigger::bookTriggers(){
 	if(muon){
-	    triggerList.push_back("HLT_IsoMu20_eta2p1_v2");
-	    triggerList.push_back("HLT_IsoMu20_eta2p1_TriCentralPFJet30_v2");
-	    triggerList.push_back("HLT_IsoMu20_eta2p1_TriCentralPFJet50_40_30_v2");	
-	    triggerList.push_back("HLT_IsoMu20_eta2p1_v1");
-	    triggerList.push_back("HLT_IsoMu20_eta2p1_TriCentralPFJet30_v1");
-	    triggerList.push_back("HLT_IsoMu20_eta2p1_TriCentralPFJet50_40_30_v1");		    
-	    triggerList.push_back("HLT_TkIsoMu20_eta2p1_v1");
+	    //triggerList.push_back("HLT_IsoMu20_eta2p1_v2");
+	    triggerList.push_back("HLT_IsoMu20_eta2p1_TriCentralPFJet30_v*");
+	    triggerList.push_back("HLT_IsoMu20_eta2p1_TriCentralPFJet50_40_30_v*");	
+	    triggerList.push_back("HLT_IsoMu20_eta2p1_v*");
+	    triggerList.push_back("HLT_IsoMu18_v*");
+	    triggerList.push_back("HLT_IsoMu18_TriCentralPFJet50_40_30_v*");		    
+	    triggerList.push_back("HLT_TkIsoMu20_eta2p1_v*");
    	}
 
     if (electron){
-	    triggerList.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_v1");
-	    triggerList.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet30_v1");
-	    triggerList.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30_v1");
-	    triggerList.push_back("HLT_Ele27_eta2p1_WP75_Gsf_v1");
-	    triggerList.push_back("HLT_Ele27_eta2p1_WP75_Gsf_TriCentralPFJet30_v1");
-	    triggerList.push_back("HLT_Ele27_eta2p1_WP75_Gsf_TriCentralPFJet50_40_30_v1");    	
+	    triggerList.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_v*");
+	    triggerList.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet30_v*");
+	    triggerList.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30_v*");
+	    triggerList.push_back("HLT_Ele27_eta2p1_WP75_Gsf_v*");
+	    triggerList.push_back("HLT_Ele27_eta2p1_WP75_Gsf_TriCentralPFJet30_v*");
+	    triggerList.push_back("HLT_Ele27_eta2p1_WP75_Gsf_TriCentralPFJet50_40_30_v*");    	
+	    triggerList.push_back("HLT_Ele23_WPLoose_Gsf_v*"); 
+	    triggerList.push_back("HLT_Ele23_WPLoose_Gsf_TriCentralPFJet50_40_30_v*");    	
+
+
     }
 
     for(UInt_t itrig=0; itrig<triggerList.size(); itrig++){
         triggermap[triggerList[itrig]]=std::pair<int,bool>(-999,false);
     }
-
-    // for(std::map<std::string,std::pair<int,bool> >::iterator trigiter = triggermap.begin(); trigiter != triggermap.end(); trigiter++){
-    //     std::pair<int,bool> bla = trigiter->second;
-    //     std::string bla2 = trigiter->first; 
-    // }    
+ 
 }
 
 void Trigger::checkAvail(int currentRun, vector < Dataset* > datasets, unsigned int d, TTreeLoader *treeLoader, TRootEvent* event){
 	redotrigmap=false;
 	currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
+	// currentRun = event->runId();
 	if(previousFilename != currentFilename){
 	    previousFilename = currentFilename;
 	    iFile++;
 	    redotrigmap=true;
-	    //cout<<"File changed!!! => iFile = "<<iFile << " new file is " << datasets[d]->eventTree()->GetFile()->GetName() << " in sample " << datasets[d]->Name() << endl;
+	    cout<<"File changed!!! => iFile = "<<iFile << " new file is " << datasets[d]->eventTree()->GetFile()->GetName() << " in sample " << datasets[d]->Name() << endl;
 	}
 	if(previousRun != currentRun){
 	    previousRun = currentRun;
-	    //cout<<"*****!!!!new run!!!! => new run = "<<previousRun<<" *****"<<endl;
+	    cout<<"*****!!!!new run!!!! => new run = "<<previousRun<<" *****"<<endl;
 	    redotrigmap=true;
 	}
+	// if(datasets[d]->Name() != previousDatasetName){
+	//     datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
+	//     datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos2);		
+	// }
+	// datasets[d]->runTree()->GetEntry(iFile);
 
 	if(redotrigmap){
-        //treeLoader->ListTriggers(currentRun, iFile);
+		cout<<"redo map::print names list"<<endl;
+		// runInfos2->getHLTinfo(currentRun).gethltNameList();
+		//treeLoader->ListTriggers(currentRun, iFile);
 	}
 
 
 	// get trigger info:
 	for(std::map<std::string,std::pair<int,bool> >::iterator iter = triggermap.begin(); iter != triggermap.end(); iter++){
 	    if(redotrigmap){
+			//  cout << "Bytes read out by GetEntry: " << rBytes << endl;
+			//cout << "Getting HLT Path Info" << endl;
+			// Int_t loc;
+			// if(runInfos2 == 0){
+			// 	loc = -9999;
+			// }
+			// else {
+			// 	loc = runInfos2->getHLTinfo(currentRun).hltPath(iter->first);
+			// }
 
 	        Int_t loc = treeLoader->iTrigger(iter->first, currentRun, iFile);
 	        string trigname = iter->first;
-	        //cout<<"trigname: "<<trigname<<"  location: "<<loc<<endl;
+	        cout<<"trigname: "<<trigname<<"  location: "<<loc<<endl;
 
 	        iter->second.first=loc;
 	    }
@@ -93,6 +110,7 @@ int Trigger::checkIfFired(){
 	trigged =0;
 
 	for(UInt_t itrig=0; itrig<triggerList.size() && trigged==0; itrig++){
+		cout<<"fired: "<<triggermap[triggerList[itrig]].second<<endl;
 	    if(triggermap[triggerList[itrig]].second)   trigged=1;
 	}
 

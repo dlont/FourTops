@@ -35,8 +35,8 @@ SOFLAGS       = -shared
 endif
 
 CXXFLAGS	  += $(ROOTCFLAGS)
-LIBS		  = -I./TMVA/include -L./TMVA/lib $(ROOTLIBS) -lEG -I.. -L. -L../TopTreeProducer/src -L libTopTreeAna74 -L TopTreeAnaContent74
-LIBS_NoTMVA   = $(ROOTLIBS_NoTMVA) -lEG -I.. -L. -L../TopTreeProducer/src -L libTopTreeAna74 -L TopTreeAnaContent74
+LIBS		  = -I./TMVA/include -L./TMVA/lib $(ROOTLIBS) -lEG -I.. -L. -L libTopTreeAna76 -L TopTreeAnaContent76
+LIBS_NoTMVA   = $(ROOTLIBS_NoTMVA) -lEG -I.. -L. -L libTopTreeAna76 -L TopTreeAnaContent76
 ifeq ($(UNAME), Darwin)
 LIBS          += -I/opt/local/include
 endif
@@ -53,10 +53,10 @@ all:  libFourTopSingleLep.$(DllSuf)
 
 SLMACRO: 
 	@echo "compiling macro"
-	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent74 -l TopTreeAna74 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACRO
+	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACRO
 
 SLMACROEL:
-	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent74 -l TopTreeAna74 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACROEL
+	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACROEL
 
 clean:
 	@echo "Cleaning..."

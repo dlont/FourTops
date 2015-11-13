@@ -1,7 +1,7 @@
 from ROOT import TChain
 from glob import glob
 
-path = '/pnfs/iihe/cms/store/user/heilman/TopTree/CMSSW_74X_v4/TT_TuneZ2star_13TeV-powheg-pythia6-tauola/crab_TOPTREE-TT_TuneZ2star_13TeV-powheg-pythia6-tauola-RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v3-MINIAODSIM--CMSSW_74X_v4--MCRUN2_74_V9-All/150720_081210/0000/TOPTREE_*.root'
+path = '/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/crab_TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9_ext1-v1-CMSSW_74X_v8-MCRUN2_74_V9/151020_160817/0000/TOPTREE_*.root'
 files = glob(path)
 root_files = []
 for f in files:
@@ -13,3 +13,4 @@ for rf in root_files:
 print 'added files'
 nEntries = chain.GetEntries();
 print nEntries
+

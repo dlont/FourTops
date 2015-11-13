@@ -2,6 +2,22 @@
 <datasets>
 
 
+<!--d name="Data"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1." PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_Data_Run2_TopTree_Study.root"/>
+
+<d name="Data"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1." PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_El/Craneens25_10_2015/Craneen_Data_Run2_TopTree_Study.root"/>
+
+<d name="NP_overlay_ttttNLO" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.7052526"  EqLumi="112696815.14" xsection=".008823" PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_NP_overlay_ttttNLO_Run2_TopTree_Study.root"  CombineName="tttt__nominal"/>
+
+<d name="SingleTop_tW"  title="SingleTop tW"  add="1"   color="7"  ls="0"  lw="2" normf="1"  EqLumi="56056.179" xsection="35.6"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
+
+<d name="DYJets"  title="DY+jets"   add="1"   color="214"  ls="1"  lw="2" normf="1"  EqLumi="3307" xsection="6025.2"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_DYJets_Run2_TopTree_Study.root" />
+
+<d name="WJets"  title="WJets"   add="1"   color="413"  ls="1"  lw="2" normf="1"  EqLumi="392.5376" xsection="61526"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_WJets_Run2_TopTree_Study.root"  />
+
+<d name="TTJets"  title="t\bar{t}+jets Madgraph MLM"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="13632.81715" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/>
+
+<d name="TTJets"  title="t\bar{t}+jets Powheg"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="6002.000" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/-->
+
 <d name="Data"     title="Data"    add="1"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1." PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_Data_Run2_TopTree_Study.root"/>
 
 <d name="Data"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1." PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_El/Craneens23_7_2015_merge/Craneen_Data_Run2_TopTree_Study.root"/>
@@ -17,6 +33,7 @@
 <d name="TTJets"  title="t\bar{t}+jets"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1977.179" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_TTJets_Run2_TopTree_Study.root"/>
 
 <d name="ttttLO" title="LO SM tttt"  add="0"   color="50" ls="0"  lw="2" normf="1"  EqLumi="4925535.53" xsection=".008995" PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_NP_overlay_ttttNLO_Run2_TopTree_Study.root"  CombineName="tttt__nominal"/>
+
 
 </datasets>
 
