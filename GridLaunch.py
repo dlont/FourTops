@@ -76,7 +76,7 @@ for row in args:
     f.write('#PBS -l walltime=02:00:00\n')
     f.write('source /user/heilman/.bash_profile\n')
     f.write('export X509_USER_PROXY=/localgrid/heilman/proxy\n')
-    f.write('cd /user/heilman/CMSSW_7_6_0_pre2/src/\n')
+    f.write('cd /user/heilman/CMSSW_7_6_0/src/\n')
     f.write('eval `scramv1 runtime -sh`\n')
     f.write('cp -pr ./TopBrussels $TMPDIR/.\n')
 #    f.write('cd TopBrussels/FourTops\n')
@@ -89,6 +89,7 @@ for row in args:
     f.write('echo ">> Training Complete"\n')
     f.write('ls -l\n')
     f.write('cp -pr $TMPDIR/TopBrussels/FourTops/Craneens_* /user/heilman/batchoutput\n')
+    f.write('cp -pr $TMPDIR/TopBrussels/FourTops/MACRO_* /user/heilman/batchoutput\n')
 
 #    popen = subprocess.Popen(row)
 #    print 'Job {} begun'.format(row[2])
