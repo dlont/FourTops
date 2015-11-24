@@ -2,15 +2,19 @@
 <data>
 <datasets>
 
-<d name="Data_Run2015C"     title="Data"    add="1"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/SingleMuon/crab_SingleMuon-Run2015C-23Sep2015-v1-CMSSW_74X_v8-74X_dataRun2_Prompt_v1/09112015_084000/Skimmed_TOPTREE_*.root"/>
+<d name="Data_Run2015C_Golden"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="10.364" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/SingleMuon/crab_SingleMuon-Run2015C-23Sep2015-v1-CMSSW_74X_v8-74X_dataRun2_Prompt_v1/09112015_084000/Skimmed_TOPTREE_*.root"/> <!-- silver-->
 
-<d name="Data_Run2015D"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/SingleMuon/crab_SingleMuon-Run2015D-05Oct2015-v1-CMSSW_74X_v8-74X_dataRun2_Prompt_v2/09112015_085032/Skimmed_TOPTREE_*.root"/>
+<d name="Data_Run2015D2_v3_Golden"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="552.673" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/lbeck/Skimmed-TopTrees/CMSSW_74X_v8/Muon/SingleMuon/crab_SingleMuon-Run2015D-05Oct2015-v1-CMSSW_74X_v8-74X_dataRun2_Prompt_v2_golden/19112015_212106/Skimmed_TOPTREE_*.root"/>
 
-<d name="Data_Run2015D2"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/SingleMuon/crab_SingleMuon-Run2015D-PromptReco-v4-CMSSW_74X_v8-74X_dataRun2_Prompt_v2/09112015_084324/Skimmed_TOPTREE_*.root"/>
+<d name="Data_Run2015D_v4_Golden"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="711.058" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/lbeck/Skimmed-TopTrees/CMSSW_74X_v8/Muon/SingleMuon/crab_SingleMuon-Run2015D-PromptReco-v4-CMSSW_74X_v8-74X_dataRun2_Prompt_v2_golden/19112015_191010/Skimmed_TOPTREE_*.root"/>
 
-<d name="ttttNLO" title="NLO SM tttt"  add="0"  color="40" ls="1"  lw="2" normf="0.563529176"  EqLumi="112696815.142" xsection=".008823" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CCMSSW_74X_v8/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/crab_TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/09112015_080726/Skimmed_TOPTREE_*.root"/>
+<d name="Data_Run2015D_v3_Silver"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="334.851" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/SingleMuon/crab_SingleMuon-Run2015D-05Oct2015-v1-CMSSW_74X_v8-74X_dataRun2_Prompt_v2/09112015_085032/Skimmed_TOPTREE_*.root"/> <!-- silver-->
 
-<d name="TTJets"  title="t\bar{t}+jets Madgraph MLM"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="13632.81715" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/09112015_050316/Skimmed_TOPTREE_*.root"/>
+<d name="Data_Run2015D2_Silver"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="16.678" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/SingleMuon/crab_SingleMuon-Run2015D-PromptReco-v4-CMSSW_74X_v8-74X_dataRun2_Prompt_v2/09112015_084324/Skimmed_TOPTREE_*.root"/> <!-- silver-->
+
+<d name="ttttNLO" title="NLO SM tttt"  add="1"  color="40" ls="1"  lw="2" normf="0.563529176"  EqLumi="112696815.142" xsection=".008823" PreselEff="0.0" filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CCMSSW_74X_v8/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/crab_TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/09112015_080726/Skimmed_TOPTREE_*.root"/>
+
+<d name="TTJets"  title="t\bar{t}+jets Madgraph MLM"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="13632.81715" xsection="831.76"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/09112015_050316/Skimmed_TOPTREE_*.root"/>
 
 <d name="T_tW"  title="t tW"  add="0"   color="7"  ls="0"  lw="2" normf="1"  EqLumi="27966.29213" xsection="35.6"   PreselEff="0.0"   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt25ns/09112015_075038/Skimmed_TOPTREE_*.root"/>
 
