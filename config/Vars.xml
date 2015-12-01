@@ -9,7 +9,7 @@
 		<fileNameSys>config/Run2SingleLepton_samples_Sys74.xml</fileNameSys>
 		<!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/Craneen_</craneenPath-->
 		<!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/CraneenJets_</craneenPath-->
-		<craneenPath>/user/lbeck/CMSSW_7_6_0/src/TopBrussels/FourTops/Craneens_Mu/Craneens20_11_2015/merge/Craneen_</craneenPath> <!-- 17_9 no scale 
+		<craneenPath>/user/lbeck/CMSSW_7_6_0/src/TopBrussels/FourTops/Craneens_Mu/Craneens27_11_2015/merge/CraneenZ_</craneenPath> <!-- 17_9 no scale 
 		weights--> <!--22_10_2015_merge2 25ns    25_10 50ns v7 tag -->
 
 		<lumiScale lumi=5/>
@@ -26,7 +26,9 @@
 		</splitting>
 
 		<datacardVar>BDT</datacardVar> <!-- variable for which datacard will be produced -->
-		<var lBound= 0 uBound=2000 nBins=20 >HT</var>
+		<!--var lBound= 0 uBound=2000 nBins=20 >HT</var>
+		<var lBound= 3.5 uBound=16.5 nBins=13 >nJets</var>
+
 		<var lBound= 20 uBound=400 nBins=38 >LeadingMuonPt</var>
 		<var lBound= -2.5 uBound=4.5 nBins=24 >LeadingMuonEta</var>
 		<var lBound= -3.5 uBound=5.5 nBins=28 >leptonphi</var>
@@ -34,12 +36,12 @@
 		<var lBound= 1.5 uBound=11.5 nBins=10 >nLtags</var>
 		<var lBound= 1.5 uBound=7.5 nBins=6 >nTtags</var>
 		<var lBound= 0 uBound=700 nBins=28 >met</var>
+
 		<var lBound= 0 uBound=1600 nBins=16 >1stjetpt</var>
 		<var lBound= 0 uBound=900 nBins=18 >LeadingBJetPt</var>
 		<var lBound= -0.5 uBound=50.5 nBins=51 >PU</var>
-		<var lBound= 20 uBound=400 nBins=38 >LeadingMuonPt</var>		
+		<var lBound= 20 uBound=400 nBins=38 >LeadingMuonPt</var-->		
 		<!--var lBound= -0.5 uBound=1.0 nBins=15 >BDT</var-->
-		<var lBound= 3.5 uBound=16.5 nBins=13 >nJets</var>
 
 
 		<!--var lBound= 0 uBound=4 nBins=20>angletop1top2</var>
@@ -55,9 +57,9 @@
 		<!--var lBound= 0 uBound=600 nBins=20 >jetpT</var>
 		<var lBound= -15 uBound=15 nBins=50 >csvDisc</var>
 		<var lBound= -2.5 uBound=2.5 nBins=100 >jeteta</var>
-		<var lBound= -3.5 uBound=3.5 nBins=70 >jetphi</var>
+		<var lBound= -3.5 uBound=3.5 nBins=70 >jetphi</var-->
 
-		<var lBound=0 uBound=120 nBins=60 >invMassll</var-->
+		<var lBound=0 uBound=200 nBins=100 >invMassll</var>
 
 	</channel>
 

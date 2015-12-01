@@ -165,8 +165,8 @@ int main (int argc, char *argv[])
     bool SingleLepton  = true;
     bool Muon          = true;
     bool Electron      = false;
-    bool HadTopOn      = true;
-    bool EventBDTOn    = true;
+    bool HadTopOn      = false;
+    bool EventBDTOn    = false;
     bool TrainMVA      = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25          = false;
     bool bTagReweight  = true;
@@ -236,10 +236,11 @@ int main (int argc, char *argv[])
 
     if(bTagReweight && dataSetName.find("Data")==string::npos){
         //Btag documentation : http://mon.iihe.ac.be/~smoortga/TopTrees/BTagSF/BTaggingSF_inTopTrees.pdf
-        bTagCalib = new BTagCalibration("CSVv2","CSVv2_13TeV_25ns_combToMujets.csv");
+        bTagCalib = new BTagCalibration("CSVv2","../TopTreeAnalysisBase/Calibrations/BTagging/CSVv2_13TeV_25ns_combToMujets.csv");
         bTagReader = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"mujets","central"); //mujets
         if(fillingbTagHistos) btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+".root",false,30,999,2.4);    
         else btwt = new BTagWeightTools(bTagReader,"HistosPtEta.root",false,30,999,2.4); 
+        //   btwt = new BTagWeightTools(bTagReader,"HistosPtEta_TTJets_4J.root",false,30,999,2.4); 
 
     }
 
@@ -538,7 +539,7 @@ int main (int argc, char *argv[])
                 if (debug)cout<<"Getting Tight Muons"<<endl;
                 selectedMuons                                       = r2selection.GetSelectedMuons(26, 2.1, 0.12, "Tight", "Spring15");
                 nMu = selectedMuons.size(); //Number of Muons in Event
-                if (debug)cout<<"Getting Tight Electrons"<<endl;
+                if (debug)cout<<"Getting Loose Electrons"<<endl;
                 selectedElectrons                                   = r2selection.GetSelectedElectrons("Loose", "Spring15_50ns", true); // VBTF ID    
                 nEl = selectedElectrons.size(); //Number of Electrons in Event   
                 if (debug)cout<<"Getting Loose Muons"<<endl;
@@ -553,16 +554,21 @@ int main (int argc, char *argv[])
 
             //TLorentzVector *LeptonPlusJet = new TLorentzVector(0,0,0,0);
             //cout<<"size of orig jets: "<<selectedOrigJets.size()<<"  number of muons: "<<nMu<<endl;
+            zPeakMaker->invariantMass(r2selection);
+            float invMassll = zPeakMaker->returnInvMass();
+
+
             selectedJets.clear();
-            if( nMu!=1) continue;
+            if( nMu!=1 && nEl!=1) continue;
+            //cout<<nMu<<"<--nmu  nEl-->"<<nEl<<endl;
             for (int origJets=0; origJets<selectedOrigJets.size(); origJets++){
-                if(Muon){
+                if(nMu==1){
                     //cout<<"DR: "<< selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])<<endl;
                     if(selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])>0.4){
                         selectedJets.push_back(selectedOrigJets[origJets]);
                     }                    
                 }
-                else if(Electron){
+                else if(nEl==1){
                     if(selectedOrigJets[origJets]->DeltaR(*selectedElectrons[0])>0.4){
                         selectedJets.push_back(selectedOrigJets[origJets]);
                     }                       
@@ -685,11 +691,11 @@ int main (int argc, char *argv[])
 
             
             //Form z peak
-            zPeakMaker->invariantMass(r2selection);
+            // zPeakMaker->invariantMass(r2selection);
 
             zPeakMaker->fillPlot(datasets, d, Luminosity, scaleFactor);
 
-            float invMassll = zPeakMaker->returnInvMass();
+            // float invMassll = zPeakMaker->returnInvMass();
             float normfactor = datasets[d]->NormFactor();
             float vals2[4] = {invMassll,scaleFactor,normfactor,Luminosity};
             bool isTwoLeptons=zPeakMaker->requireTwoLeptons();
@@ -706,7 +712,7 @@ int main (int argc, char *argv[])
             if (Muon)
             {   
                 if(debug) cout<<"before baseline"<<endl;
-                if  (  !( nMu == 1 && nEl == 1 && nLooseEl == 1 && nJets>=6 && nMtags >=2)) continue; // Muon Channel Selection
+                if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=4 && nMtags >=0))) continue; // Muon Channel Selection
 
             }
             else if(Electron){
@@ -716,7 +722,7 @@ int main (int argc, char *argv[])
                 cerr<<"Correct Channel not selected."<<endl;
                 exit(1);
             }
-
+            if(debug) cout<<"after baseline"<<endl;
             weightCount += scaleFactor;
             eventCount++;
 
@@ -724,10 +730,35 @@ int main (int argc, char *argv[])
             float numOfcc = 0;
             float numOfll = 0;
             float ttbar_flav = -1;
-
+            vector<TRootMCParticle*> mcParticles_flav;
+            TRootGenEvent* genEvt_flav = 0;
             if(dataSetName.find("TTJets")!=string::npos){
+                genEvt_flav = treeLoader.LoadGenEvent(ievt,false);
+                treeLoader.LoadMCEvent(ievt, genEvt_flav, 0, mcParticles_flav,false);
+                for(unsigned int p=0; p<mcParticles_flav.size(); p++) {
+                    //cout<<"status: "<<mcParticles_flav[p]->status()<<"  id: "<<mcParticles_flav[p]->type()<<" mother: "<<mcParticles_flav[p]->motherType()<<endl;
+                    if(mcParticles_flav[p]->status()<30 && mcParticles_flav[p]->status()>20 && abs(mcParticles_flav[p]->motherType())!=6){
 
-            }
+                        if (abs(mcParticles_flav[p]->type())==5)
+                        {
+                            // ttbar_flav=2;
+                            numOfbb++;  
+                        }
+                        
+                        else if (abs(mcParticles_flav[p]->type())==4 && abs(mcParticles_flav[p]->motherType())!=5 && abs(mcParticles_flav[p]->motherType())!=24)
+                        {
+                            // ttbar_flav=1;
+                            numOfcc++; 
+                        }
+                        
+                        else if (abs(mcParticles_flav[p]->type())<4){
+                            // ttbar_flav=1;
+                            numOfll++; 
+                        }
+                    }
+
+                }
+            } 
 
             if(numOfbb>=2){
                 ttbar_flav = 2;
@@ -810,7 +841,10 @@ int main (int argc, char *argv[])
             if (debug) cout<<"getMCEventWeight for btag"<<endl;
             float btagWeight = 1;
             if(bTagReweight && dataSetName.find("Data")==string::npos){
-                btagWeight =  btwt->getMCEventWeight(selectedJets, false);
+                if(!fillingbTagHistos){
+                    btagWeight =  btwt->getMCEventWeight(selectedJets, false);
+                }
+                
                 // cout<<"btag weight "<<btagWeight<<endl;
             }
 
@@ -835,7 +869,7 @@ int main (int argc, char *argv[])
             }
             passed++;
 
-            TRootGenEvent* genEvt = 0;
+            // TRootGenEvent* genEvt = 0;
 
             sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
 
@@ -1050,17 +1084,12 @@ int main (int argc, char *argv[])
     cutsTable->Calc_Write(postfix, dName, channelpostfix);
     delete cutsTable;
 
-    delete btwt;
+    //delete btwt;
 
-    if(Muon){
+    cout<<"TRIGGGG"<<endl;
 
-        cout<<"TRIGGGG"<<endl;
-
-        cout<<"preTrig: "<<preTrig<<"   postTrig: "<<postTrig<<endl;
-        cout<<"********"<<endl;
-    }
-
-
+    cout<<"preTrig: "<<preTrig<<"   postTrig: "<<postTrig<<endl;
+    cout<<"********"<<endl;
 
     delete trigger;
 
