@@ -67,7 +67,7 @@ int main(int argc, char** argv)
     bool jetSplit = false; 
     bool jetTagsplit = false;
     int isplit_ttbar = 0;
-    bool split_ttbar = true;
+    bool split_ttbar = false;
 
     //upper and lower bound of variable in plot
     float lBound, uBound, bSplit, tSplit, wSplit, bSplit1, tSplit1, wSplit1, bSplit2, tSplit2, wSplit2;  // + the bottom, top, and width of the splitting for 1 & 2 variables
@@ -461,6 +461,8 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor",&ScaleFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav",&ttbar_flav);
+
         // nTuple[dataSetName.c_str()]->SetBranchAddress("GenWeight",&GenWeight);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("weight1",&weight1);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("weight2",&weight2);
@@ -470,7 +472,6 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         // nTuple[dataSetName.c_str()]->SetBranchAddress("weight6",&weight6);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("weight7",&weight7);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("weight8",&weight8);
-        // nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav",&ttbar_flav);
 
         float eqlumi = 1./datasets[d]->EquivalentLumi();
         cout<<"eqlumi: "<<eqlumi<<endl;
@@ -509,7 +510,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
                 {
                     Luminosity = 1000*lScale;
                 }               
-                Luminosity = 1274.1; 
+                Luminosity = 2460.38; 
                 NormFactor =1;
                 if (dataSetName.find("tttt")!=string::npos) {
                     NormFactor = 0.5635;                
@@ -523,7 +524,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
                 //ScaleFactor =1;
                 histo1D[dataSetName]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*eqlumi);
 
-                if (dataSetName == "TTJets"){
+                if (dataSetName.find("TTJets")!=string::npos){
                     // histo1D["Genweight_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*GenWeight*eqlumi);
                     // // cout<<"genweight: "<<GenWeight<<endl;
                     // histo1D["weight1_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight1*eqlumi);
@@ -535,11 +536,12 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
                     // histo1D["weight7_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight7*eqlumi);
                     // histo1D["weight8_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight8*eqlumi);   
                     if(split_ttbar){
-                        if(ttbar_flav==0){//light
+                        // if (ttbar_flav>1.5) cout<<"ttbar_flav:  "<<ttbar_flav<<endl;
+                        if(ttbar_flav<0.5){//light
                             
                             MSPlot[plotname]->Fill(varofInterest, ttbar_ll, true, NormFactor*ScaleFactor*Luminosity);                
                         }     
-                        else if(ttbar_flav==1){//cc
+                        else if(ttbar_flav>0.5 && ttbar_flav<1.5){//cc
                             MSPlot[plotname]->Fill(varofInterest, ttbar_cc, true, NormFactor*ScaleFactor*Luminosity);                
                         }   
                         else{
