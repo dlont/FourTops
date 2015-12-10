@@ -90,6 +90,7 @@ for row in args:
     f.write('ls -l\n')
     f.write('cp -pr $TMPDIR/TopBrussels/FourTops/Craneens_* /user/heilman/batchoutput\n')
     f.write('cp -pr $TMPDIR/TopBrussels/FourTops/MACRO_* /user/heilman/batchoutput\n')
+    f.write('cp -pr $TMPDIR/TopBrussels/FourTops/HistosPtEta*.root /user/heilman/batchoutput\n')
 
 #    popen = subprocess.Popen(row)
 #    print 'Job {} begun'.format(row[2])

@@ -7,14 +7,14 @@
 
 
 
-<d name="NP_overlay_Data_Run2015C_23Sep2015_v1_MuElSkim" title="MuEl_Run2015C_23Sep2015_v1_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="5.361701868" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/Run2015C-23Sep2015-v1/23102015_234559/*.root"/>
+<d name="NP_overlay_Data_Run2015C_25ns-05Oct2015-v1_MuEl" title="MuEl_Run2015C_25ns-05Oct2015-v1_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="16.344578402" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/MuonEG/crab_MuonEG-Run2015C_25ns-05Oct2015-v1-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151127_083714/0000/*.root"/>
 
-<d name="NP_overlay_Data_Run2015D_MuElSkim_05Oct2015_v2" title="MuEl_Run2015D_05Oct2015_v2_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="293.025428" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/Run2015D-05Oct2015-v2/23102015_234740/*.root"/>
+<d name="NP_overlay_Data_Run2015D_05Oct2015-v2_MuEl" title="MuEl_Run2015D_05Oct2015-v2_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="887.308177909" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/MuonEG/crab_MuonEG-Run2015D-05Oct2015-v2-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112300/0000/*.root"/>
 
-<d name="NP_overlay_Data_Run2015D_MuElSkim_PromptReco_v4" title="MuEl_Run2015D_PromptReco_v4_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="381.1635792" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/Run2015D-PromptReco-v4/24102015_003512/*.root"/>
+<d name="NP_overlay_Data_Run2015D_PromptReco-v4_MuEl" title="MuEl_Run2015D_PromptReco-v4_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="1557.735806609" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/MuonEG/crab_MuonEG-Run2015D-PromptReco-v4-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112331/0000/*.root /pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/MuonEG/crab_MuonEG-Run2015D-PromptReco-v4-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112331/0001/*.root"/>
 
 <d name="ttttNLO_SUS25_MuElSkim" title="NLO_SM_tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="63144018.46" xsection="0.009103" PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/22102015_181415/Skimmed_TOPTREE*.root"/>
@@ -33,19 +33,19 @@
 
 
 
-<d name="NP_overlay_Data_Run2015C_23Sep2015_v1_MuMuSkim" title="MuMu Run2015C_23Sep2015_v1 Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="2.394544822" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/Run2015C-23Sep2015-v1/24102015_151900/*.root"/>
+<d name="NP_overlay_Data_Run2015C_25ns-05Oct2015-v1_MuMu" title="MuMu_Run2015C_25ns-05Oct2015-v1_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="16.344578402" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/DoubleMuon/crab_DoubleMuon-Run2015C_25ns-05Oct2015-v1-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151127_083652/0000/*.root"/>
 
-<d name="NP_overlay_Data_Run2015D_05Oct2015_v1_MuMuSkim" title="MuMu Run2015D_05Oct2015_v1 Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="156.1373503" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/Run2015D-05Oct2015-v1/24102015_152438/*.root"/>
+<d name="NP_overlay_Data_Run2015D_05Oct2015_v1_MuMu" title="MuMu_Run2015D_05Oct2015-v1_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="835.827627434" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/DoubleMuon/crab_DoubleMuon-Run2015D-05Oct2015-v1-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151127_090355/0000/*.root"/>
 
-<d name="NP_overlay_Data_Run2015D_PromptReco_v4_MuMuSkim" title="MuMu Run2015D_PromptReco_v4 Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="208.604635" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/Run2015D-PromptReco-v4/24102015_165224/*.root"/>
+<d name="NP_overlay_Data_Run2015D_PromptReco_v4_MuMu" title="MuMu_Run2015D_PromptReco-v4_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="1556.443845662" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/DoubleMuon/crab_DoubleMuon-Run2015D-PromptReco-v4-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112244/0000/*.root /pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/DoubleMuon/crab_DoubleMuon-Run2015D-PromptReco-v4-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112244/0001/*.root"/>
 
 <d name="ttttNLO_SUS25_MuMuSkim" title="NLO_SM_tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="47099637.48" xsection="0.009103" PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/24102015_082141/Skimmed_TOPTREE*.root"/>
 
-<d name="TTJets25_MuMuSkim"  title="t\bar{t}+jets_MadGraph_Run-2_Start 25ns"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1775.242859" xsection="831.76"   PreselEff="0.0"
+<d name="TTJets25_MuMuSkim"  title="t\bar{t}+jets_MadGraph_Run-2_Start_25ns"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1775.242859" xsection="831.76"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleMuon/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/24102015_013719/Skimmed_TOPTREE*.root"/>
 
 <d name="T_tW25_MuMuSkim"  title="t_tW"  add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2661.460674" xsection="35.6"   PreselEff="0.0"
@@ -59,14 +59,14 @@
 
 
 
-<d name="NP_overlay_Data_Run2015C_23Sep2015_v1_ElElSkim" title="ElEl Run2015C_23Sep2015_v1 Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="0.8120215021" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/Run2015C-23Sep2015-v1/25102015_022315/*.root"/>
+<d name="NP_overlay_Data_Run2015C_25ns-05Oct2015-v1_ElEl" title="ElEl_Run2015C_25ns-05Oct2015-v1_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="15.570804835" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/DoubleEG/crab_DoubleEG-Run2015C_25ns-05Oct2015-v1-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151127_083622/0000/*.root"/>
 
-<d name="NP_overlay_Data_Run2015D_05Oct2015_v1_ElElSkim" title="ElEl Run2015D_05Oct2015_v1 Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="60.86085027" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/Run2015D-05Oct2015-v1/25102015_023506/*.root"/>
+<d name="NP_overlay_Data_Run2015D_05Oct2015_v1_ElEl" title="ElEl_Run2015D_05Oct2015-v1_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="887.308177909" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/DoubleEG/crab_DoubleEG-Run2015D-05Oct2015-v1-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112150/0000/*.root"/>
 
-<d name="NP_overlay_Data_Run2015D_PromptReco_v4_ElElSkim" title="ElEl Run2015D_PromptReco_v4 Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="86.1769497" xsection="1" PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/Run2015D-PromptReco-v4/25102015_040358/*.root"/>
+<d name="NP_overlay_Data_Run2015D_PromptReco_v4_ElEl" title="ElEl_Run2015D_PromptReco-v4_Data"  add="1"   color="40" ls="0"  lw="2" normf="1"  EqLumi="1555.411332694" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/DoubleEG/crab_DoubleEG-Run2015D-PromptReco-v4-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112210/0000/*.root /pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/DoubleEG/crab_DoubleEG-Run2015D-PromptReco-v4-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112210/0001/*.root"/>
 
 <d name="ttttNLO_SUS25_ElElSkim" title="NLO_SM_tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="50341975.17" xsection="0.009103" PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/DoubleEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/24102015_224256/Skimmed_TOPTREE*.root"/>
