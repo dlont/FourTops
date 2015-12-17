@@ -174,7 +174,7 @@ int main (int argc, char *argv[])
     bool debug         = false;
     bool fillingbTagHistos = false;
     string MVAmethod   = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
-    float Luminosity   = 2109.42589335 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
+    float Luminosity   = 2460.0 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
     //bool split_ttbar = false;
 
     if(Muon && SingleLepton){
@@ -238,9 +238,15 @@ int main (int argc, char *argv[])
     if(bTagReweight && dataSetName.find("Data")==string::npos){
         //Btag documentation : http://mon.iihe.ac.be/~smoortga/TopTrees/BTagSF/BTaggingSF_inTopTrees.pdf
         bTagCalib = new BTagCalibration("CSVv2","../TopTreeAnalysisBase/Calibrations/BTagging/CSVv2_13TeV_25ns_combToMujets.csv");
-        bTagReader = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"mujets","central"); //mujets
-        if(fillingbTagHistos) btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+".root",false,30,999,2.4);    
-        else btwt = new BTagWeightTools(bTagReader,"HistosPtEta.root",false,30,999,2.4); 
+        bTagReader = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"mujets","down"); //mujets
+        if(fillingbTagHistos) {
+            if (Muon) btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+"_Mu_Down.root",false,30,600,2.4);
+            else if (Electron) btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+"_El.root",false,30,600,2.4);
+        }    
+        else {
+            if(Muon)      btwt = new BTagWeightTools(bTagReader,"btaghistos/HistosPtEta_TTJets_MLM_Mu_Down.root",false,30,600,2.4); 
+            else if (Electron) btwt = new BTagWeightTools(bTagReader,"HistosPtEta.root",false,30,600,2.4); //btaghistos/HistosPtEta_TTJets_powheg_El.root
+        }
         //   btwt = new BTagWeightTools(bTagReader,"HistosPtEta_TTJets_4J.root",false,30,999,2.4); 
 
     }
@@ -371,7 +377,7 @@ int main (int argc, char *argv[])
     //               Pu reweighting                //
     /////////////////////////////////////////////////
     LumiReWeighting LumiWeights;
-    LumiWeights = LumiReWeighting("../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIISpring15DR74-Asympt25ns.root", "../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data74X_25ns-Run254231-258750Cert/nominal.root", "pileup", "pileup");    
+    LumiWeights = LumiReWeighting("../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIISpring15DR74-Asympt25ns.root", "../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data74X_25ns-Run246908-260627Cert_Silver.root", "pileup", "pileup");    
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //                                                                                             //
@@ -464,7 +470,7 @@ int main (int argc, char *argv[])
         ///////////////////////////////////////////////////////////
         //             Get # of events to run over               //
         ///////////////////////////////////////////////////////////
-
+//
         int start = 0;
         unsigned int ending = datasets[d]->NofEvtsToRunOver();    cout <<"Number of events = "<<  ending  <<endl;
         int event_start = startEvent;
@@ -515,6 +521,8 @@ int main (int argc, char *argv[])
 
             currentRun = event->runId();
             datasets[d]->eventTree()->LoadTree(ievt);
+            int treenumber = datasets[d]->eventTree()->GetTreeNumber();
+            // cout<<"treenumber: "<< treenumber<<endl;
             currentfilename2 = datasets[d]->eventTree()->GetFile()->GetName();
             if(previousFilename2 != currentfilename2){
                 previousFilename2 = currentfilename2;
@@ -535,13 +543,13 @@ int main (int argc, char *argv[])
                                                                                                                                            
                 selectedOrigJets                                    = r2selection.GetSelectedJets(); if (debug)cout<<"Getting Jets"<<endl; // ApplyJetId
                                                                                                                                             
-                selectedMuons                                       = r2selection.GetSelectedMuons(10, 2.5, 0.25, "Tight", "Spring15"); if (debug)cout<<"Getting Tight Muons"<<endl;
+                selectedMuons                                       = r2selection.GetSelectedMuons(10, 2.5, 0.25, "Loose", "Spring15"); if (debug)cout<<"Getting Loose Muons"<<endl;
                 nMu = selectedMuons.size(); //Number of Muons in Event
                                                                                                                                             
                 selectedElectrons                                   = r2selection.GetSelectedElectrons(30, 2.1, "Tight", "Spring15_25ns", true); if (debug)cout<<"Getting Tight Electrons"<<endl; // VBTF ID       
                 nEl = selectedElectrons.size(); //Number of Electrons in Event
                                                                                                                                             
-                selectedExtraElectrons                              = r2selection.GetSelectedElectrons(15, 2.5, "Loose", "Spring15_25ns", true); if (debug)cout<<"Getting Loose Electrons"<<endl;
+                selectedExtraElectrons                              = r2selection.GetSelectedElectrons(15, 2.5, "Veto", "Spring15_25ns", true); if (debug)cout<<"Getting Loose Electrons"<<endl;
                 nLooseEl = selectedExtraElectrons.size(); //Number of loose muons
 
             }
@@ -552,7 +560,7 @@ int main (int argc, char *argv[])
                 selectedMuons                                       = r2selection.GetSelectedMuons(26, 2.1, 0.15, "Tight", "Spring15"); if (debug)cout<<"Getting Tight Muons"<<endl;
                 nMu = selectedMuons.size(); //Number of Muons in Event
                                                                                                                                             
-                selectedElectrons                                   = r2selection.GetSelectedElectrons(15, 2.5, "Loose", "Spring15_25ns", true); if (debug)cout<<"Getting Loose Electrons"<<endl; // VBTF ID    
+                selectedElectrons                                   = r2selection.GetSelectedElectrons(15, 2.5, "Veto", "Spring15_25ns", true); if (debug)cout<<"Getting Loose Electrons"<<endl; // VBTF ID    
                 nEl = selectedElectrons.size(); //Number of Electrons in Event   
                                                                                                                                             
                 selectedExtraMuons                                  = r2selection.GetSelectedMuons(10, 2.5, 0.25, "Loose", "Spring15"); if (debug)cout<<"Getting Loose Muons"<<endl;
@@ -569,21 +577,24 @@ int main (int argc, char *argv[])
             //            Jet lepton cleaning              //
             /////////////////////////////////////////////////
             selectedJets.clear();
-            if( nMu<1 && nEl<1) continue;
             //cout<<nMu<<"<--nmu  nEl-->"<<nEl<<endl;
-            for (int origJets=0; origJets<selectedOrigJets.size(); origJets++){
-                if(Muon && nMu>0){
+            if(Muon && nMu>0){
+                for (int origJets=0; origJets<selectedOrigJets.size(); origJets++){
                     //cout<<"DR: "<< selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])<<endl;
                     if(selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])>0.4){
                         selectedJets.push_back(selectedOrigJets[origJets]);
                     }                    
                 }
-                else if(Electron && nEl>0){
+            }
+            else if(Electron && nEl>0){
+                for (int origJets=0; origJets<selectedOrigJets.size(); origJets++){
+                    //cout<<"DR: "<< selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])<<endl;
                     if(selectedOrigJets[origJets]->DeltaR(*selectedElectrons[0])>0.4){
                         selectedJets.push_back(selectedOrigJets[origJets]);
                     }                       
                 }
             }
+            else selectedJets = selectedOrigJets;
 
             ///////////////////////////////////////////////////////////////////////////////////
             // Preselection looping over Jet Collection                                      //
@@ -598,14 +609,14 @@ int main (int argc, char *argv[])
             float HTb = 0.;  //calculate assigning loose, medium and tight tags
             for (Int_t seljet =0; seljet < selectedJets.size(); seljet++ )
             {
-                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244   )
+                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.605   )
                 {
                     selectedLBJets.push_back(selectedJets[seljet]);
-                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.679)
+                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.890)
                     {
                         HTb += selectedJets[seljet]->Pt();
                         selectedMBJets.push_back(selectedJets[seljet]);
-                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.898)
+                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.970)
                         {
                             selectedTBJets.push_back(selectedJets[seljet]);
                         }
@@ -653,7 +664,7 @@ int main (int argc, char *argv[])
             /////////////////////////////////
 
             // cout<<"!!CHECK AVAIL!!"<<endl;
-            trigger->checkAvail(currentRun, datasets, d, &treeLoader, event);
+            trigger->checkAvail(currentRun, datasets, d, &treeLoader, event, treenumber);
             // cout<<"!!CHECK FIRED!!"<<endl;
 
             trigged = trigger->checkIfFired();
@@ -663,9 +674,9 @@ int main (int argc, char *argv[])
 
             preTrig++;
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
-            if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos){
+            //if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos){
             if (!trigged)          continue;  //If an HLT condition is not present, skip this event in the loop.       
-            }
+            //}
             postTrig++; 
 
             /////////////////////////////////
@@ -764,12 +775,19 @@ int main (int argc, char *argv[])
             if(dataSetName.find("tttt") != string::npos){
                 weight_0 = ( event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("scale_variation 1"))/(abs(event->originalXWGTUP()))); //nominal                   
             }
-            if(dataSetName.find("TTJets") != string::npos){
+            else if(dataSetName.find("TTJets") != string::npos){
                 weight_0 = ( event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1"))/(abs(event->originalXWGTUP()))); //nominal               
             }
-            if(dataSetName.find("WJets")!=string::npos || dataSetName.find("DYJets")!=string::npos ){
-                weight_0 = event->getWeight(1)/(abs(event->originalXWGTUP()));
+            else if(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1")>=0){
+                //cout<<"central"<<endl;
+                weight_0 = (event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("Central scale variation 1")))/(abs(event->originalXWGTUP()));   
             }
+            else if(runInfos->getWeightInfo(currentRun).weightIndex("scale_variation 1")>=0){
+                //cout<<"scale"<<endl;
+                weight_0 = (event->getWeight(runInfos->getWeightInfo(currentRun).weightIndex("scale_variation 1")))/(abs(event->originalXWGTUP()));  
+                //cout<<"weight0: "<<weight_0<<endl;       
+            }
+
             // cout<<"unscaled"<<event->getWeight(1)<<endl;
             // cout<<"weight: "<<weight_0<<endl;
 
@@ -806,13 +824,11 @@ int main (int argc, char *argv[])
             //            neg weights counter              //
             /////////////////////////////////////////////////
 
-            if(nlo)
+
+            if(weight_0 < 0.0)
             {
-                if(weight_0 < 0.0)
-                {
-                    scaleFactor *= -1.0;  //Taking into account negative weights in NLO Monte Carlo
-                    negWeights++;
-                }
+                scaleFactor *= -1.0;  //Taking into account negative weights in NLO Monte Carlo
+                negWeights++;
             }
 
 
@@ -847,11 +863,11 @@ int main (int argc, char *argv[])
 
             if (Muon)
             {   
-                if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=3 && nMtags >=0))) continue; // Muon Channel Selection
+                if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6 && nMtags >=2))) continue; // Muon Channel Selection
 
             }
             else if(Electron){
-                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=3 && nMtags >=0)) continue; // Electron Channel Selection
+                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=6 && nMtags >=2)) continue; // Electron Channel Selection
             }
             else{
                 cerr<<"Correct Channel not selected."<<endl;
@@ -1153,7 +1169,7 @@ int main (int argc, char *argv[])
     cutsTable->Calc_Write(postfix, dName, channelpostfix);
     delete cutsTable;
 
-    //delete btwt;
+    delete btwt;
 
     cout<<"TRIGGGG"<<endl;
 
