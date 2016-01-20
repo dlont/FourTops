@@ -84,6 +84,8 @@ class HadronicTopReco{
 		void WriteDiagnosticPlots(TFile *fout, string pathPNG);
 		float ReturnAnglet1t2();
 		float ReturnAngletoplep();
+		float ReturnSumJetMassX();
+		float ReturnHTX();
 
 	private:
 		map<string,MultiSamplePlot*> MSPlot;
@@ -117,6 +119,13 @@ class HadronicTopReco{
 		unsigned int wj1, wj2, bj1, wj1_2ndpass, wj2_2ndpass, bj1_2ndpass;  //wjet1, wjet2, bjet
 		float AngleT1T22ndpass;
 		float AngleT1Lep;
+		float SumJetMassX;
+		float HTX;
+		float sumpx_X;
+		float sumpy_X;
+		float sumpz_X;
+		float sume_X; 
+		TRootJet sumjet_X;
 
 		// MSPlot["MVA1TriJetMass"];
 		// MSPlot["MVA1DiJetMass"];    
