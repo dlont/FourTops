@@ -18,7 +18,7 @@ Zpeak::~Zpeak(){
 
 }
 
-void Zpeak::invariantMass(Run2Selection r2selection){
+void Zpeak::invariantMass(const Run2Selection& r2selection){
 	isTwoLeptons_=false;
 	looseMuons_ = r2selection.GetSelectedMuons(26, 2.1, 0.12, "Loose", "Spring15");
 	tightMuons_ = r2selection.GetSelectedMuons(26, 2.1, 0.12, "Tight", "Spring15");

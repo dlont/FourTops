@@ -40,7 +40,14 @@ HadronicTopReco::HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool
 	MVAmethod(MVAmethodIn),
 	wj1(0), wj2(0), bj1(0), wj1_2ndpass(0), wj2_2ndpass(0), bj1_2ndpass(0),
 	AngleT1T22ndpass(0),
-	AngleT1Lep(0)
+	AngleT1Lep(0),
+	SumJetMassX(0),
+	HTX(0),
+	sumpx_X(0),
+	sumpy_X(0),
+	sumpz_X(0),
+	sume_X(0),
+	sumjet_X(TLorentzVector(0,0,0,0))
 	{
 	if (isMuon){
 		leptonChoice = "Muon";
@@ -107,6 +114,8 @@ void HadronicTopReco::Compute1st(unsigned int d, vector<TRootPFJet*> selectedJet
 void HadronicTopReco::Compute2nd(unsigned int d, vector<TRootPFJet*> selectedJets, vector < Dataset* > datasets){
 	selectedJets2ndPass.clear();
 	MVASelJets1.clear();   
+	HTX = 0;
+	sumpx_X = 0, sumpy_X = 0, sumpz_X = 0, sume_X =0;
 
     //make vector of jets excluding these selected by 1st pass of mass reco
     for (unsigned int seljet1 =0; seljet1 < selectedJets.size(); seljet1++ ){
@@ -115,7 +124,14 @@ void HadronicTopReco::Compute2nd(unsigned int d, vector<TRootPFJet*> selectedJet
             continue;
         }
         selectedJets2ndPass.push_back(selectedJets[seljet1]);
+        HTX += selectedJets[seljet1]->Pt();
+        sumpx_X = sumpx_X + selectedJets[seljet1]->Px();
+        sumpy_X = sumpy_X + selectedJets[seljet1]->Py();
+        sumpz_X = sumpz_X + selectedJets[seljet1]->Pz();
+        sume_X = sume_X + selectedJets[seljet1]->E();          
     }
+    sumjet_X = TLorentzVector (sumpx_X, sumpy_X, sumpz_X,sume_X ); //Object representing all the jets summed minus the hadronic system
+    SumJetMassX = sumjet_X.M();	
 
     //Perform jet combiner a second time with top tri-jet removed
     jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticles_flav, selectedJets2ndPass, selectedLeptonTLV_JC[0], genEvt_flav, scaleFactor);
@@ -252,6 +268,14 @@ void HadronicTopReco::FillDiagnosticPlots(TFile *fout, unsigned int d, vector<TR
     MSPlot["MVA_AnTop1Top2"]->Fill(AngleT1T22ndpass, datasets[d], true, Luminosity*scaleFactor);
     MSPlot["MVA_AnTop1Lep"]->Fill(AngleT1Lep, datasets[d], true, Luminosity*scaleFactor);
     if (debug)  cout <<"MVA Mass 1 = "<< bestTopMass1 << " MVA Mass 2 = "<< bestTopMass2 << endl;
+}
+
+float HadronicTopReco::ReturnSumJetMassX(){
+    return SumJetMassX;
+}
+
+float HadronicTopReco::ReturnHTX(){
+	return HTX;
 }
 
 float HadronicTopReco::ReturnAnglet1t2(){

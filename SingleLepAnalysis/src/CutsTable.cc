@@ -19,7 +19,8 @@ CutsTable::~CutsTable(){
 
 void CutsTable::AddSelections(){
 	CutsselecTable.push_back(string("initial"));
-	CutsselecTable.push_back(string("Event cleaning and Trigger"));
+	CutsselecTable.push_back(string("Event cleaning"));
+	CutsselecTable.push_back(string("Trigger"));
 	if(leptonChoice == "Muon"){
 	    CutsselecTable.push_back(string("Exactly 1 Tight Isolated Muon"));
 	    CutsselecTable.push_back(string("Exactly 1 Loose Isolated Muon"));
@@ -31,6 +32,8 @@ void CutsTable::AddSelections(){
 	    CutsselecTable.push_back(string("Exactly 1 Loose Electron"));
 	    CutsselecTable.push_back(string("Exactly zero muons"));
 	}
+    CutsselecTable.push_back(string("At least 4 Jets"));
+    CutsselecTable.push_back(string("At least 5 Jets"));
 	CutsselecTable.push_back(string("At least 6 Jets"));
 	CutsselecTable.push_back(string("At least 1 CSVM Jet"));
 	CutsselecTable.push_back(string("At least 2 CSVM Jets"));
@@ -68,29 +71,41 @@ void CutsTable::FillTable(unsigned int d, bool isGoodPV, bool trigged, float sca
 
     if(leptonChoice == "Muon")   //Muon-Electron Selection Table
     {
-        if(isGoodPV && trigged)
+        if(isGoodPV)
         {
             selecTable->Fill(d,1,scaleFactor);
-            if (nMu==1)
-            {
-                selecTable->Fill(d,2,scaleFactor);
-                if(nLooseMu==1)
-                {
-                    selecTable->Fill(d,3,scaleFactor);
-                    if(nEl==0)
-                    {
+            if(trigged)
+            {	
+                selecTable->Fill(d,2,scaleFactor);	
+                if (nMu==1)
+            	{
+                	selecTable->Fill(d,3,scaleFactor);
+                	if(nLooseMu==1)
+                	{
                         selecTable->Fill(d,4,scaleFactor);
-                        if(nJets>=6)
+                        if(nEl==0)
                         {
                             selecTable->Fill(d,5,scaleFactor);
-                            if(nMtags>=1)
+                            if(nJets>=4)
                             {
-                                selecTable->Fill(d,6,scaleFactor);
-                                if(nMtags>=2)
+                            	selecTable->Fill(d,6,scaleFactor);
+                                if(nJets>=5)
                                 {
                                     selecTable->Fill(d,7,scaleFactor);
-                                }
-                            }
+                                	if(nJets>=6)
+                                	{		
+                                		selecTable->Fill(d,8,scaleFactor);
+                                		if(nMtags>=1)
+                                		{
+                                			selecTable->Fill(d,9,scaleFactor);
+                                			if(nMtags>=2)
+                                			{
+                                				selecTable->Fill(d,10,scaleFactor);
+                                            }
+                                        }
+                                    }		
+                        		}
+                        	}
                         }
                     }
                 }
@@ -100,38 +115,48 @@ void CutsTable::FillTable(unsigned int d, bool isGoodPV, bool trigged, float sca
 
     else if(leptonChoice ==  "Electron")   //Muon-Electron Selection Table
     {
-        if(isGoodPV && trigged)
+        if(isGoodPV)
         {
             selecTable->Fill(d,1,scaleFactor);
-            if (nEl==1)
+            if(trigged)
             {
                 selecTable->Fill(d,2,scaleFactor);
-                if(nLooseEl==1)
-                {
-                    selecTable->Fill(d,3,scaleFactor);
-                    if(nMu==0)
-                    {
+                if (nEl==1)
+            	{
+                	selecTable->Fill(d,3,scaleFactor);
+                	if(nLooseEl==1)
+                	{
                         selecTable->Fill(d,4,scaleFactor);
-                        if(nJets>=6)
+                        if(nMu==0)
                         {
                             selecTable->Fill(d,5,scaleFactor);
-                            if(nMtags>=1)
+                            if(nJets>=4)
                             {
                                 selecTable->Fill(d,6,scaleFactor);
-                                if(nMtags>=2)
+                                if(nJets>=5)
                                 {
                                     selecTable->Fill(d,7,scaleFactor);
+                                    if(nJets>=6)
+                                    {       
+                                        selecTable->Fill(d,8,scaleFactor);
+                                        if(nMtags>=1)
+                                        {
+                                            selecTable->Fill(d,9,scaleFactor);
+                                            if(nMtags>=2)
+                                            {
+                                                selecTable->Fill(d,10,scaleFactor);
+                                            }
+                                        }
+                                    }       
                                 }
                             }
                         }
-                    }
-                }
+                	}
+            	}
             }
-        }
-    }         
+        }         
+    }
 }
-
-
 void CutsTable::FillTableMuons(unsigned int d, float scaleFactor, vector < TRootMuon* > init_muons){
 
     for (unsigned int i=0; i<init_muons.size(); i++)  //Muon-Electron Selection Table
@@ -184,9 +209,9 @@ void CutsTable::FillTableMuons(unsigned int d, float scaleFactor, vector < TRoot
 
 void CutsTable::Calc_Write(string postfix, string dName, string channelpostfix){
     //(bool mergeTT, bool mergeQCD, bool mergeW, bool mergeZ, bool mergeST)
-    selecTable->TableCalculator(  true, true, true, true, true);
+    selecTable->TableCalculator(true, true, true, true, true);
     //Options : WithError (false), writeMerged (true), useBookTabs (false), addRawsyNumbers (false), addEfficiencies (false), addTotalEfficiencies (false), writeLandscape (false)
-    selecTable->Write(  "FourTop"+postfix+dName+"_Table"+channelpostfix+".tex",    false,true,true,true,false,false,true);
+    selecTable->Write("FourTop"+postfix+dName+"_Table"+channelpostfix+".tex",false,true,true,true,false,false,true);
     delete selecTable;
 }
 

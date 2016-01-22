@@ -28,7 +28,7 @@ class Zpeak{
 public:
 	Zpeak(vector < Dataset* > datasets);
 	~Zpeak();
-	void invariantMass(Run2Selection r2selection);
+	void invariantMass(const Run2Selection& r2selection);
 	void fillPlot(vector < Dataset* > datasets, unsigned int d, float Luminosity, float scaleFactor);
 	void writeErase(TFile *fout, string pathPNG);
 	float returnInvMass();
