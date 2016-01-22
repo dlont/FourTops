@@ -15,6 +15,7 @@
 #include <fstream>
 #include <sstream>
 #include <sys/stat.h>
+#include <errno.h>
 #include "TRandom3.h"
 #include "TRandom.h"
 #include "TProfile.h"
@@ -28,6 +29,7 @@
 #include "TopTreeAnalysisBase/Selection/interface/SelectionTable.h"
 #include "TopTreeAnalysisBase/Selection/interface/Run2Selection.h"
 
+
 #include "TopTreeAnalysisBase/Content/interface/AnalysisEnvironment.h"
 #include "TopTreeAnalysisBase/Content/interface/Dataset.h"
 #include "TopTreeAnalysisBase/Tools/interface/JetTools.h"
@@ -39,6 +41,7 @@
 #include "TopTreeAnalysisBase/Reconstruction/interface/JetCorrectionUncertainty.h"
 #include "TopTreeAnalysisBase/Reconstruction/interface/MakeBinning.h"
 #include "TopTreeAnalysisBase/MCInformation/interface/LumiReWeighting.h"
+#include "TopTreeAnalysisBase/MCInformation/interface/JetPartonMatching.h"
 #include "TopTreeAnalysisBase/Reconstruction/interface/MEzCalculator.h"
 #include "TopTreeAnalysisBase/Tools/interface/LeptonTools.h"
 
@@ -54,6 +57,9 @@
 #include "TopTreeAnalysisBase/Tools/interface/MVATrainer.h"
 #include "TopTreeAnalysisBase/Tools/interface/MVAComputer.h"
 #include "TopTreeAnalysisBase/Tools/interface/JetTools.h"
+
+using namespace std;
+using namespace TopTree;
 
 struct HighestCVSBtag
 {
@@ -71,7 +77,7 @@ int main ()
 
 
     clock_t start = clock();
-    string xmlFileName = "/user/heilman/CMSSW_7_6_0_pre2/src/TopBrussels/FourTops/config/Run2DiLepton_BDTTrain.xml";
+    string xmlFileName = "/user/heilman/CMSSW_7_6_0/src/TopBrussels/FourTops/config/Run2DiLepton_BDTTrain.xml";
 
     const char *xmlfile = xmlFileName.c_str();
     cout << "used config file: " << xmlfile << endl;
@@ -118,13 +124,14 @@ int main ()
     vector < TRootMuon* >     init_muons;
     vector < TRootElectron* > init_electrons;
     vector < TRootJet* >      init_jets;
+    vector < TRootJet* >      init_fatjets;
     vector < TRootMET* >      mets;
 
     bool debug = false;
     bool singlelep = false;
     bool dilep = true;
     bool Muon = true;
-    bool Electron = true;
+    bool Electron = false;
     int nPassed = 0;
 
 //    BTagWeightTools * bTool = new BTagWeightTools("SFb-pt_NOttbar_payload_EPS13.txt", "CSVM") ;
@@ -178,8 +185,8 @@ int main ()
     {
         Eventtrainer_->bookWeight("Weight");
         Eventtrainer_->bookInputVar("topness");
-        Eventtrainer_->bookInputVar("muonpt");
-        Eventtrainer_->bookInputVar("muoneta");
+        Eventtrainer_->bookInputVar("LeadLepPt");
+        Eventtrainer_->bookInputVar("LeadLepEta");
         Eventtrainer_->bookInputVar("HTH");
         Eventtrainer_->bookInputVar("HTRat");
         Eventtrainer_->bookInputVar("HTb");
@@ -227,6 +234,7 @@ int main ()
         cout <<"Beginning dataset loop: " << datasets[d]->Name() << " with " << datasets[d]->NofEvtsToRunOver() << " events." << endl;
         unsigned int ending = datasets[d]->NofEvtsToRunOver();
         int start = 0, iFile = -1;
+        int itrigger = -1, previousRun = -1;
         cout <<"Number of events in total dataset = "<< ending <<endl;
         event_start = 0;
         nPassed = 0;
@@ -264,7 +272,7 @@ int main ()
             {
                 std::cout<<"Processing the "<<ievt<<"th event, time = "<< ((double)clock() - start) / CLOCKS_PER_SEC << " ("<<100*(ievt-start)/(100000-event_start)<<"%)"<<flush<<"\r"<<endl;
             }
-            if(nPassed >= 5000) continue;
+            if(nPassed >= 500) continue;
 
             mcParticlesMatching_.clear();
             genEvt = treeLoader.LoadGenEvent(ievt,false);
@@ -285,10 +293,10 @@ int main ()
                 cout << "LoadingEvent" << endl;
             }
 
-            event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, mets, false);  //load event
+            event = treeLoader.LoadEvent (ievt, vertex, init_muons, init_electrons, init_jets, init_fatjets,  mets, debug);  //load event
 
             int currentRun = event->runId();
-            int itrigger = -1;
+//            int itrigger = -1;
             bool trigged = false;
 
             string currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
@@ -298,7 +306,10 @@ int main ()
                 iFile++;
                 cout<<"File changed!!! => "<<currentFilename<<endl;
             }
-
+            if(previousRun != currentRun)
+            {
+                cout <<"What run? "<< currentRun<<endl;
+                previousRun = currentRun;
             if( Muon && Electron )
                 itrigger = treeLoader.iTrigger (string ("HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v1"), currentRun, iFile);
             else if( Muon && !Electron )
@@ -311,14 +322,16 @@ int main ()
                 cerr << "NO VALID TRIGGER FOUND FOR THIS EVENT (" << dataSetName << ") IN RUN " << event->runId() << endl;
                 //exit(1);
             }
+            }
             trigged = treeLoader.EventTrigged (itrigger);
 
             if(!trigged) continue; //without HLT don't keep going
 
+            float rho = event->fixedGridRhoFastjetAll();
 
 
 // Declare selection instance
-            Run2Selection selection(init_jets, init_muons, init_electrons, mets);
+            Run2Selection selection(init_jets, init_fatjets, init_muons, init_electrons, mets, rho);
 
             if (debug)cout<<"Getting Jets"<<endl;
             selectedJets                                        = selection.GetSelectedJets(); // Relying solely on cuts defined in setPFJetCuts()
@@ -454,7 +467,7 @@ int main ()
 
             if(debug) cout <<"event passed - "<< datasets[d]->Name() <<" njets  "  << nJets  << " ntags "<< nMtags  <<  endl;
             nPassed++;
-            if(nPassed%1000 == 0)
+            if(nPassed%100 == 0)
             {
                 std::cout<<nPassed<<" events have passed baseline selection"<<endl;
             }
@@ -489,7 +502,24 @@ int main ()
             }
 
             double multitopness = 0;
-            double muonpt, muoneta;
+            double leadLepPt=0, leadLepEta=0, muonpt=0, muoneta=0;
+
+            if(dilep && Muon && Electron)
+            {
+                leadLepPt = (selectedMuons[0]->Pt() > selectedElectrons[0]->Pt() ? selectedMuons[0]->Pt() : selectedElectrons[0]->Pt());
+                leadLepEta = (selectedMuons[0]->Pt() > selectedElectrons[0]->Pt() ? selectedMuons[0]->Eta() : selectedElectrons[0]->Eta());
+            }
+            else if(dilep && Muon && !Electron)
+            {
+                leadLepPt = selectedMuons[0]->Pt();
+                leadLepEta = selectedMuons[0]->Eta();
+            }
+            else if(dilep && !Muon && Electron)
+            {
+                leadLepPt = selectedElectrons[0]->Pt();
+                leadLepEta = selectedElectrons[0]->Eta();
+            }
+
             if(nJets >=6)
             {
                 if (dilep && !Muon && Electron)
@@ -548,8 +578,8 @@ int main ()
                 {
                     Eventtrainer_->FillWeight("S","Weight",scaleFactor);
                     Eventtrainer_->Fill("S","topness",topness );
-                    Eventtrainer_->Fill("S","muonpt",muonpt);
-                    Eventtrainer_->Fill("S","muoneta",muoneta);
+                    Eventtrainer_->Fill("S","LeadLepPt",leadLepPt);
+                    Eventtrainer_->Fill("S","LeadLepEta",leadLepEta);
                     Eventtrainer_->Fill("S","HTb", HTb);
                     Eventtrainer_->Fill("S","HTH", HTH);
                     Eventtrainer_->Fill("S","HTRat", HTRat);
@@ -572,8 +602,8 @@ int main ()
                 {
                     Eventtrainer_->FillWeight("B","Weight", scaleFactor);
                     Eventtrainer_->Fill("B","topness",topness);
-                    Eventtrainer_->Fill("B","muonpt",muonpt);
-                    Eventtrainer_->Fill("B","muoneta",muoneta);
+                    Eventtrainer_->Fill("B","LeadLepPt",leadLepPt);
+                    Eventtrainer_->Fill("B","LeadLepEta",leadLepEta);
                     Eventtrainer_->Fill("B","HTb", HTb);
                     Eventtrainer_->Fill("B","HTRat", HTRat);
                     Eventtrainer_->Fill("B","HTH", HTH);
@@ -600,8 +630,8 @@ int main ()
                 {
                     //        Eventtrainer_->FillWeight("S","Weight",scaleFactor);
                     Eventtrainer_->Fill("S","multitopness",multitopness );
-                    Eventtrainer_->Fill("S","muonpt",muonpt);
-                    Eventtrainer_->Fill("S","muoneta",muoneta);
+                    Eventtrainer_->Fill("S","LeadLepPt",muonpt);
+                    Eventtrainer_->Fill("S","LeadLepEta",muoneta);
                     Eventtrainer_->Fill("S","HTb", HTb);
                     Eventtrainer_->Fill("S","HTH", HTH);
                     Eventtrainer_->Fill("S","HTRat", HTRat);
@@ -620,8 +650,8 @@ int main ()
 
                     //	   Eventtrainer_->FillWeight("B","Weight", scaleFactor);
                     Eventtrainer_->Fill("B","multitopness",multitopness);
-                    Eventtrainer_->Fill("B","muonpt",muonpt);
-                    Eventtrainer_->Fill("B","muoneta",muoneta);
+                    Eventtrainer_->Fill("B","LeadLepPt",muonpt);
+                    Eventtrainer_->Fill("B","LeadLepEta",muoneta);
                     Eventtrainer_->Fill("B","HTb", HTb);
                     Eventtrainer_->Fill("B","HTRat", HTRat);
                     Eventtrainer_->Fill("B","HTH", HTH);
@@ -639,7 +669,18 @@ int main ()
         }
 
     }
-    Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElOctober26th2015", true);
+    if (dilep && Muon && Electron)
+    {
+        Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuElOctober26th2015", true);
+    }
+    else if (dilep && Muon && !Electron)
+    {
+        Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_MuMuOctober26th2015", true);
+    }
+    else if (dilep && !Muon && Electron)
+    {
+        Eventtrainer_->TrainMVA("Random","",0,0,"",0,0,"_ElElOctober26th2015", true);
+    }
 
 
 }
