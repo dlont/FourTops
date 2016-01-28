@@ -78,6 +78,7 @@ using namespace reweight;
 
 /// MultiSamplePlot
 map<string,MultiSamplePlot*> MSPlot;
+bool batch = true;
 
 struct HighestCVSBtag
 {
@@ -90,16 +91,7 @@ struct HighestCVSBtag
 
 int main (int argc, char *argv[])
 {
-
-    //Checking Passed Arguments to ensure proper execution of MACRO
-    if(argc < 12)
-    {
-        std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
-        return 1;
-    }
-
     //Placing arguments in properly typed variables for Dataset creation
-
     const string dName              = argv[1];
     const string dTitle             = argv[2];
     const int color                 = strtol(argv[4], NULL, 10);
@@ -109,15 +101,45 @@ int main (int argc, char *argv[])
     const float EqLumi              = strtod(argv[8], NULL);
     const float xSect               = strtod(argv[9], NULL);
     const float PreselEff           = strtod(argv[10], NULL);
-    string fileName                 = argv[11];
-    const int startEvent            = strtol(argv[argc-2], NULL, 10);
-    const int endEvent              = strtol(argv[argc-1], NULL, 10);
+    string fileName                 = argv[11];    
+    const int startEvent            = batch ? 0 : strtol(argv[argc-2], NULL, 10);
+    const int endEvent              = batch ? -1 : strtol(argv[argc-1], NULL, 10);
+    cout << "Ending Event :  " << endEvent << "     "<<strtol(argv[argc-1], NULL, 10)<<endl;
 
     vector<string> vecfileNames;
     cout<<"arg 10: "<<argv[10]<<endl;
-    for(int args = 11; args < argc-2; args++) //argc-2 starting at 11
-    {
-        vecfileNames.push_back(argv[args]);
+        for(int args = 0; args < argc; args++)
+        {
+            cout<<args<<"  : "<<argv[args]<<endl;
+        }
+
+        cout<<"!"<<argc-1<<" : "<<strtol(argv[argc-1],NULL,10)<<endl;
+    if (batch){
+        //Checking Passed Arguments to ensure proper execution of MACRO
+        if(argc < 12)
+        {
+            std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
+            return 1;
+        }
+
+        for(int args = 11; args < argc; args++) 
+        {
+            vecfileNames.push_back(argv[args]);
+        }        
+    }
+    else{  //ie. running locally 
+
+        //Checking Passed Arguments to ensure proper execution of MACRO
+        if(argc < 14)
+        {
+            std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
+            return 1;
+        }
+
+        for(int args = 11; args < argc-2; args++)
+        {
+            vecfileNames.push_back(argv[args]);
+        }
     }
 
     cout << "---Dataset accepted from command line---" << endl;
@@ -165,8 +187,8 @@ int main (int argc, char *argv[])
     bool SingleLepton  = true;
     bool Muon          = true;
     bool Electron      = false;
-    bool HadTopOn      = true;
-    bool EventBDTOn    = true;
+    bool HadTopOn      = false;
+    bool EventBDTOn    = false;
     bool TrainMVA      = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25          = true;
     bool bTagReweight  = true;
@@ -184,18 +206,18 @@ int main (int argc, char *argv[])
     float Luminosity   = 2460.0 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
     //bool split_ttbar = false;
 
-    if(JERDown){
-        postfix += "_JER_Down";
-    }
-    else if(JERUp){
-        postfix += "_JER_Up";
-    }
-    if(JESDown){
-        postfix += "_JES_Down";
-    }
-    else if(JESUp){
-        postfix += "_JES_Up";
-    }    
+    // if(JERDown){
+    //     postfix += "_JER_Down";
+    // }
+    // else if(JERUp){
+    //     postfix += "_JER_Up";
+    // }
+    // if(JESDown){
+    //     postfix += "_JES_Down";
+    // }
+    // else if(JESUp){
+    //     postfix += "_JES_Up";
+    // }    
 
     if(Muon && SingleLepton){
         cout<<" ***** USING SINGLE MUON CHANNEL  ******"<<endl;
@@ -370,7 +392,6 @@ int main (int argc, char *argv[])
     vector < TRootJet* >      init_jets;
     vector < TRootMET* >      mets;
     vector < TRootGenJet* > genjets;
-    vector < TRootGenJet* > selectedpreJECJERJets;
 
     /////////////////////////////////////////////////
     //              Global variable                //
@@ -483,6 +504,10 @@ int main (int argc, char *argv[])
         /////////////////////////////////////////////////
         bool nlo = true;
         dataSetName = datasets[d]->Name();
+
+        ofstream MLoutput;
+        MLoutput.open(("MLvariables"+dataSetName+".csv").c_str());
+
         if(dataSetName.find("bx50") != std::string::npos) bx25 = false;
         else bx25 = true;
         if(bx25) cout << "Dataset with 25ns Bunch Spacing!" <<endl;
@@ -542,6 +567,8 @@ int main (int argc, char *argv[])
         vector<TRootPFJet*>    selectedOrigJets; //all original jets before jet lepton cleaning
         vector<TRootPFJet*>    selectedJets; //all jets after jet lepton cleaning
         vector<TRootPFJet*>    selectedJets2; //after removal of 2 highest CSVL btags
+        vector<TRootPFJet*>    selectedpreJECJERJets;
+
         vector<TRootMuon*>     selectedMuons;
         vector<TRootElectron*> selectedExtraElectrons;
         vector<TRootElectron*> selectedOrigElectrons;
@@ -565,20 +592,23 @@ int main (int argc, char *argv[])
         ///////////////////////////////////////////////////////////
         //             Get # of events to run over               //
         ///////////////////////////////////////////////////////////
-//
-        int start = 0;
-        unsigned int ending = datasets[d]->NofEvtsToRunOver();    cout <<"Number of events = "<<  ending  <<endl;
-        int event_start = startEvent;
-        double end_d = ending;
-        if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos  || dataSetName.find("DATA")!=string::npos ){
-            // end_d=ending;
-            if(endEvent > ending)            end_d = ending;
-            else            end_d = endEvent;  
-        }
-        else{  //this only works if using parallel launcher to split into jobs
-            if(endEvent > ending)            end_d = ending;
-            else            end_d = endEvent;            
-        }
+
+        // int start = 0;
+        unsigned int ending = datasets[d]->NofEvtsToRunOver();    cout <<"Number of events in full dataset = "<<  ending  <<endl;
+        int event_start = startEvent; //set start of for loop to input startEvent
+        double end_d = ending; //initialise end of for loop to end of dataset
+
+        if(endEvent <ending && endEvent>0 ) end_d = endEvent; // if the input endEvent is less than total events in dataset (and greater than 0), set max of for loop to endEvent
+
+        // if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos  || dataSetName.find("DATA")!=string::npos ){
+        //     // end_d=ending;
+        //     if(endEvent > ending)            end_d = ending;
+        //     else            end_d = endEvent;  
+        // }
+        // else{  //this only works if using parallel launcher to split into jobs
+        //     if(endEvent > ending)            end_d = ending;
+        //     else            end_d = endEvent;            
+        // }
 
         cout <<"Will run over "<<  end_d<< " events..."<<endl;    cout <<"Starting event = = = = "<< event_start  << endl;
 
@@ -599,7 +629,7 @@ int main (int argc, char *argv[])
             if(ievt%1000 == 0)
             {
                 std::cout<<"Processing the "<<ievt<<"th event, time = "<< ((double)clock() - start) / CLOCKS_PER_SEC 
-                << " ("<<100*(ievt-start)/(ending-start)<<"%)"<<flush<<"\r"<<endl;
+                << " ("<<100*(ievt-0)/(ending-0)<<"%)"<<flush<<"\r"<<endl;
             }
 
             float scaleFactor = 1.;  // scale factor for the event
@@ -631,7 +661,7 @@ int main (int argc, char *argv[])
 
             //int rBytes = datasets[d]->runTree()->GetEntry(treenumber);  if(debug) cout<<"get entry with treenumber"<<endl;
 
-            selectedpreJECJERJets                                    = r2selection.GetSelectedJets();  if (debug)cout<<"Getting Jets"<<endl; // ApplyJetId
+            // selectedpreJECJERJets                                    = r2selection.GetSelectedJets();  if (debug)cout<<"Getting Jets"<<endl; // ApplyJetId
 
             //////////////////////////////////////
             ///  Jet Energy Scale Corrections  ///
@@ -643,10 +673,11 @@ int main (int argc, char *argv[])
                 else if(JERDown) jetTools->correctJetJER(init_jets, genjets, mets[0], "minus", false);
                 else if (JERUp) jetTools->correctJetJER(init_jets, genjets, mets[0], "plus", false);
                 /// Example how to apply JES systematics
-                if(JESDown) jetTools->correctJetJESUnc(init_jets, "minus", 1);
-                else if(JESUp) jetTools->correctJetJESUnc(init_jets, "plus", 1);
+
                 //cout << "JER smeared!!! " << endl;
             }
+            if(JESDown) jetTools->correctJetJESUnc(init_jets, "minus", 1);
+            else if(JESUp) jetTools->correctJetJESUnc(init_jets, "plus", 1);
 
             bool isData = false;
             if(dataSetName.find("Data")!=string::npos){
@@ -661,8 +692,8 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////
             //           Object definitions for selection            //
             ///////////////////////////////////////////////////////////
-
             Run2Selection r2selection(init_jets, init_muons, init_electrons, mets);
+
             int nMu = 0, nEl = 0, nLooseMu = 0, nLooseEl = 0; //number of (loose) muons/electrons
 
             if(Electron){
@@ -706,7 +737,7 @@ int main (int argc, char *argv[])
                         selectedExtraElectrons.push_back(selectedOrigExtraElectrons[e_iter]);
                     }
                 }
-                nLooseEl = selectedExtraElectrons.size(); //Number of loose muons
+                nLooseEl = selectedExtraElectrons.size(); //Number of loose electrons
              cout<<"nel: "<<nEl<<"  nLooseEl: "<<nLooseEl<<"  origel: "<<selectedOrigElectrons.size()<<"  origextra el: "<<selectedOrigExtraElectrons.size()<<endl;
             }
 
@@ -723,6 +754,7 @@ int main (int argc, char *argv[])
             //cout<<nMu<<"<--nmu  nEl-->"<<nEl<<endl;
             if(Muon && nMu>0){
                 for (int origJets=0; origJets<selectedOrigJets.size(); origJets++){
+                    if(selectedOrigJets[origJets]->Pt()<30) cout<<selectedOrigJets[origJets]->Pt()<<endl;
                     //cout<<"DR: "<< selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])<<endl;
                     if(selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])>0.4){
                         selectedJets.push_back(selectedOrigJets[origJets]);
@@ -1308,7 +1340,19 @@ int main (int argc, char *argv[])
                 }
                 eventBDT->fillVariables(diTopness, selectedLeptonPt, leptoneta, HTH, HTRat, HTb, nLtags, nMtags, nTtags, nJets, jet5Pt, jet6Pt);
             }
-           
+
+
+            if(dataSetName.find("TTJets")!=string::npos ||dataSetName.find("tttt")!=string::npos  ){
+                MLoutput<<diTopness<<","<<selectedLeptonPt<<","<<leptoneta<<","<<HTH<<","<<HTRat<<","<<HTb<<","<<nLtags<<","<<nMtags<<","<<nTtags<<","<<nJets<<","<<jet5Pt<<","<<jet6Pt<<",";
+            }
+            if (dataSetName.find("TTJets")!=string::npos ){
+                MLoutput<<"0"<<endl;
+            }
+            else if (dataSetName.find("tttt")!=string::npos ){
+                MLoutput<<"1"<<endl;
+            }            
+
+
             BDTScore = 0 ;
             if(EventBDTOn){
                 eventBDT->computeBDTScore();
@@ -1354,10 +1398,11 @@ int main (int argc, char *argv[])
         cout << "Weight Count: " << weightCount << endl;
         //important: free memory
         treeLoader.UnLoadDataset();
+            MLoutput.close();
+
     } //End Loop on Datasets
 
     eventlist.close();
-
     /////////////
     // Writing //
     /////////////
