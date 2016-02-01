@@ -193,7 +193,7 @@ int main (int argc, char *argv[])
     bool bTagReweight  = true;
     bool bLeptonSF     = true;
     bool debug         = false;
-    bool applyJER      = false;
+    bool applyJER      = true;
     bool applyJEC      = false;
     bool JERNom        = true;
     bool JERUp         = false;
@@ -245,7 +245,7 @@ int main (int argc, char *argv[])
     anaEnv.ElectronCollection = "Electrons_slimmedElectrons";
     anaEnv.GenJetCollection   = "GenJets_slimmedGenJets";
     anaEnv.TrackMETCollection = "";
-    anaEnv.GenEventCollection = "GenEvent";
+    // anaEnv.GenEventCollection = "GenEvent";
     anaEnv.NPGenEventCollection = "NPGenEvent";
     anaEnv.MCParticlesCollection = "MCParticles";
     anaEnv.loadFatJetCollection = true;
@@ -533,7 +533,7 @@ int main (int argc, char *argv[])
         //               Craneen setup                 //
         /////////////////////////////////////////////////
         string channel_dir = "Craneens"+channelpostfix;
-        string date_dir = channel_dir+"/Craneens" + date_str +"/";
+        string date_dir = channel_dir+"/Craneens" + date_str +"/JER/";
         int mkdirstatus = mkdir(channel_dir.c_str(),0777);
         mkdirstatus = mkdir(date_dir.c_str(),0777);
         if(debug)cout<<"created dirs"<<endl;
@@ -1124,10 +1124,10 @@ int main (int argc, char *argv[])
             float numOfll = 0;
             float ttbar_flav = -1;
             vector<TRootMCParticle*> mcParticles_flav;
-            TRootGenEvent* genEvt_flav = 0;
+            // TRootGenEvent* genEvt_flav = 0;
             if(dataSetName.find("TTJets")!=string::npos){
-                genEvt_flav = treeLoader.LoadGenEvent(ievt,false);
-                treeLoader.LoadMCEvent(ievt, genEvt_flav, 0, mcParticles_flav,false);
+                // genEvt_flav = treeLoader.LoadGenEvent(ievt,false);
+                treeLoader.LoadMCEvent(ievt, 0, mcParticles_flav,false);
                 for(unsigned int p=0; p<mcParticles_flav.size(); p++) {
                     //cout<<"status: "<<mcParticles_flav[p]->status()<<"  id: "<<mcParticles_flav[p]->type()<<" mother: "<<mcParticles_flav[p]->motherType()<<endl;
                     if(mcParticles_flav[p]->status()<30 && mcParticles_flav[p]->status()>20 && abs(mcParticles_flav[p]->motherType())!=6){
