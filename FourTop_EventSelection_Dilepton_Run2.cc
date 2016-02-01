@@ -273,21 +273,21 @@ int main (int argc, char *argv[])
         cout << " --> Using the Muon-Electron channel..." << endl;
         channelpostfix = "_MuEl";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2461.3885;
+        Luminosity = 2581.340;
     }
     else if(Muon && !Electron && dilepton)
     {
         cout << " --> Using the Muon-Muon channel..." << endl;
         channelpostfix = "_MuMu";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2408.6160;
+        Luminosity = 2581.340;
     }
     else if(!Muon && Electron && dilepton)
     {
         cout << " --> Using the Electron-Electron channel..." << endl;
         channelpostfix = "_ElEl";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2458.2903;
+        Luminosity = 2581.515;
     }
     else
     {

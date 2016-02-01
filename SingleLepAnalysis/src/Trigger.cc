@@ -28,10 +28,10 @@ void Trigger::bookTriggers(){
 	    // triggerListDataD.push_back("HLT_IsoMu18_v*");
 	    // triggerListDataD.push_back("HLT_IsoMu18_TriCentralPFJet50_40_30_v*");	
 
-	    triggerListDataC.push_back("HLT_IsoMu18_v*");
-   	    // triggerListDataC.push_back("HLT_IsoMu20_v*");
-	    triggerListDataD.push_back("HLT_IsoMu18_v*");
-   	    // triggerListDataD.push_back("HLT_IsoMu20_v*");
+	    triggerListDataC.push_back("HLT_IsoTkMu20_v*");
+   	    triggerListDataC.push_back("HLT_IsoMu20_v*");
+	    triggerListDataD.push_back("HLT_IsoTkMu20_v*");
+   	    triggerListDataD.push_back("HLT_IsoMu20_v*");
 
 	    triggerListMC.push_back("HLT_IsoTkMu20_v*");
    	    triggerListMC.push_back("HLT_IsoMu20_v*");

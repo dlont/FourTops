@@ -55,10 +55,10 @@
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_TJetsTuneCUETP8M113TeVmadgraphMLMpythia8RunIISpring15DR74Asympt25nsMCRUN274V9v2CMSSW74Xv10MCRUN274V9/160118_195149/0000/TOPTREE*.root"/>
 
 <d name="T_tW25_MuEl"  title="t_tW"  add="1"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="4300.252809" xsection="35.6"   PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_iveDecays13TeVpowhegpythia8TuneCUETP8M1RunIISpring15DR74Asympt50nsMCRUN274V9Av1CMSSW74Xv10MCRUN274V9/160118_194848/0000/TOPTREE*.root"/>
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_tW_top_5f__13TeV-powheg-pythia8_-Spring15DR74-25ns_MCRUN2_74_V9-v1-CMSSW_74X_v10-MCRUN2_74_V9/160123_092947/0000/TOPTREE*.root"/>
 
 <d name="Tbar_tW25_MuEl"  title="tbar_tW"  add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="4320.617978" xsection="35.6"   PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_iveDecays13TeVpowhegpythia8TuneCUETP8M1RunIISpring15DR74Asympt50nsMCRUN274V9Av2CMSSW74Xv10MCRUN274V9/160118_194819/0000/TOPTREE*.root"/>
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_tW_antitop_5f__13TeV-powheg-pythia8_-Spring15DR74-25ns_MCRUN2_74_V9-v1-CMSSW_74X_v10-MCRUN2_74_V9/160123_092859/0000/TOPTREE*.root"/>
 
 <d name="DYJets25_MuEl"  title="DY+jets"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="4506.506" xsection="2008.4"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_LLM50TuneCUETP8M113TeVmadgraphMLMpythia8RunIISpring15DR74Asympt25nsMCRUN274V9v1CMSSW74Xv10MCRUN274V9/160118_192246/0000/TOPTREE*.root"/>
@@ -150,11 +150,11 @@
 <d name="TTJets25_ElEl"  title="t\bar{t}+jets_MadGraph_Run-2_Start_25ns"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="13632.81715" xsection="831.76"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_TTJetsTuneCUETP8M113TeVmadgraphMLMpythia8Spring15DR74Asympt25nsMCRUN274V9v2CMSSW74Xv10MCRUN274V9/160120_221023/0000/TOPTREE*.root"/>
 
-<d name="T_tW25_ElEl"  title="t_tW"  add="0"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="4300.252809" xsection="35.6"   PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_iveDecays13TeVpowhegpythia8TuneCUETP8M1RunIISpring15DR74Asympt50nsMCRUN274V9Av1CMSSW74Xv10MCRUN274V9/160118_194848/0000/TOPTREE*.root"/>
+<d name="T_tW25_ElEl"  title="t_tW"  add="1"   color="633"  ls="0"  lw="2" normf="1"  EqLumi="4300.252809" xsection="35.6"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_tW_top_5f__13TeV-powheg-pythia8_-Spring15DR74-25ns_MCRUN2_74_V9-v1-CMSSW_74X_v10-MCRUN2_74_V9/160123_092947/0000/TOPTREE*.root"/>
 
-<d name="Tbar_tW25_ElEl"  title="tbar_tW"  add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="4320.617978" xsection="35.6"   PreselEff="0.0"
-   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_iveDecays13TeVpowhegpythia8TuneCUETP8M1RunIISpring15DR74Asympt50nsMCRUN274V9Av2CMSSW74Xv10MCRUN274V9/160118_194819/0000/TOPTREE*.root"/>
+<d name="Tbar_tW25_ElEl"  title="tbar_tW"  add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="4320.617978" xsection="35.6"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/crab_tW_antitop_5f__13TeV-powheg-pythia8_-Spring15DR74-25ns_MCRUN2_74_V9-v1-CMSSW_74X_v10-MCRUN2_74_V9/160123_092859/0000/TOPTREE*.root"/>
 
 <d name="DYJets25_ElEl"  title="DY+jets"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1502.468" xsection="6025.2"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v10/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_etsToLLM50TuneCUETP8M113TeVmadgraphMLMpythia8Spring15DR74Asympt25nsMCRUN274V9v1CMSSW74Xv10MCRUN274V9/160120_220132/0000/TOPTREE*.root"/>

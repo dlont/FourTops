@@ -29,7 +29,6 @@ HadronicTopReco::HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool
 	MVASelJets1(), //the selected jets from the highest ranked tri jet
 	MVASelJets2(), //the selected jets from the second highest ranked tri jet
 	jetCombiner(new JetCombiner(TrainMVA, Lumi, datasets, MVAmethodIn, false)),
-	genEvt_flav(0),
 	bestTopMass1(0),
 	bestTopMass2(0),
 	bestTopMass2ndPass(0), 
@@ -98,7 +97,7 @@ void HadronicTopReco::Compute1st(unsigned int d, vector<TRootPFJet*> selectedJet
 	selectedJets3rdPass.clear();
 	MVASelJets1.clear();   
 
-    jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticles_flav, selectedJets, selectedLeptonTLV_JC[0], genEvt_flav, scaleFactor);
+    jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticles_flav, selectedJets, selectedLeptonTLV_JC[0], scaleFactor);
 
 
 	if (debug) cout <<"Processing event with jetcombiner :  "<< endl;
@@ -134,7 +133,7 @@ void HadronicTopReco::Compute2nd(unsigned int d, vector<TRootPFJet*> selectedJet
     SumJetMassX = sumjet_X.M();	
 
     //Perform jet combiner a second time with top tri-jet removed
-    jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticles_flav, selectedJets2ndPass, selectedLeptonTLV_JC[0], genEvt_flav, scaleFactor);
+    jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticles_flav, selectedJets2ndPass, selectedLeptonTLV_JC[0], scaleFactor);
  
 
     MVAvals2ndPass = jetCombiner->getMVAValue(MVAmethod, 1);
@@ -157,7 +156,7 @@ void HadronicTopReco::Compute3rd(unsigned int d, vector<TRootPFJet*> selectedJet
 
     if (selectedJets3rdPass.size()>=3) {
 	     //Perform jet combiner a third time with top tri-jet removed if there are 3 jets remaining, otherwise it's not possible
-	    jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticles_flav, selectedJets3rdPass, selectedLeptonTLV_JC[0], genEvt_flav, scaleFactor);
+	    jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticles_flav, selectedJets3rdPass, selectedLeptonTLV_JC[0], scaleFactor);
 
 	    MVAvals3rdPass = jetCombiner->getMVAValue(MVAmethod, 1);
 	    TriTopness = MVAvals3rdPass.first;
