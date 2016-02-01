@@ -273,21 +273,21 @@ int main (int argc, char *argv[])
         cout << " --> Using the Muon-Electron channel..." << endl;
         channelpostfix = "_MuEl";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2461.3885;
+        Luminosity = 2581.340;
     }
     else if(Muon && !Electron && dilepton)
     {
         cout << " --> Using the Muon-Muon channel..." << endl;
         channelpostfix = "_MuMu";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2408.6160;
+        Luminosity = 2581.340;
     }
     else if(!Muon && Electron && dilepton)
     {
         cout << " --> Using the Electron-Electron channel..." << endl;
         channelpostfix = "_ElEl";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2458.2903;
+        Luminosity = 2581.515;
     }
     else
     {
@@ -1988,7 +1988,7 @@ int main (int argc, char *argv[])
             // Getting Gen Event //
             ///////////////////////
 
-            TRootGenEvent* genEvt = 0;
+            //TRootGenEvent* genEvt = 0;
 
             if(dataSetName != "data" && dataSetName != "Data" && dataSetName != "Data")
             {
@@ -2003,8 +2003,8 @@ int main (int argc, char *argv[])
                 int leptonPDG, muonPDG = 13, electronPDG = 11;
                 leptonPDG = muonPDG;
 
-                genEvt = treeLoader.LoadGenEvent(ievt,false);
-                treeLoader.LoadMCEvent(ievt, genEvt, 0, mcParticlesMatching_,false);
+                //genEvt = treeLoader.LoadGenEvent(ievt,false);
+                treeLoader.LoadMCEvent(ievt, 0, mcParticlesMatching_,false);
                 if (debug) cout <<"size   "<< mcParticlesMatching_.size()<<endl;
             }
 
@@ -2044,7 +2044,7 @@ int main (int argc, char *argv[])
             int bj1;
 
             if(nJets >= 4){
-            jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedLeptonTLV_JC[0], genEvt, scaleFactor);
+            jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedLeptonTLV_JC[0], scaleFactor);
             
 
             if(!TrainMVA)
