@@ -104,7 +104,6 @@ int main (int argc, char *argv[])
     string fileName                 = argv[11];    
     const int startEvent            = batch ? 0 : strtol(argv[argc-2], NULL, 10);
     const int endEvent              = batch ? -1 : strtol(argv[argc-1], NULL, 10);
-    cout << "Ending Event :  " << endEvent << "     "<<strtol(argv[argc-1], NULL, 10)<<endl;
 
     vector<string> vecfileNames;
     cout<<"arg 10: "<<argv[10]<<endl;
@@ -280,6 +279,10 @@ int main (int argc, char *argv[])
     BTagWeightTools *btwt;
     BTagWeightTools *btwtUp;
     BTagWeightTools *btwtDown;
+    bool isData = false;
+    if(dataSetName.find("Data")!=string::npos){
+        isData = true;
+    }
 
     if(bTagReweight && dataSetName.find("Data")==string::npos){
         //Btag documentation : http://mon.iihe.ac.be/~smoortga/TopTrees/BTagSF/BTaggingSF_inTopTrees.pdf //v2 or _v2
@@ -462,7 +465,7 @@ int main (int argc, char *argv[])
     vector<JetCorrectorParameters> vCorrParam;
     string pathCalJEC = "../TopTreeAnalysisBase/Calibrations/JECFiles/";
 
-    if(dataSetName.find("Data")!=string::npos)
+    if(isData)
     {
         JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters(pathCalJEC+"Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
         vCorrParam.push_back(*L1JetCorPar);
@@ -667,7 +670,7 @@ int main (int argc, char *argv[])
             ///  Jet Energy Scale Corrections  ///
             //////////////////////////////////////
 
-            if (applyJER && dataSetName.find("Data")==string::npos)
+            if (applyJER && !isData)
             {
                 if(JERNom) jetTools->correctJetJER(init_jets, genjets, mets[0], "nominal", false);
                 else if(JERDown) jetTools->correctJetJER(init_jets, genjets, mets[0], "minus", false);
@@ -679,10 +682,7 @@ int main (int argc, char *argv[])
             if(JESDown) jetTools->correctJetJESUnc(init_jets, "minus", 1);
             else if(JESUp) jetTools->correctJetJESUnc(init_jets, "plus", 1);
 
-            bool isData = false;
-            if(dataSetName.find("Data")!=string::npos){
-                isData = true;
-            }
+
             if (applyJEC)   ///should this have  && dataSetName.find("Data")==string::npos
             {
                 // cout<<"apply JEC"<<endl;

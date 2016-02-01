@@ -14,15 +14,15 @@ print "found  "  + str(len(datasets)) + " datasets"
 
 procsDone = 0
 procsStarted = 0
-numCores = 8
+numCores = 10
 args = []
 execCommands = []
 topTrees = []
-jobSize = 400000000
+jobSize = 554000000
 for d in datasets:
     if d.attrib['add'] == '1':
         print "found dataset to be added..." + str(d.attrib['name'])
-        files = ["./SLMACROEL", d.attrib['name'], d.attrib['title'], d.attrib['add'], d.attrib['color'], d.attrib['ls'], d.attrib['lw'], d.attrib['normf'], d.attrib['EqLumi'], d.attrib['xsection'], d.attrib['PreselEff']]
+        files = ["./SLMACROLocalEl", d.attrib['name'], d.attrib['title'], d.attrib['add'], d.attrib['color'], d.attrib['ls'], d.attrib['lw'], d.attrib['normf'], d.attrib['EqLumi'], d.attrib['xsection'], d.attrib['PreselEff']]
         topTrees = glob.glob(d.attrib['filenames'])
         for f in glob.glob(d.attrib['filenames']):
             files.append("dcap://maite.iihe.ac.be"+f)
