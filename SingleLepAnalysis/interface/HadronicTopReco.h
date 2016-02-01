@@ -107,7 +107,6 @@ class HadronicTopReco{
         vector<TRootPFJet*>      MVASelJets1; //the selected jets from the highest ranked tri jet
         vector<TRootPFJet*>		 MVASelJets2; //the selected jets from the second highest ranked tri jet
 		JetCombiner* jetCombiner;
-		TRootGenEvent* genEvt_flav;
 		double bestTopMass1;
 		double bestTopMass2;
 		double bestTopMass2ndPass ;
