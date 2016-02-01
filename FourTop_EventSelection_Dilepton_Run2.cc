@@ -317,16 +317,16 @@ int main (int argc, char *argv[])
     anaEnv.MuonCollection = "Muons_slimmedMuons";
     anaEnv.ElectronCollection = "Electrons_slimmedElectrons";
     anaEnv.GenJetCollection   = "GenJets_slimmedGenJets";
-    anaEnv.TrackMETCollection = "";
-    anaEnv.GenEventCollection = "GenEvent";
+//    anaEnv.TrackMETCollection = "";
+//    anaEnv.GenEventCollection = "GenEvent";
     anaEnv.NPGenEventCollection = "NPGenEvent";
     anaEnv.MCParticlesCollection = "MCParticles";
     anaEnv.loadFatJetCollection = true;
     anaEnv.loadGenJetCollection = false;
-    anaEnv.loadGenEventCollection = false;
+//    anaEnv.loadGenEventCollection = false;
     anaEnv.loadNPGenEventCollection = false;
     anaEnv.loadMCParticles = true;
-    anaEnv.loadTrackMETCollection = false;
+//    anaEnv.loadTrackMETCollection = false;
     anaEnv.JetType = 2;
     anaEnv.METType = 2;
     int verbose = 2;//anaEnv.Verbose;
@@ -1109,7 +1109,7 @@ int main (int argc, char *argv[])
             if( ! (dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA" ) )
             {
                 // loading GenJets as I need them for JER
-                genjets = treeLoader.LoadGenJet(ievt);
+                genjets = treeLoader.LoadGenJet(ievt, false);
             }
 //            string currentFilename = datasets[d]->eventTree()->GetFile()->GetName();
 //            if(previousFilename != currentFilename)
@@ -1988,7 +1988,6 @@ int main (int argc, char *argv[])
             // Getting Gen Event //
             ///////////////////////
 
-            TRootGenEvent* genEvt = 0;
 
             if(dataSetName != "data" && dataSetName != "Data" && dataSetName != "Data")
             {
@@ -2003,8 +2002,7 @@ int main (int argc, char *argv[])
                 int leptonPDG, muonPDG = 13, electronPDG = 11;
                 leptonPDG = muonPDG;
 
-                genEvt = treeLoader.LoadGenEvent(ievt,false);
-                treeLoader.LoadMCEvent(ievt, genEvt, 0, mcParticlesMatching_,false);
+                treeLoader.LoadMCEvent(ievt, 0, mcParticlesMatching_,false);
                 if (debug) cout <<"size   "<< mcParticlesMatching_.size()<<endl;
             }
 
@@ -2044,7 +2042,7 @@ int main (int argc, char *argv[])
             int bj1;
 
             if(nJets >= 4){
-            jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedLeptonTLV_JC[0], genEvt, scaleFactor);
+            jetCombiner->ProcessEvent_SingleHadTop(datasets[d], mcParticlesMatching_, selectedJets, selectedLeptonTLV_JC[0], scaleFactor);
             
 
             if(!TrainMVA)
