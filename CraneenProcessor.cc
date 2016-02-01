@@ -51,6 +51,8 @@ void Split2_DataCardProducer(TFile *shapefile, string shapefileName, string chan
 void GetScaleEnvelope(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath, string shapefileName);
 void GetScaleEnvelopeSplit(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath, string shapefileName);
 
+void CutFlowPlotter(TFile *cffile, string leptoAbbr, string channel, string xmlNom, string CraneenPath, int nCuts, float lScale);
+
 string DatacardVar = "BDT"; //variable of interest for plotting //global
 
 
@@ -231,6 +233,7 @@ int main(int argc, char** argv)
                     if(ppText == DatacardVar){
                         //DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, xmlFileName, lumiScale);
                     }
+		    
                 }
 
                 shapefile->Close();
@@ -243,8 +246,14 @@ int main(int argc, char** argv)
                 delete errorfile;
                 cout<<""<<endl;                cout<<"end var"<<endl;
             }
+	    
         }
     } 
+	string cffileName = "Cut_Flow_"+leptoAbbr+".root";
+        cout<<cffileName<<endl;
+        TFile *cffile = new TFile((cffileName).c_str(), "RECREATE");
+	CutFlowPlotter(cffile, leptoAbbr, channel, xmlFileName, CraneenPath, 7, lumiScale);
+	delete cffile;
     cout<<" DONE !! "<<endl;
 }
 
@@ -511,7 +520,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
                 {
                     Luminosity = 1000*lScale;
                 }               
-                Luminosity = 2460.38; 
+                Luminosity = 2581.340; 
                 NormFactor =1;
                 if (dataSetName.find("tttt")!=string::npos) {
                     NormFactor = 0.5635;                
@@ -645,6 +654,95 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         histo1D.erase(it->first);
     }
 };
+
+void CutFlowPlotter(TFile *cffile, string leptoAbbr, string channel, string xmlNom, string CraneenPath, int nCuts, float lScale)
+{
+    const char *xmlfile = xmlNom.c_str();    cout << "used config file: " << xmlfile << endl;
+
+    string pathPNG = "FourTop_Light";    pathPNG += leptoAbbr;    pathPNG += "_MSPlots/";
+    mkdir(pathPNG.c_str(),0777);    cout <<"Making directory :"<< pathPNG  <<endl;		//make directory
+
+    ///////////////////////////////////////////////////////////// Load Datasets ////////////////////////////////////////////////////////////////////
+    TTreeLoader treeLoader;
+    vector < Dataset* > datasets; 					//cout<<"vector filled"<<endl;
+    treeLoader.LoadDatasets (datasets, xmlfile);	//cout<<"datasets loaded"<<endl;
+
+    string dataSetName, filepath;
+    string plotname = channel + " Cut Flow";
+    int nEntries;
+    float ScaleFactor, NormFactor, Luminosity, varofInterest, GenWeight, weight1, weight2, weight3, weight4, weight5, weight6, weight7, weight8, ttbar_flav;
+    MultiSamplePlot* cutFlowPlot = new MultiSamplePlot(datasets, plotname.c_str(), nCuts, 0, nCuts, "Cut Number");
+    std::vector<float> cuts(nCuts);
+
+    for (int d = 0; d < datasets.size(); d++)  //Loop through datasets
+    {
+        dataSetName = datasets[d]->Name();        cout<<"Dataset:  :"<<dataSetName<<endl;
+        
+        filepath = CraneenPath+dataSetName + "_Run2_TopTree_Study.root";        //cout<<"filepath: "<<filepath<<endl;
+
+        FileObj[dataSetName.c_str()] = new TFile((filepath).c_str()); //create TFile for each dataset
+        string nTuplename = "Craneen__"+ leptoAbbr + "_CutFlow";
+        nTuple[dataSetName.c_str()] = (TNtuple*)FileObj[dataSetName.c_str()]->Get(nTuplename.c_str()); //get ntuple for each dataset
+        nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();        cout<<"                 nEntries: "<<nEntries<<endl;
+
+        nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor",&ScaleFactor);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor",&NormFactor);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity",&Luminosity);
+
+        nTuple[dataSetName.c_str()]->SetBranchAddress("trigger",&cuts[0]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("isGoodPV",&cuts[1]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("Lep1",&cuts[2]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("Lep2",&cuts[3]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("nJets",&cuts[4]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("nTags",&cuts[5]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("HT",&cuts[6]);
+
+        float eqlumi = 1./datasets[d]->EquivalentLumi();
+        cout<<"eqlumi: "<<eqlumi<<endl;
+        cout<<"got variables"<<endl;
+        //for fixed bin width
+        
+        for (int j = 0; j<nEntries; j++)
+        {
+            nTuple[dataSetName.c_str()]->GetEntry(j);
+
+	    for(int cutnum = 0; cutnum < nCuts; cutnum++)
+	    {
+		if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
+		{
+			if(cuts[cutnum] == 1) cutFlowPlot->Fill(cutnum, datasets[d], true, 1);
+		}
+		else
+		{
+			if(lScale > 0 ) //artificial Lumi
+                {
+                    Luminosity = 1000*lScale;
+                }               
+                Luminosity = 2581.340; 
+                NormFactor =1;
+                if (dataSetName.find("tttt")!=string::npos) {
+                    NormFactor = 0.5635;                
+                }
+                else if (dataSetName.find("WJets")!=string::npos){
+                    NormFactor = 0.6312;
+                    // cout<<"voi: "<<varofInterest<<"  NormFactor: "<<NormFactor<<"  ScaleFactor: "<<ScaleFactor<<"  lumi: "<<Luminosity<<endl; 
+
+                }
+	        	if(cuts[cutnum] == 1) cutFlowPlot->Fill(cutnum, datasets[d], true, NormFactor*ScaleFactor*Luminosity);
+		}
+	    }
+        }
+        cout<<"after for loop entries"<<endl;
+    }
+    cout<<"unloading datasets"<<endl;
+
+    
+    
+        cout << "Writing Cut Flow Plot" << endl;
+        cutFlowPlot->Draw("Cut Flow", 2, false, true, false, 100);
+        cutFlowPlot->Write(cffile, "CutFlow", true, pathPNG, "png");
+    
+}
 
 
 // void SystematicsAnalyser(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, bool Normalise, TFile* shapefile, TFile* errorfile, string channel, string sVarofinterest, string xmlSys, string CraneenPath)
