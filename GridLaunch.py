@@ -73,7 +73,10 @@ for row in args:
     command = row[0]+" "+row[1]+" "+row[2]+" "+row[3]+" "+row[4]+" "+row[5]+" "+row[6]+" "+row[7]+" "+row[8]+" "+row[9]+" "+row[10]+" "+row[11]
     f = open("Submit_Scripts/Submit"+row[1]+".sh",'w')
     f.write('#PBS -q localgrid\n')
-    f.write('#PBS -l walltime=02:00:00\n')
+    if (row[1].find('Skim') == -1):
+        f.write('#PBS -l walltime=08:00:00\n')
+    else:
+        f.write('#PBS -l walltime=02:00:00\n')
     f.write('source /user/heilman/.bash_profile\n')
     f.write('export X509_USER_PROXY=/localgrid/heilman/proxy\n')
     f.write('cd /user/heilman/CMSSW_7_6_0/src/\n')
@@ -90,6 +93,7 @@ for row in args:
     f.write('ls -l\n')
     f.write('cp -pr $TMPDIR/TopBrussels/FourTops/Craneens_* /user/heilman/batchoutput\n')
     f.write('cp -pr $TMPDIR/TopBrussels/FourTops/MACRO_* /user/heilman/batchoutput\n')
+#    f.write('cp -pr $TMPDIR/TopBrussels/FourTops/bTagWeightHistosPtEta*.root /user/heilman/batchoutput\n')
 
 #    popen = subprocess.Popen(row)
 #    print 'Job {} begun'.format(row[2])
