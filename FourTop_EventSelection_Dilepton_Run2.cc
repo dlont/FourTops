@@ -1675,15 +1675,15 @@ int main (int argc, char *argv[])
                     //  cout <<" light jet... "<<endl;
                     //SF_tag =  bTool->getSF(selectedJets[seljet]->Pt(),selectedJets[seljet]->Eta(),jet_flavor,domisTagEffShift);
                 }
-                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.605   )
+                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.460   )
                 {
 
                     selectedLBJets.push_back(selectedJets[seljet]);
-                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.890)
+                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.800)
                     {
                         selectedMBJets.push_back(selectedJets[seljet]);
 
-                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.970)
+                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.935)
                         {
                             selectedTBJets.push_back(selectedJets[seljet]);
                         }
@@ -2186,7 +2186,7 @@ int main (int argc, char *argv[])
                     HT2M = HT2M + jetpt;
                     H2M = H2M + selectedJets[seljet1]->P();
                 }
-                if(selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.244)
+                if(selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.800)
                 {
                     HTb += selectedJets[seljet1]->Pt();
                 }
