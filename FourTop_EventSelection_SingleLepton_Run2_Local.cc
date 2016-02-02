@@ -78,7 +78,7 @@ using namespace reweight;
 
 /// MultiSamplePlot
 map<string,MultiSamplePlot*> MSPlot;
-bool batch = true;
+bool batch = false;
 
 struct HighestCVSBtag
 {
@@ -106,13 +106,12 @@ int main (int argc, char *argv[])
     const int endEvent              = batch ? -1 : strtol(argv[argc-1], NULL, 10);
 
     vector<string> vecfileNames;
-    cout<<"arg 10: "<<argv[10]<<endl;
+    cout<<"argc: "<<argc<<endl;
         for(int args = 0; args < argc; args++)
         {
             cout<<args<<"  : "<<argv[args]<<endl;
         }
 
-        cout<<"!"<<argc-1<<" : "<<strtol(argv[argc-1],NULL,10)<<endl;
     if (batch){
         //Checking Passed Arguments to ensure proper execution of MACRO
         if(argc < 12)
@@ -186,14 +185,14 @@ int main (int argc, char *argv[])
     bool SingleLepton  = true;
     bool Muon          = true;
     bool Electron      = false;
-    bool HadTopOn      = true;
-    bool EventBDTOn    = true;
+    bool HadTopOn      = false;
+    bool EventBDTOn    = false;
     bool TrainMVA      = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25          = true;
-    bool bTagReweight  = true;
-    bool bLeptonSF     = true;
+    bool bTagReweight  = false;
+    bool bLeptonSF     = false;
     bool debug         = false;
-    bool applyJER      = true;
+    bool applyJER      = false;
     bool applyJEC      = false;
     bool JERNom        = true;
     bool JERUp         = false;
