@@ -4,7 +4,7 @@ import time
 import os
 import glob
 
-tree = ET.ElementTree(file='config/Run2SingleLepton_TOPTREES_74.xml')
+tree = ET.ElementTree(file='config/FullMuonTopTrees.xml')
 #tree = ET.ElementTree(file='config/Testing.xml')
 
 root = tree.getroot()
