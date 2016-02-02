@@ -186,8 +186,8 @@ int main (int argc, char *argv[])
     bool SingleLepton  = true;
     bool Muon          = true;
     bool Electron      = false;
-    bool HadTopOn      = false;
-    bool EventBDTOn    = false;
+    bool HadTopOn      = true;
+    bool EventBDTOn    = true;
     bool TrainMVA      = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25          = true;
     bool bTagReweight  = true;
@@ -243,17 +243,17 @@ int main (int argc, char *argv[])
     anaEnv.METCollection = "PFMET_slimmedMETs";
     anaEnv.MuonCollection = "Muons_slimmedMuons";
     anaEnv.ElectronCollection = "Electrons_slimmedElectrons";
-    anaEnv.GenJetCollection   = "GenJets_slimmedGenJets";
-    anaEnv.TrackMETCollection = "";
+    // anaEnv.GenJetCollection   = "GenJets_slimmedGenJets";
+    // anaEnv.TrackMETCollection = "";
     // anaEnv.GenEventCollection = "GenEvent";
     anaEnv.NPGenEventCollection = "NPGenEvent";
     anaEnv.MCParticlesCollection = "MCParticles";
     anaEnv.loadFatJetCollection = true;
     anaEnv.loadGenJetCollection = false;
-    anaEnv.loadGenEventCollection = false;
+    // anaEnv.loadGenEventCollection = false;
     anaEnv.loadNPGenEventCollection = false;
     anaEnv.loadMCParticles = true;
-    anaEnv.loadTrackMETCollection = false;
+    // anaEnv.loadTrackMETCollection = false;
     anaEnv.JetType = 2;
     anaEnv.METType = 2;
 
@@ -533,7 +533,7 @@ int main (int argc, char *argv[])
         //               Craneen setup                 //
         /////////////////////////////////////////////////
         string channel_dir = "Craneens"+channelpostfix;
-        string date_dir = channel_dir+"/Craneens" + date_str +"/JER/";
+        string date_dir = channel_dir+"/Craneens" + date_str +"/";
         int mkdirstatus = mkdir(channel_dir.c_str(),0777);
         mkdirstatus = mkdir(date_dir.c_str(),0777);
         if(debug)cout<<"created dirs"<<endl;
