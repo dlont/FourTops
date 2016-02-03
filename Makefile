@@ -69,6 +69,14 @@ else
 	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocalEl
 endif
 
+CRAN:
+	@echo "compiling CranProc macro"
+	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent74 -l TopTreeAna74 -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` CraneenProcessor.cc -o CranProc
+
+CRAN2:
+	@echo "compiling CranProc2 macro"
+	@g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent74 -l TopTreeAna74 -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` CraneenProcessor2.cc -o CranProc
+
 clean:
 	@echo "Cleaning..."
 	@rm -f $(OBJECTS) $(DEPENDS) macros/*.exe *Dict.* *.$(DllSuf) core 
