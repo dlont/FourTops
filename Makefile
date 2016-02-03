@@ -51,12 +51,23 @@ SOBJECTS	  = $(SOURCES:.$(SrcSuf)=.$(DllSuf))
 all:  libFourTopSingleLep.$(DllSuf)
 	cp libFourTopSingleLep.$(DllSuf) ~/lib/
 
-SLMACRO: 
-	@echo "compiling macro"
+SLMACRO:
+ifndef ISLOCAL
+	@echo "compiling grid macro"
 	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACRO
+else
+	@echo "compiling local macro"
+	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocal
+endif
 
 SLMACROEL:
+ifndef ISLOCAL
+	@echo "compiling grid electron macro"
 	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACROEL
+else
+	@echo "compiling local electron macro"
+	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocalEl
+endif
 
 clean:
 	@echo "Cleaning..."
