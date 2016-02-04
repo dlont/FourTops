@@ -52,22 +52,20 @@ all:  libFourTopSingleLep.$(DllSuf)
 	cp libFourTopSingleLep.$(DllSuf) ~/lib/
 
 SLMACRO: FourTop_EventSelection_SingleLepton_Run2_New.cc libFourTopSingleLep.$(DllSuf)
-ifndef ISLOCAL
 	@echo "compiling grid macro"
 	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACRO
-else
+
+SLMACROLocal: FourTop_EventSelection_SingleLepton_Run2_Local.cc libFourTopSingleLep.$(DllSuf)
 	@echo "compiling local macro"
 	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocal
-endif
 
 SLMACROEL: FourTop_EventSelection_SingleLepton_Run2_New.cc libFourTopSingleLep.$(DllSuf)
-ifndef ISLOCAL
 	@echo "compiling grid electron macro"
 	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACROEL
-else
+
+SLMACROLocalEl: FourTop_EventSelection_SingleLepton_Run2_Local.cc libFourTopSingleLep.$(DllSuf)
 	@echo "compiling local electron macro"
 	g++ -g -std=c++11 -L ~/lib -I ../ -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocalEl
-endif
 
 CRAN:
 	@echo "compiling CranProc macro"
