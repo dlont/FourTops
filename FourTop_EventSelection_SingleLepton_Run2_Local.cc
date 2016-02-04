@@ -72,16 +72,24 @@
 #include "SingleLepAnalysis/interface/Zpeak.h"
 #include "SingleLepAnalysis/interface/Trigger.h"
 
+#define SUCCESS 0
+#define FAIL    1
+
 using namespace std;
 using namespace TopTree;
 using namespace reweight;
 
-/// MultiSamplePlot
+//
+// MultiSamplePlot
+//
 map<string,MultiSamplePlot*> MSPlot;
 
-bool batch = false;  // Flag setting the state of the program to run localy or at cluster
 
-// Functor for comparison of B-jet discriminants
+bool batch = false;  // Flag setting the state of the program to run locally or at cluster
+
+//
+// Functor for comparison of two B-jets discriminant values
+//
 struct HighestCVSBtag
 {
     bool operator()( TRootJet* j1, TRootJet* j2 ) const
@@ -90,57 +98,56 @@ struct HighestCVSBtag
     }
 };
 
-
-int main (int argc, char *argv[])
-{
+//
+//
+//  Program receives arguments from command line
+//  the arguments with argv[ 11 <= i < argc - 2 ] contain filenames to run over
+//
+//
+int main (int argc, char *argv[]) {
+    
+    //
     //Placing arguments in properly typed variables for Dataset creation
-    const string dName              = argv[1];				// Dataset name
-    const string dTitle             = argv[2];				// 
-    const int color                 = strtol(argv[4], NULL, 10);
-    const int ls                    = strtol(argv[5], NULL, 10);
-    const int lw                    = strtol(argv[6], NULL, 10);
-    const float normf               = strtod(argv[7], NULL);
-    const float EqLumi              = strtod(argv[8], NULL);
-    const float xSect               = strtod(argv[9], NULL);
-    const float PreselEff           = strtod(argv[10], NULL);
-    string fileName                 = argv[11];    
-    const int startEvent            = batch ? 0 : strtol(argv[argc-2], NULL, 10);
-    const int endEvent              = batch ? -1 : strtol(argv[argc-1], NULL, 10);
+    //
+    const string dName              = argv[1];                                      // Dataset name
+    const string dTitle             = argv[2];                                      // 
+    const int color                 = strtol(argv[4], NULL, 10);                    //
+    const int ls                    = strtol(argv[5], NULL, 10);                    //
+    const int lw                    = strtol(argv[6], NULL, 10);                    //
+    const float normf               = strtod(argv[7], NULL);                        //
+    const float EqLumi              = strtod(argv[8], NULL);                        //
+    const float xSect               = strtod(argv[9], NULL);                        //
+    const float PreselEff           = strtod(argv[10], NULL);                       //
+    const int startEvent            = batch ? 0 : strtol(argv[argc-2], NULL, 10);   //
+    const int endEvent              = batch ? -1 : strtol(argv[argc-1], NULL, 10);  //
 
+    //
+    // Store supplied filenames in the vector
+    // batch: args >= 11 
+    // local:  11 <= args < argc - 2
+    //
     vector<string> vecfileNames;
-    cout<<"argc: "<<argc<<endl;
-        for(int args = 0; args < argc; args++)
-        {
-            cout<<args<<"  : "<<argv[args]<<endl;
-        }
-
-    if (batch){
-        //Checking Passed Arguments to ensure proper execution of MACRO
-        if(argc < 12)
-        {
-            std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
-            return 1;
-        }
-
-        for(int args = 11; args < argc; args++) 
-        {
-            vecfileNames.push_back(argv[args]);
-        }        
+    for(int args = 11; args < batch ? argc : (argc-2); args++) {
+        vecfileNames.push_back(argv[args]);
     }
-    else{  //ie. running locally 
-
-        //Checking Passed Arguments to ensure proper execution of MACRO
-        if(argc < 14)
-        {
-            std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
-            return 1;
+    
+    //
+    // Check received arguments to ensure proper execution of MACRO
+    // at least one filename has to be supplied
+    //
+    if (batch) {    // run on grid
+        if ( argc < 12 ) {
+            std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " 
+                      << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
+            return FAIL;
         }
-
-        for(int args = 11; args < argc-2; args++)
-        {
-            vecfileNames.push_back(argv[args]);
+    } else {  //ie. running locally 
+        if(argc < 14) {
+            std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " 
+                      << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
+            return FAIL;
         }
-    }
+    } // if (batch)
 
     cout << "---Dataset accepted from command line---" << endl;
     cout << "Dataset Name: " << dName << endl;
@@ -158,19 +165,23 @@ int main (int argc, char *argv[])
     for(int vecfiles=0; vecfiles<vecfileNames.size(); vecfiles++){
         cout<<"vecfile names: "<<vecfiles<<" : "<<vecfileNames[vecfiles]<<endl;
     }
+    
+    //
+    //  Text file for selected events
+    //
     ofstream eventlist;
     eventlist.open ("interesting_events_mu2.txt");
 
-    int passed = 0;
-    int preTrig = 0;
-    int postTrig = 0;
-    int ndefs =0;
-    int negWeights = 0;
-    float weightCount = 0.0;
-    int eventCount = 0;
-    float scalefactorbtageff, mistagfactor;
-    string dataSetName = "";
-    string channelpostfix = "";
+    int passed = 0;                                                                     //
+    int preTrig = 0;                                                                    //
+    int postTrig = 0;                                                                   //
+    int ndefs =0;                                                                       //
+    int negWeights = 0;                                                                 //
+    float weightCount = 0.0;                                                            //
+    int eventCount = 0;                                                                 //
+    float scalefactorbtageff, mistagfactor;                                             //
+    string dataSetName = "";                                                            //
+    string channelpostfix = "";                                                         //
     string postfix = "_Run2_TopTree_Study"; // to relabel the names of the output file
 
     clock_t start = clock();
@@ -184,6 +195,8 @@ int main (int argc, char *argv[])
     //      Configuration                //
     ///////////////////////////////////////
 
+    // @TODO: This has to be moved to the config file
+    
     bool SingleLepton  = true;
     bool Muon          = true;
     bool Electron      = false;
@@ -542,7 +555,13 @@ int main (int argc, char *argv[])
         
         string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
         TFile * tupfile    = new TFile(Ntupname.c_str(),"RECREATE");
-        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt");
+        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), 
+                "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:"
+                "HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:"
+                "SFbtag:SFbtagUp:SFbtagDown:SFPU:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:"
+                "weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:"
+                "1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:"
+                "5thjetpt:6thjetpt:jet5and6pt");
        
         // string Ntup4j0bname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_4j0b_" + dataSetName + postfix + ".root";     
         // TFile * tup4j0bfile    = new TFile(Ntupname.c_str(),"RECREATE");
@@ -1287,7 +1306,9 @@ int main (int argc, char *argv[])
             if(nJets > 7 && (dataSetName.find("Data") || dataSetName.find("data") || dataSetName.find("DATA")) ){
                 //cout<<event->runId()  << " " << event->lumiBlockId() <<" " <<event->eventId() << "  jets "  << nJets <<"  nmtags "<<nMtags<<" muon pt "<<selectedMuons[0]->Pt()<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
 
-                eventlist <<event->runId()  << " " << event->lumiBlockId() <<" " <<event->eventId() << "  jets "  << nJets <<" nmtags "<<nMtags<<" muon pt "<<selectedLeptonPt<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
+                eventlist <<event->runId()  << " " << event->lumiBlockId() <<" " 
+                        <<event->eventId() << "  jets "  << nJets <<" nmtags "<<nMtags<<" muon pt "
+                        <<selectedLeptonPt<<" 1stjetpt "<<selectedJets[0]->Pt()<<"  2ndjet pt "<<selectedJets[1]->Pt()<<endl;        
                 for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
                 {
                     eventlist<<"  jet pt  "<<selectedJets[seljet1]->Pt()<<"   btag csv "<<selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags()<<endl;
@@ -1339,12 +1360,15 @@ int main (int argc, char *argv[])
                     jet6Pt = selectedJets[5]->Pt();
                     //cout<<"5thjetpt "<<jet5Pt<<"  jet6pt: "<<jet6Pt<<endl;
                 }
-                eventBDT->fillVariables(diTopness, selectedLeptonPt, leptoneta, HTH, HTRat, HTb, nLtags, nMtags, nTtags, nJets, jet5Pt, jet6Pt);
+                eventBDT->fillVariables(diTopness, selectedLeptonPt, leptoneta, 
+                        HTH, HTRat, HTb, nLtags, nMtags, nTtags, nJets, jet5Pt, jet6Pt);
             }
 
 
             if(dataSetName.find("TTJets")!=string::npos ||dataSetName.find("tttt")!=string::npos  ){
-                MLoutput<<diTopness<<","<<selectedLeptonPt<<","<<leptoneta<<","<<HTH<<","<<HTRat<<","<<HTb<<","<<nLtags<<","<<nMtags<<","<<nTtags<<","<<nJets<<","<<jet5Pt<<","<<jet6Pt<<",";
+                MLoutput<<diTopness<<","<<selectedLeptonPt<<","<<leptoneta<<","<<HTH<<","
+                        <<HTRat<<","<<HTb<<","<<nLtags<<","<<nMtags<<","<<nTtags<<","
+                        <<nJets<<","<<jet5Pt<<","<<jet6Pt<<",";
             }
             if (dataSetName.find("TTJets")!=string::npos ){
                 MLoutput<<"0"<<endl;
@@ -1377,7 +1401,14 @@ int main (int argc, char *argv[])
             }
             float nOrigJets = (float)selectedOrigJets.size();
             float jet5and6Pt = jet5Pt+jet6Pt;
-            float vals[53] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fleptonSF,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt};
+            float vals[53] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,
+            selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,
+            diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fleptonSF,
+            btagWeight,btagWeightUp,btagWeightDown,lumiWeight,nvertices,normfactor,
+            Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,
+            weight_7,weight_8,met,angletop1top2,angletoplep,firstjetpt,secondjetpt,
+            leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,
+            jet6Pt,jet5and6Pt};
             tupfile->cd();
             tup->Fill(vals);
         } //End Loop on Events
@@ -1469,7 +1500,7 @@ int main (int argc, char *argv[])
     cout << "********************************************" << endl;
     
     return 0;
-}
+} // main()
 
 
             // sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
