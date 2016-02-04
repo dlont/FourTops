@@ -9,7 +9,7 @@ __init__.py
 *.png
 *.tex
 *DS_Store
-
+nbproject
 
 
 
