@@ -66,11 +66,11 @@
 #include "TopTreeAnalysisBase/Tools/interface/MVAComputer.h"
 // #include "TopTreeAnalysisBase/Tools/interface/JetTools.h"
 
-#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/CutsTable.h"
-#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/HadronicTopReco.h"
-#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/EventBDT.h"
-#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/Zpeak.h"
-#include "TopTreeAnalysisBase/../FourTops/SingleLepAnalysis/interface/Trigger.h"
+#include "SingleLepAnalysis/interface/CutsTable.h"
+#include "SingleLepAnalysis/interface/HadronicTopReco.h"
+#include "SingleLepAnalysis/interface/EventBDT.h"
+#include "SingleLepAnalysis/interface/Zpeak.h"
+#include "SingleLepAnalysis/interface/Trigger.h"
 
 using namespace std;
 using namespace TopTree;
@@ -78,8 +78,10 @@ using namespace reweight;
 
 /// MultiSamplePlot
 map<string,MultiSamplePlot*> MSPlot;
-bool batch = false;
 
+bool batch = false;  // Flag setting the state of the program to run localy or at cluster
+
+// Functor for comparison of B-jet discriminants
 struct HighestCVSBtag
 {
     bool operator()( TRootJet* j1, TRootJet* j2 ) const
@@ -92,8 +94,8 @@ struct HighestCVSBtag
 int main (int argc, char *argv[])
 {
     //Placing arguments in properly typed variables for Dataset creation
-    const string dName              = argv[1];
-    const string dTitle             = argv[2];
+    const string dName              = argv[1];				// Dataset name
+    const string dTitle             = argv[2];				// 
     const int color                 = strtol(argv[4], NULL, 10);
     const int ls                    = strtol(argv[5], NULL, 10);
     const int lw                    = strtol(argv[6], NULL, 10);
