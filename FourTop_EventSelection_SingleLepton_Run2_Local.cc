@@ -72,6 +72,9 @@
 #include "SingleLepAnalysis/interface/Zpeak.h"
 #include "SingleLepAnalysis/interface/Trigger.h"
 
+//
+// Application return codes
+//
 #define SUCCESS 0
 #define FAIL    1
 
@@ -107,7 +110,7 @@ struct HighestCVSBtag
 int main (int argc, char *argv[]) {
     
     //
-    //Placing arguments in properly typed variables for Dataset creation
+    // Placing arguments in properly typed variables for Dataset creation
     //
     const string dName              = argv[1];                                      // Dataset name
     const string dTitle             = argv[2];                                      // 
@@ -122,7 +125,7 @@ int main (int argc, char *argv[]) {
     const int endEvent              = batch ? -1 : strtol(argv[argc-1], NULL, 10);  //
 
     //
-    // Store supplied filenames in the vector
+    // Store supplied filenames in a vector
     // batch: args >= 11 
     // local:  11 <= args < argc - 2
     //
@@ -1501,24 +1504,3 @@ int main (int argc, char *argv[]) {
     
     return 0;
 } // main()
-
-
-            // sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
-
-            // vector<double> ptList;
-            // double jetptTemp;
-            // for(Int_t csvJets = 2; csvJets<selectedJets.size(); csvJets++){
-            //     jetptTemp = (double)selectedJets[csvJets]->Pt();
-            //     ptList.push_back(jetptTemp);
-            //     //cout<<csvJets<<"   ptlist "<<ptList[csvJets-2]<<endl;
-            //     //selectedJets2.push_back(selectedJets[csvJets]);  //created array of selected jets without 2 highest CSVL btags
-            //     //cout<<csvJets<<" jet pt "<<selectedJets2[csvJets-2]->Pt()<<"   "<<selectedJets[csvJets]->Pt()<<endl;
-            // }
-
-            // sort(selectedJets2.begin(),selectedJets2.end(),HighestPt()); //order Jets wrt Pt for tuple output
-
-            // HT2L2J = HT - selectedJets[0]->Pt() - selectedJets[1]->Pt() - ptList[0] - ptList[1];    
-            //cout<<"HT:  "<<HT<<"  "<<selectedJets[0]->Pt()<<"  "<<selectedJets[1]->Pt()<<"  "<<ptList[0]<<"  "<<ptList[1]<<"  HT2l2J"<<HT2L2J<<endl;    
-
-            //HT - (2 highest CSVL btags) and (2 highest pt jets from remaining jets)
-
