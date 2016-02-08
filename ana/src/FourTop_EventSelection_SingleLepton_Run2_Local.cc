@@ -129,11 +129,14 @@ int main (int argc, char *argv[]) {
     // batch: args >= 11 
     // local:  11 <= args < argc - 2
     //
+    const int lastFileNameArg = batch ? argc : (argc-2);
     vector<string> vecfileNames;
-    for(int args = 11; args < batch ? argc : (argc-2); args++) {
+    for(int args = 11; args < lastFileNameArg; args++) {
+        cout << setw(10) << batch << setw(10) << argc << setw(10) 
+             << lastFileNameArg << "\t" << setw(100) << argv[args] << endl;
         vecfileNames.push_back(argv[args]);
     }
-    
+
     //
     // Check received arguments to ensure proper execution of MACRO
     // at least one filename has to be supplied
@@ -168,7 +171,7 @@ int main (int argc, char *argv[]) {
     for(int vecfiles=0; vecfiles<vecfileNames.size(); vecfiles++){
         cout<<"vecfile names: "<<vecfiles<<" : "<<vecfileNames[vecfiles]<<endl;
     }
-    
+
     //
     //  Text file for selected events
     //
@@ -555,7 +558,7 @@ int main (int argc, char *argv[]) {
         mkdirstatus = mkdir(date_dir.c_str(),0777);
         if(debug)cout<<"created dirs"<<endl;
         string Ntuptitle   = "Craneen_" + channelpostfix;
-        
+
         string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
         TFile * tupfile    = new TFile(Ntupname.c_str(),"RECREATE");
         TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), 
@@ -565,7 +568,7 @@ int main (int argc, char *argv[]) {
                 "weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:"
                 "1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:"
                 "5thjetpt:6thjetpt:jet5and6pt");
-       
+
         // string Ntup4j0bname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_4j0b_" + dataSetName + postfix + ".root";     
         // TFile * tup4j0bfile    = new TFile(Ntupname.c_str(),"RECREATE");
         // TNtuple * tup4j0b      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:SFbtag:SFPU:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso");
