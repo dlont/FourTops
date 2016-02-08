@@ -8,8 +8,11 @@ __init__.py
 *.pdf
 *.png
 *.tex
+*.swp
 *DS_Store
 nbproject
+Terminal*
+
 
 
 
