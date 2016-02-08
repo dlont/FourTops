@@ -21,12 +21,12 @@ ROOTLIBS       += -L$(ROOFITSYS)/lib
 # Linux with egcs
 DEFINES       = -DNO_ORCA_CLASSES -I..
 CXX           = g++
-CXXFLAGS	  = -O -Wall -fPIC $(DEFINES)  -I./TMVA/include
+CXXFLAGS	  = -g3 -gdwarf-2 -O -Wall -fPIC $(DEFINES)  -I./TMVA/include
 ifeq ($(UNAME), Darwin)
 CXXFLAGS      += -I/opt/local/include
 endif
 LD		      = g++
-LDFLAGS		  = -g -O -Wall -fPIC
+LDFLAGS		  = -g3 -gdwarf-2 -O -Wall -fPIC
 ifeq ($(UNAME), Darwin)
 SOFLAGS       = -dynamiclib
 endif
@@ -53,19 +53,19 @@ all:  libFourTopSingleLep.$(DllSuf)
 
 SLMACRO: ana/src/FourTop_EventSelection_SingleLepton_Run2_New.cc libFourTopSingleLep.$(DllSuf)
 	@echo "compiling grid macro"
-	g++ -g -std=c++11 -I.. -I. -L ~/lib -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` ana/src/FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACRO
+	g++ -g3 -gdwarf-2 -std=c++11 -I.. -I. -L ~/lib -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` ana/src/FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACRO
 
 SLMACROLocal: ana/src/FourTop_EventSelection_SingleLepton_Run2_Local.cc libFourTopSingleLep.$(DllSuf)
 	@echo "compiling local macro"
-	g++ -g -std=c++11 -I.. -I. -L ~/lib -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` ana/src/FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocal
+	g++ -g3 -gdwarf-2 -std=c++11 -I.. -I. -L ~/lib -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` ana/src/FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocal
 
 SLMACROEL: ana/src/FourTop_EventSelection_SingleLepton_Run2_New.cc libFourTopSingleLep.$(DllSuf)
 	@echo "compiling grid electron macro"
-	g++ -g -std=c++11 -I.. -I. -L ~/lib -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` ana/src/FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACROEL
+	g++ -g3 -gdwarf-2 -std=c++11 -I.. -I. -L ~/lib -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` ana/src/FourTop_EventSelection_SingleLepton_Run2_New.cc -o SLMACROEL
 
 SLMACROLocalEl: ana/src/FourTop_EventSelection_SingleLepton_Run2_Local.cc libFourTopSingleLep.$(DllSuf)
 	@echo "compiling local electron macro"
-	g++ -g -std=c++11 -I.. -I. -L ~/lib -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` ana/src/FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocalEl
+	g++ -g3 -gdwarf-2 -std=c++11 -I.. -I. -L ~/lib -l TopTreeAnaContent76 -l TopTreeAna76 -l FourTopSingleLep -l MLP -l TreePlayer -l TMVA -l XMLIO -I `root-config --incdir` `root-config --libs` ana/src/FourTop_EventSelection_SingleLepton_Run2_Local.cc -o SLMACROLocalEl
 
 clean:
 	@echo "Cleaning..."
