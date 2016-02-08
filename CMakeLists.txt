@@ -1,5 +1,10 @@
 cmake_minimum_required (VERSION 2.6)
 project(BSMFourTop)
-#subdirs(SingleLepAnalysis ana)
-subdirs(SingleLepAnalysis)
+subdirs(SingleLepAnalysis ana)
+#subdirs(SingleLepAnalysis)
 
+IF(IS_DIRECTORY ${TopBrussels_SOURCE_DIR})
+	MESSAGE(STATUS "TopBrussels was set to: ${TopBrussels_SOURCE_DIR}")
+ELSE()
+	MESSAGE(FATAL_ERROR "TopBrussels was not found in: ${TopBrussels_SOURCE_DIR}")
+ENDIF()

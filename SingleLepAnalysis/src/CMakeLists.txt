@@ -8,28 +8,21 @@ set(CMAKE_CXX_COMPILER "g++")
 message( "CMAKE_C_FLAGS: ${CMAKE_CXX_FLAGS}" )
 message( "CMAKE_LD_FLAGS: ${CMAKE_LD_FLAGS}" )
 
-# Specify TopBrussels include and lib path
-set(TopBrussels_DIR "/user/dlontkov/CMSSW_7_6_3/src/TopBrussels/")
+# include TopBrussels header search path
+include_directories(${TopBrussels_SOURCE_DIR})
+include_directories(${TopBrussels_SOURCE_DIR}/BSMFourTops)
 
-#set(TopBrussels_DIR "" CACHE "TopBrussels installation paths")
-if(IS_DIRECTORY ${TopBrussels_DIR})
-        message(STATUS "Found dir: ${TopBrussels_DIR}")
-        set(TopBrussels_LIBRARY_DIR ${TopBrussels_DIR})
-        set(TopBrussels_INCLUDE_DIR ${TopBrussels_DIR})
-else()
-        message(SEND_ERROR "ERROR: ${TopBrussels_DIR} does not exist")
-endif()
+# add TopTreeAna76 TopTreeAnaContent76 lib search path
+link_directories(~/lib)
 
 # include TopBrussels header search path
-include_directories(${TopBrussels_INCLUDE_DIR})
-# link against TopBrussels
-#link_directories(${TopBrussels_LIBRARY_DIR}/)
+#include_directories(${BSMFourTops_SOURCE_DIR}/SingleLepAnalysis/interface)
+#message(STATUS "lib SingleLepton dir: ${BSMFourTops_SOURCE_DIR}")
 
-# include TopBrussels header search path
-include_directories(${BSMFourTops_SOURCE_DIR}/SingleLepAnalysis/interface)
-
+# define output target
 add_library(FourTopSingleLep SHARED CutsTable.cc EventBDT.cc HadronicTopReco.cc Trigger.cc Zpeak.cc)
-# link against root
-target_link_libraries(FourTopSingleLep PRIVATE ${CMAKE_LD_FLAGS})
+
+# link against root and TopTreeAna76 TopTreeAnaContent76
+target_link_libraries(FourTopSingleLep PUBLIC TopTreeAna76 TopTreeAnaContent76 PRIVATE ${CMAKE_LD_FLAGS})
 install(TARGETS FourTopSingleLep DESTINATION ~/lib)
 
