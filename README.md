@@ -6,8 +6,8 @@ https://docs.google.com/document/d/1cbFPpLJSKc3ketyKBFjR1N0IuiJh-PmRvIorqoeVBqU/
 To compile SingleLepton lib
 ```sh
 mkdir build
-cd builda
-cmake -DCMAKE_INSTALL_PREFIX:PATH=~/lib ..
+cd build
+cmake -DTopBrussels_SOURCE_DIR=/user/direcrory/TopBrussels ..
 make -j
 make install
 ```
