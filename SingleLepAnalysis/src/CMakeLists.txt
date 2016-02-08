@@ -23,7 +23,7 @@ endif()
 # include TopBrussels header search path
 include_directories(${TopBrussels_INCLUDE_DIR})
 # link against TopBrussels
-link_directories(${TopBrussels_LIBRARY_DIR}/)
+#link_directories(${TopBrussels_LIBRARY_DIR}/)
 
 # include TopBrussels header search path
 include_directories(${BSMFourTops_SOURCE_DIR}/SingleLepAnalysis/interface)
@@ -31,5 +31,5 @@ include_directories(${BSMFourTops_SOURCE_DIR}/SingleLepAnalysis/interface)
 add_library(FourTopSingleLep SHARED CutsTable.cc EventBDT.cc HadronicTopReco.cc Trigger.cc Zpeak.cc)
 # link against root
 target_link_libraries(FourTopSingleLep PRIVATE ${CMAKE_LD_FLAGS})
-
+install(TARGETS FourTopSingleLep DESTINATION ~/lib)
 
