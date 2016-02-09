@@ -21,4 +21,4 @@ add_executable(SLMACROLocal FourTop_EventSelection_SingleLepton_Run2_Local.cc)
 
 # link against root and FourTopSingleLep TopTreeAna76 TopTreeAnaContent76
 target_link_libraries(SLMACROLocal PUBLIC FourTopSingleLep TopTreeAna76 TopTreeAnaContent76 PRIVATE ${CMAKE_LD_FLAGS})
-install(TARGETS SLMACROLocal DESTINATION ~/user/dlontkov/CMSSW_7_6_3/src/TopBrussels/BSMFourTops/)
+install(TARGETS SLMACROLocal DESTINATION ~/CMSSW_7_6_3/src/TopBrussels/BSMFourTops/)
