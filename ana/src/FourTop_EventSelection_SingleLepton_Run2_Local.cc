@@ -629,16 +629,6 @@ int main (int argc, char *argv[]) {
 
         if(endEvent <ending && endEvent>0 ) end_d = endEvent; // if the input endEvent is less than total events in dataset (and greater than 0), set max of for loop to endEvent
 
-        // if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos  || dataSetName.find("DATA")!=string::npos ){
-        //     // end_d=ending;
-        //     if(endEvent > ending)            end_d = ending;
-        //     else            end_d = endEvent;  
-        // }
-        // else{  //this only works if using parallel launcher to split into jobs
-        //     if(endEvent > ending)            end_d = ending;
-        //     else            end_d = endEvent;            
-        // }
-
         cout <<"Will run over "<<  end_d<< " events..."<<endl;    cout <<"Starting event = = = = "<< event_start  << endl;
 
         ////////////////////////////////////////////////////////////////////////////////
