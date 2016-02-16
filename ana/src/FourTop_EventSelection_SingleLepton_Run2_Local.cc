@@ -1495,5 +1495,5 @@ int main (int argc, char *argv[]) {
     cout << "           End of the program !!            " << endl;
     cout << "********************************************" << endl;
     
-    return 0;
+    return SUCCESS;
 } // main()
