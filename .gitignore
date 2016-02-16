@@ -13,3 +13,5 @@ __init__.py
 nbproject
 Terminal*
 build
+glog
+googletest
